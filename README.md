@@ -1,52 +1,52 @@
 # ChatQ Assist - AI-Powered FAQ Chatbot
 
-Ein intelligenter, LLM-basierter FAQ-/Support-Chatbot für KMU mit **RAG (Retrieval-Augmented Generation)**, **Streaming-Antworten** und **intelligenter Performance-Optimierung**. Das System nutzt OpenAI GPT-4 und Vector-Similarity-Search, um präzise Antworten auf Basis Ihrer FAQ-Datenbank zu generieren.
+An intelligent, LLM-based FAQ/Support chatbot for SMBs featuring **RAG (Retrieval-Augmented Generation)**, **streaming responses**, and **intelligent performance optimization**. The system uses OpenAI GPT-4 and vector similarity search to generate precise answers based on your FAQ database.
 
 ## 🚀 Features
 
-### ✅ Implementiert (v0.1)
+### ✅ Implemented (v0.1)
 
-#### Core Funktionalität
-- **🤖 LLM-basierter Chat**: OpenAI GPT-4 für natürliche, kontextbewusste Antworten
-- **🔍 RAG Pipeline**: Retrieval-Augmented Generation mit pgvector Similarity Search
-- **⚡ Streaming Responses**: Echtzeit-Antworten via Server-Sent Events (SSE)
-- **📝 FAQ Management**: Vollständiges CRUD-System für FAQ-Einträge
-- **🏷️ Tag-System**: Organisierung von FAQs mit Tags
-- **💬 Conversation History**: Kontextbewusste Multi-Turn-Gespräche
-- **🎯 Confidence Scoring**: Automatische Qualitätsbewertung der Antworten
-- **🔄 Smart Handoff**: Automatische Weiterleitung bei fehlenden Antworten
+#### Core Functionality
+- **🤖 LLM-based Chat**: OpenAI GPT-4 for natural, context-aware responses
+- **🔍 RAG Pipeline**: Retrieval-Augmented Generation with pgvector similarity search
+- **⚡ Streaming Responses**: Real-time answers via Server-Sent Events (SSE)
+- **📝 FAQ Management**: Complete CRUD system for FAQ entries
+- **🏷️ Tag System**: Organize FAQs with tags
+- **💬 Conversation History**: Context-aware multi-turn conversations
+- **🎯 Confidence Scoring**: Automatic quality assessment of responses
+- **🔄 Smart Handoff**: Automatic escalation when no answer is found
 
-#### Performance-Optimierung
-- **💾 Embedding Cache**: Wiederholte Texte generieren keine neuen OpenAI-API-Aufrufe
-- **🚀 FAQ Match Cache**: Vector-Similarity-Suchergebnisse werden gecacht
-- **📦 Batch Processing**: Bulk-Import von FAQs in einer Transaktion
-- **⏱️ Cache TTL**: 24h TTL, 10.000 Einträge pro Cache (Caffeine)
+#### Performance Optimization
+- **💾 Embedding Cache**: Repeated texts don't generate new OpenAI API calls
+- **🚀 FAQ Match Cache**: Vector similarity search results are cached
+- **📦 Batch Processing**: Bulk import of FAQs in a single transaction
+- **⏱️ Cache TTL**: 24h TTL, 10,000 entries per cache (Caffeine)
 
 #### Frontend
-- **🎨 Modernes Chat-Widget**: Angular 17 Standalone Component
-- **📱 Responsive Design**: Mobile-first UI mit Custom CSS
-- **🌊 Streaming UI**: Token-basierte Echtzeit-Anzeige
-- **💭 Source References**: Anzeige der verwendeten FAQ-Quellen
+- **🎨 Modern Chat Widget**: Angular 17 Standalone Component
+- **📱 Responsive Design**: Mobile-first UI with custom CSS
+- **🌊 Streaming UI**: Token-based real-time display
+- **💭 Source References**: Display of used FAQ sources
 
 #### Multi-Tenancy
-- **🏢 Tenant-Isolation**: Header-basierte Mandantentrennung (`X-Tenant-ID`)
-- **🗄️ Daten-Isolation**: Alle Queries filtern nach Tenant-ID
+- **🏢 Tenant Isolation**: Header-based tenant separation (`X-Tenant-ID`)
+- **🗄️ Data Isolation**: All queries filter by tenant ID
 
-### 🚧 Geplant (Roadmap)
+### 🚧 Planned (Roadmap)
 
-- [ ] **Document Ingestion**: URLs, PDFs, DOCX hochladen und verarbeiten
-- [ ] **Analytics Dashboard**: Top-Fragen, Deflection-Rate, Confidence-Trends
-- [ ] **Admin Panel**: Web-UI für FAQ-Management
-- [ ] **E-Mail Notifications**: Bei Handoff automatisch benachrichtigen
-- [ ] **Multi-Language Support**: i18n für verschiedene Sprachen
-- [ ] **Rate Limiting**: API-Schutz vor Überlastung
-- [ ] **Monitoring & Metrics**: Prometheus/Grafana Integration
+- [ ] **Document Ingestion**: Upload and process URLs, PDFs, DOCX
+- [ ] **Analytics Dashboard**: Top questions, deflection rate, confidence trends
+- [ ] **Admin Panel**: Web UI for FAQ management
+- [ ] **E-Mail Notifications**: Automatic notifications on handoff
+- [ ] **Multi-Language Support**: i18n for different languages
+- [ ] **Rate Limiting**: API protection against overload
+- [ ] **Monitoring & Metrics**: Prometheus/Grafana integration
 
 ## 🛠️ Tech Stack
 
 ### Backend
-| Technologie | Version | Verwendung |
-|------------|---------|-----------|
+| Technology | Version | Purpose |
+|------------|---------|---------|
 | **Spring Boot** | 3.2.0 | Application Framework |
 | **Java** | 21 | Programming Language |
 | **PostgreSQL** | 16+ | Primary Database |
@@ -59,8 +59,8 @@ Ein intelligenter, LLM-basierter FAQ-/Support-Chatbot für KMU mit **RAG (Retrie
 | **Lombok** | latest | Boilerplate Reduction |
 
 ### Frontend
-| Technologie | Version | Verwendung |
-|------------|---------|-----------|
+| Technology | Version | Purpose |
+|------------|---------|---------|
 | **Angular** | 17.x | Frontend Framework |
 | **TypeScript** | 5.x | Programming Language |
 | **RxJS** | 7.x | Reactive Programming |
@@ -71,7 +71,7 @@ Ein intelligenter, LLM-basierter FAQ-/Support-Chatbot für KMU mit **RAG (Retrie
 - **Maven**: Build Tool (Backend)
 - **Angular CLI**: Build Tool (Frontend)
 
-## 📁 Projektstruktur
+## 📁 Project Structure
 
 ```
 ChatQ-Assist/
@@ -85,7 +85,7 @@ ChatQ-Assist/
 │   │   │   └── FaqController.java     # /api/faq (+ /batch)
 │   │   ├── domain/
 │   │   │   ├── entity/
-│   │   │   │   ├── FaqEntry.java      # FAQ Entity mit Embeddings
+│   │   │   │   ├── FaqEntry.java      # FAQ Entity with Embeddings
 │   │   │   │   ├── Conversation.java  # Chat Sessions
 │   │   │   │   └── Message.java       # Chat Messages
 │   │   │   ├── dto/
@@ -96,7 +96,7 @@ ChatQ-Assist/
 │   │   │       ├── ConversationStatus.java
 │   │   │       └── MessageRole.java
 │   │   ├── repository/
-│   │   │   ├── FaqRepository.java     # inkl. Vector Similarity Query
+│   │   │   ├── FaqRepository.java     # incl. Vector Similarity Query
 │   │   │   ├── ConversationRepository.java
 │   │   │   └── MessageRepository.java
 │   │   ├── service/
@@ -127,46 +127,46 @@ ChatQ-Assist/
 │   └── angular.json
 │
 ├── docker-compose.yml
-├── CLAUDE.md                          # Project Instructions für Claude Code
+├── CLAUDE.md                          # Project Instructions for Claude Code
 └── README.md
 ```
 
 ## 🚀 Quick Start
 
-### Voraussetzungen
+### Prerequisites
 
-- **Docker** & **Docker Compose** (für einfachsten Start)
-- **Java 21** (für lokale Backend-Entwicklung)
-- **Node.js 18+** (für Frontend-Entwicklung)
-- **PostgreSQL 16+** mit **pgvector Extension** (wenn lokal ohne Docker)
-- **OpenAI API Key** ([hier erstellen](https://platform.openai.com/api-keys))
+- **Docker** & **Docker Compose** (for easiest setup)
+- **Java 21** (for local backend development)
+- **Node.js 18+** (for frontend development)
+- **PostgreSQL 16+** with **pgvector extension** (if running locally without Docker)
+- **OpenAI API Key** ([create one here](https://platform.openai.com/api-keys))
 
-### Option 1: Docker Compose (Empfohlen)
+### Option 1: Docker Compose (Recommended)
 
 ```bash
-# 1. Repository klonen
+# 1. Clone repository
 git clone <repository-url>
 cd ChatQ-Assist
 
-# 2. Umgebungsvariablen setzen
-# Erstelle docker-compose.yml oder setze Env-Vars:
+# 2. Set environment variables
+# Create docker-compose.yml or set env vars:
 export OPENAI_API_KEY="sk-..."
 
-# 3. Starten
+# 3. Start
 docker-compose up -d
 
-# 4. Logs verfolgen
+# 4. Follow logs
 docker-compose logs -f backend
 ```
 
-**Zugriff**:
+**Access**:
 - Backend API: http://localhost:8080
 - Frontend Widget: http://localhost:4200
 - PostgreSQL: localhost:5433 (User: `postgres`, PW: `taxcRH51#`)
 
-### Option 2: Lokale Entwicklung
+### Option 2: Local Development
 
-#### Backend starten
+#### Start Backend
 
 ```bash
 cd chatq-assist-backend
@@ -178,9 +178,9 @@ mvnw.cmd spring-boot:run
 ./mvnw spring-boot:run
 ```
 
-**Wichtig**: PostgreSQL mit pgvector muss laufen! Siehe [pgvector Installation](#pgvector-installation).
+**Important**: PostgreSQL with pgvector must be running! See [pgvector Installation](#pgvector-installation).
 
-#### Frontend starten
+#### Start Frontend
 
 ```bash
 cd chatq-assist-frontend
@@ -188,19 +188,19 @@ npm install
 ng serve
 ```
 
-Widget läuft auf http://localhost:4200
+Widget runs on http://localhost:4200
 
-## 📋 API Dokumentation
+## 📋 API Documentation
 
 ### Chat Endpoints
 
 #### POST /api/chat
-Standard-Chat (nicht-streaming)
+Standard chat (non-streaming)
 
 **Request**:
 ```json
 {
-  "question": "Was sind Ihre Öffnungszeiten?",
+  "question": "What are your business hours?",
   "sessionId": "optional-uuid",
   "userEmail": "user@example.com"
 }
@@ -210,12 +210,12 @@ Standard-Chat (nicht-streaming)
 ```json
 {
   "sessionId": "uuid",
-  "answer": "Unsere Öffnungszeiten sind...",
+  "answer": "Our business hours are...",
   "confidenceScore": 0.85,
   "sources": [
     {
       "type": "FAQ",
-      "title": "Öffnungszeiten",
+      "title": "Business Hours",
       "id": 42
     }
   ],
@@ -224,17 +224,17 @@ Standard-Chat (nicht-streaming)
 ```
 
 #### POST /api/chat/stream
-Chat mit Streaming-Antwort (SSE)
+Chat with streaming response (SSE)
 
-**Request**: Gleich wie `/api/chat`
+**Request**: Same as `/api/chat`
 
 **Response**: Server-Sent Events
 ```
 event: token
-data: Unsere
+data: Our
 
 event: token
-data:  Öffnungszeiten
+data:  business
 
 event: metadata
 data: {"sessionId":"uuid","confidenceScore":0.85,"sources":[...],"handoffTriggered":false}
@@ -243,7 +243,7 @@ data: {"sessionId":"uuid","confidenceScore":0.85,"sources":[...],"handoffTrigger
 ### FAQ Management Endpoints
 
 #### GET /api/faq
-Alle FAQs für einen Tenant abrufen
+Get all FAQs for a tenant
 
 **Headers**: `X-Tenant-ID: default-tenant`
 
@@ -252,9 +252,9 @@ Alle FAQs für einen Tenant abrufen
 [
   {
     "id": 1,
-    "question": "Was sind Ihre Öffnungszeiten?",
-    "answer": "Montag bis Freitag 9-18 Uhr",
-    "tags": ["zeiten", "service"],
+    "question": "What are your business hours?",
+    "answer": "Monday to Friday 9am-6pm",
+    "tags": ["hours", "service"],
     "isActive": true,
     "displayOrder": 1,
     "usageCount": 42,
@@ -265,25 +265,25 @@ Alle FAQs für einen Tenant abrufen
 ```
 
 #### POST /api/faq
-Einzelnen FAQ-Eintrag erstellen
+Create a single FAQ entry
 
 **Headers**: `X-Tenant-ID: default-tenant`
 
 **Request**:
 ```json
 {
-  "question": "Wie kann ich Sie erreichen?",
-  "answer": "Sie erreichen uns telefonisch unter...",
-  "tags": ["kontakt"],
+  "question": "How can I contact you?",
+  "answer": "You can reach us by phone at...",
+  "tags": ["contact"],
   "isActive": true,
   "displayOrder": 2
 }
 ```
 
-**Response**: Erstellter FAQ-Eintrag mit ID
+**Response**: Created FAQ entry with ID
 
 #### POST /api/faq/batch
-Mehrere FAQs auf einmal erstellen (Performance-optimiert)
+Create multiple FAQs at once (performance-optimized)
 
 **Headers**: `X-Tenant-ID: default-tenant`
 
@@ -291,38 +291,38 @@ Mehrere FAQs auf einmal erstellen (Performance-optimiert)
 ```json
 [
   {
-    "question": "Frage 1?",
-    "answer": "Antwort 1",
+    "question": "Question 1?",
+    "answer": "Answer 1",
     "tags": ["tag1"],
     "displayOrder": 1
   },
   {
-    "question": "Frage 2?",
-    "answer": "Antwort 2",
+    "question": "Question 2?",
+    "answer": "Answer 2",
     "tags": ["tag2"],
     "displayOrder": 2
   }
 ]
 ```
 
-**Vorteile**:
-- ✅ Einzelne Datenbank-Transaktion
-- ✅ Embedding-Cache wird genutzt
-- ✅ ~70% schneller als einzelne POST-Requests
+**Benefits**:
+- ✅ Single database transaction
+- ✅ Embedding cache is utilized
+- ✅ ~70% faster than individual POST requests
 
 #### PUT /api/faq/{id}
-FAQ-Eintrag aktualisieren
+Update FAQ entry
 
 **Headers**: `X-Tenant-ID: default-tenant`
 
-**Request**: Gleich wie POST, aber auf bestehender ID
+**Request**: Same as POST, but on existing ID
 
-**Hinweis**: Embedding wird automatisch neu generiert!
+**Note**: Embedding is automatically regenerated!
 
 #### DELETE /api/faq/{id}
-FAQ-Eintrag löschen
+Delete FAQ entry
 
-## 🔧 Konfiguration
+## 🔧 Configuration
 
 ### application.properties
 
@@ -340,14 +340,14 @@ openai.model.embedding=text-embedding-3-small
 # Server
 server.port=8080
 
-# JPA (Flyway übernimmt Schema)
+# JPA (Flyway handles schema)
 spring.jpa.hibernate.ddl-auto=validate
 ```
 
 ### Environment Variables
 
-| Variable | Beschreibung | Default |
-|----------|--------------|---------|
+| Variable | Description | Default |
+|----------|-------------|---------|
 | `OPENAI_API_KEY` | OpenAI API Key | *required* |
 | `DB_HOST` | PostgreSQL Host | `localhost` |
 | `DB_PORT` | PostgreSQL Port | `5433` |
@@ -358,7 +358,7 @@ spring.jpa.hibernate.ddl-auto=validate
 ## 🎯 RAG Pipeline Explained
 
 ```
-User Question: "Was sind Ihre Öffnungszeiten?"
+User Question: "What are your business hours?"
         ↓
 [1] Embedding Generation (EmbeddingService)
     → OpenAI text-embedding-3-small
@@ -373,11 +373,11 @@ User Question: "Was sind Ihre Öffnungszeiten?"
     → Results cached in Caffeine
         ↓
 [3] Context Building (ChatServiceLLM)
-    → Top 3 FAQs als Context
-    → Conversation History (last 5 messages)
+    → Top 3 FAQs as context
+    → Conversation history (last 5 messages)
         ↓
 [4] LLM Generation (OpenAI GPT-4)
-    → System Prompt + Context + History + Question
+    → System prompt + Context + History + Question
     → Streaming via SSE
         ↓
 [5] Response Processing
@@ -390,7 +390,7 @@ User Question: "Was sind Ihre Öffnungszeiten?"
 
 ### IntelliJ HTTP Client
 
-Erstelle eine `test.http` Datei:
+Create a `test.http` file:
 
 ```http
 ### Create FAQ
@@ -399,9 +399,9 @@ Content-Type: application/json
 X-Tenant-ID: default-tenant
 
 {
-  "question": "Was sind Ihre Öffnungszeiten?",
-  "answer": "Montag bis Freitag von 9 bis 18 Uhr.",
-  "tags": ["zeiten", "service"],
+  "question": "What are your business hours?",
+  "answer": "Monday to Friday from 9am to 6pm.",
+  "tags": ["hours", "service"],
   "displayOrder": 1
 }
 
@@ -415,7 +415,7 @@ Content-Type: application/json
 X-Tenant-ID: default-tenant
 
 {
-  "question": "Wann habt ihr geöffnet?",
+  "question": "When are you open?",
   "sessionId": "test-session-123"
 }
 
@@ -425,7 +425,7 @@ Content-Type: application/json
 X-Tenant-ID: default-tenant
 
 {
-  "question": "Wie erreiche ich euch?",
+  "question": "How can I reach you?",
   "sessionId": "test-session-456"
 }
 ```
@@ -438,9 +438,9 @@ curl -X POST http://localhost:8080/api/faq \
   -H "Content-Type: application/json" \
   -H "X-Tenant-ID: default-tenant" \
   -d '{
-    "question": "Was kostet der Service?",
-    "answer": "Unsere Preise beginnen bei 99€/Monat.",
-    "tags": ["preise"]
+    "question": "What does the service cost?",
+    "answer": "Our prices start at $99/month.",
+    "tags": ["pricing"]
   }'
 
 # Chat
@@ -448,7 +448,7 @@ curl -X POST http://localhost:8080/api/chat \
   -H "Content-Type: application/json" \
   -H "X-Tenant-ID: default-tenant" \
   -d '{
-    "question": "Was kostet das?",
+    "question": "What does it cost?",
     "sessionId": "curl-test"
   }'
 ```
@@ -508,15 +508,15 @@ CREATE TABLE messages (
 
 ### Windows (PostgreSQL 16+)
 
-1. Download pgvector für deine PostgreSQL-Version von:
+1. Download pgvector for your PostgreSQL version from:
    https://github.com/pgvector/pgvector/releases
 
-2. Extrahiere `vector.dll` nach:
+2. Extract `vector.dll` to:
    ```
    C:\Program Files\PostgreSQL\16\lib\
    ```
 
-3. Extrahiere SQL-Dateien nach:
+3. Extract SQL files to:
    ```
    C:\Program Files\PostgreSQL\16\share\extension\
    ```
@@ -547,42 +547,42 @@ RUN apt-get update && apt-get install -y postgresql-16-pgvector
 
 ## 📊 Performance Benchmarks
 
-### Ohne Caching
-- Erste Anfrage: ~2.5s (Embedding: 200ms + Vector Search: 100ms + GPT-4: 2.2s)
-- Wiederholte Anfrage: ~2.5s (kein Cache)
+### Without Caching
+- First request: ~2.5s (Embedding: 200ms + Vector Search: 100ms + GPT-4: 2.2s)
+- Repeated request: ~2.5s (no cache)
 
-### Mit Caching (aktuell)
-- Erste Anfrage: ~2.5s
-- Wiederholte Anfrage: ~2.2s (Embedding cached: -200ms)
-- Identische FAQ-Suche: ~2.0s (Embedding + Search cached: -300ms)
+### With Caching (current)
+- First request: ~2.5s
+- Repeated request: ~2.2s (Embedding cached: -200ms)
+- Identical FAQ search: ~2.0s (Embedding + Search cached: -300ms)
 
 ### Batch Import
-- 100 FAQs einzeln: ~45s
-- 100 FAQs batch: ~15s (**~70% schneller**)
+- 100 FAQs individually: ~45s
+- 100 FAQs batch: ~15s (**~70% faster**)
 
 ## 🚨 Troubleshooting
 
-### "Typ vector existiert nicht"
-→ pgvector Extension nicht installiert. Siehe [pgvector Installation](#pgvector-installation)
+### "Type vector does not exist"
+→ pgvector extension not installed. See [pgvector Installation](#pgvector-installation)
 
-### "Die Abfrage lieferte kein Ergebnis" (Hibernate)
-→ PostgreSQL dependency muss `compile` scope haben (nicht `runtime`)
+### "Query returned no result" (Hibernate)
+→ PostgreSQL dependency must have `compile` scope (not `runtime`)
 
-### Tokens ohne Leerzeichen im Frontend
-→ SSE Parser darf `data:` nicht `.trim()`en! Siehe `chat.service.ts:97`
+### Tokens without spaces in frontend
+→ SSE parser must not `.trim()` the `data:` field! See `chat.service.ts:97`
 
 ### OpenAI API Rate Limit
-→ Upgrade auf Tier 2+, oder verwende längeres Rate Limiting
+→ Upgrade to Tier 2+, or implement longer rate limiting
 
-### pgvector Index langsam
-→ Bei >10.000 FAQs: `CREATE INDEX USING ivfflat ... WITH (lists = 100)`
+### pgvector index slow
+→ For >10,000 FAQs: `CREATE INDEX USING ivfflat ... WITH (lists = 100)`
 
 ## 📈 Monitoring
 
 ### Cache Statistics
 
 ```java
-// In CacheConfig ist recordStats() aktiviert
+// recordStats() is enabled in CacheConfig
 CacheManager cacheManager = ...;
 Cache cache = cacheManager.getCache("embeddings");
 CaffeineCache caffeineCache = (CaffeineCache) cache;
@@ -595,22 +595,22 @@ CacheStats stats = nativeCache.stats();
 
 ### Spring Boot Actuator
 
-Endpoints verfügbar (wenn aktiviert):
+Available endpoints (when enabled):
 - `/actuator/health` - Health Check
-- `/actuator/metrics` - Metriken
-- `/actuator/caches` - Cache-Informationen
+- `/actuator/metrics` - Metrics
+- `/actuator/caches` - Cache information
 
 ## 🤝 Contributing
 
-1. Fork das Repository
-2. Feature-Branch erstellen: `git checkout -b feature/amazing-feature`
-3. Committen: `git commit -m 'Add amazing feature'`
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
 4. Push: `git push origin feature/amazing-feature`
-5. Pull Request öffnen
+5. Open Pull Request
 
-## 📝 Lizenz
+## 📝 License
 
-Dieses Projekt ist unter der **MIT License** lizenziert - siehe [LICENSE](LICENSE) für Details.
+This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for details.
 
 ## 🙋 Support
 
