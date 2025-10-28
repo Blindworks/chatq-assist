@@ -1,0 +1,260 @@
+package com.chatq.assist.service;
+
+import com.chatq.assist.domain.dto.ChatRequest;
+import com.chatq.assist.domain.dto.ChatResponse;
+import com.chatq.assist.domain.entity.Conversation;
+import com.chatq.assist.domain.entity.FaqEntry;
+import com.chatq.assist.domain.entity.Message;
+import com.chatq.assist.domain.enums.ConversationStatus;
+import com.chatq.assist.domain.enums.MessageRole;
+import com.chatq.assist.repository.ConversationRepository;
+import com.chatq.assist.repository.FaqRepository;
+import com.chatq.assist.repository.MessageRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.*;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class ChatService {
+
+    private final ConversationRepository conversationRepository;
+    private final MessageRepository messageRepository;
+    private final FaqRepository faqRepository;
+
+    private static final double CONFIDENCE_THRESHOLD = 0.3;
+    private static final String DEFAULT_FALLBACK_MESSAGE = "Entschuldigung, ich konnte keine passende Antwort in unserer FAQ-Datenbank finden. Möchten Sie mit einem Mitarbeiter sprechen?";
+
+    // Synonym mapping for better matching
+    private static final Map<String, Set<String>> SYNONYMS = Map.of(
+        "öffnungszeiten", Set.of("geöffnet", "offen", "wann", "öffnet", "geschlossen"),
+        "versand", Set.of("lieferung", "shipping", "geliefert", "liefern", "schicken"),
+        "rückgabe", Set.of("zurückgeben", "retoure", "umtausch", "zurücksenden"),
+        "zahlung", Set.of("bezahlen", "payment", "bezahlt", "kosten"),
+        "kontakt", Set.of("erreichen", "anrufen", "schreiben", "support", "hilfe")
+    );
+
+    @Transactional
+    public ChatResponse processChat(ChatRequest request, String tenantId) {
+        // Get or create conversation
+        Conversation conversation = getOrCreateConversation(request, tenantId);
+
+        // Save user message
+        Message userMessage = saveMessage(conversation, MessageRole.USER, request.getQuestion(), null, null);
+
+        // Find best matching FAQ
+        FaqMatchResult matchResult = findBestMatchingFaq(request.getQuestion(), tenantId);
+
+        // Build response
+        ChatResponse.ChatResponseBuilder responseBuilder = ChatResponse.builder()
+            .sessionId(conversation.getSessionId())
+            .confidenceScore(matchResult.getConfidenceScore());
+
+        boolean handoffTriggered = false;
+        String answer;
+
+        if (matchResult.getFaqEntry() != null && matchResult.getConfidenceScore() >= CONFIDENCE_THRESHOLD) {
+            // FAQ match found
+            FaqEntry faq = matchResult.getFaqEntry();
+            answer = faq.getAnswer();
+
+            // Increment usage count
+            faq.setUsageCount(faq.getUsageCount() + 1);
+            faqRepository.save(faq);
+
+            // Add source reference
+            ChatResponse.SourceReference source = ChatResponse.SourceReference.builder()
+                .type("FAQ")
+                .title(faq.getQuestion())
+                .id(faq.getId())
+                .build();
+
+            responseBuilder.sources(Collections.singletonList(source));
+
+            // Save assistant message with FAQ reference
+            saveMessage(conversation, MessageRole.ASSISTANT, answer, matchResult.getConfidenceScore(), faq.getId());
+
+        } else {
+            // No good match found - trigger handoff
+            answer = DEFAULT_FALLBACK_MESSAGE;
+            handoffTriggered = true;
+
+            // Update conversation status
+            conversation.setStatus(ConversationStatus.HANDED_OFF);
+            conversationRepository.save(conversation);
+
+            responseBuilder.handoffMessage("Keine passende FAQ gefunden. Handoff vorgeschlagen.");
+
+            // Save assistant message
+            saveMessage(conversation, MessageRole.ASSISTANT, answer, matchResult.getConfidenceScore(), null);
+        }
+
+        // Update last activity
+        conversation.setLastActivityAt(Instant.now());
+        conversationRepository.save(conversation);
+
+        return responseBuilder
+            .answer(answer)
+            .handoffTriggered(handoffTriggered)
+            .build();
+    }
+
+    private Conversation getOrCreateConversation(ChatRequest request, String tenantId) {
+        String sessionId = request.getSessionId();
+
+        if (sessionId != null && !sessionId.isBlank()) {
+            Optional<Conversation> existing = conversationRepository.findBySessionIdAndTenantId(sessionId, tenantId);
+            if (existing.isPresent()) {
+                return existing.get();
+            }
+        }
+
+        // Create new conversation
+        Conversation conversation = new Conversation();
+        conversation.setSessionId(sessionId != null && !sessionId.isBlank() ? sessionId : UUID.randomUUID().toString());
+        conversation.setTenantId(tenantId);
+        conversation.setUserEmail(request.getUserEmail());
+        conversation.setStatus(ConversationStatus.ACTIVE);
+        conversation.setLastActivityAt(Instant.now());
+
+        return conversationRepository.save(conversation);
+    }
+
+    private Message saveMessage(Conversation conversation, MessageRole role, String content, Double confidenceScore, Long faqEntryId) {
+        Message message = new Message();
+        message.setConversation(conversation);
+        message.setRole(role);
+        message.setContent(content);
+        message.setConfidenceScore(confidenceScore);
+        message.setFaqEntryId(faqEntryId);
+        message.setTenantId(conversation.getTenantId());
+
+        return messageRepository.save(message);
+    }
+
+    private FaqMatchResult findBestMatchingFaq(String question, String tenantId) {
+        List<FaqEntry> allFaqs = faqRepository.findByTenantIdAndIsActive(tenantId, true);
+
+        if (allFaqs.isEmpty()) {
+            return new FaqMatchResult(null, 0.0);
+        }
+
+        String normalizedQuestion = normalizeText(question);
+        FaqEntry bestMatch = null;
+        double bestScore = 0.0;
+
+        for (FaqEntry faq : allFaqs) {
+            double score = calculateSimilarity(normalizedQuestion, normalizeText(faq.getQuestion()));
+
+            // Also check tags
+            if (faq.getTags() != null && !faq.getTags().isEmpty()) {
+                for (String tag : faq.getTags()) {
+                    double tagScore = calculateSimilarity(normalizedQuestion, normalizeText(tag));
+                    score = Math.max(score, tagScore * 0.8); // Tags get slightly lower weight
+                }
+            }
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMatch = faq;
+            }
+        }
+
+        log.info("Best FAQ match for question '{}': {} (score: {})", question,
+                 bestMatch != null ? bestMatch.getQuestion() : "none", bestScore);
+
+        return new FaqMatchResult(bestMatch, bestScore);
+    }
+
+    private String normalizeText(String text) {
+        if (text == null) return "";
+        return text.toLowerCase()
+            .replaceAll("[^a-zäöüß0-9\\s]", "")
+            .replaceAll("\\s+", " ")
+            .trim();
+    }
+
+    private double calculateSimilarity(String text1, String text2) {
+        Set<String> words1 = new HashSet<>(Arrays.asList(text1.split("\\s+")));
+        Set<String> words2 = new HashSet<>(Arrays.asList(text2.split("\\s+")));
+
+        if (words1.isEmpty() || words2.isEmpty()) {
+            return 0.0;
+        }
+
+        // Remove very common stop words that don't help with matching
+        Set<String> stopWords = Set.of("ich", "sie", "ihre", "ihr", "sind", "haben", "habt",
+                                        "der", "die", "das", "ein", "eine", "können", "kann");
+        words1.removeAll(stopWords);
+        words2.removeAll(stopWords);
+
+        if (words1.isEmpty() || words2.isEmpty()) {
+            return 0.0;
+        }
+
+        // Calculate Jaccard similarity
+        Set<String> intersection = new HashSet<>(words1);
+        intersection.retainAll(words2);
+
+        Set<String> union = new HashSet<>(words1);
+        union.addAll(words2);
+
+        double jaccardSimilarity = (double) intersection.size() / union.size();
+
+        // Boost score if one text contains the other as substring
+        if (text1.contains(text2) || text2.contains(text1)) {
+            jaccardSimilarity = Math.max(jaccardSimilarity, 0.7);
+        }
+
+        // Check for synonym matches
+        for (String word1 : words1) {
+            for (String word2 : words2) {
+                if (areSynonyms(word1, word2)) {
+                    jaccardSimilarity = Math.max(jaccardSimilarity, 0.7);
+                }
+            }
+        }
+
+        // Boost score for partial word matches (e.g., "öffnungszeiten" in both)
+        for (String word1 : words1) {
+            for (String word2 : words2) {
+                if (word1.length() >= 4 && word2.length() >= 4) {
+                    // Check if words are similar (e.g., one contains the other)
+                    if (word1.contains(word2) || word2.contains(word1)) {
+                        jaccardSimilarity = Math.max(jaccardSimilarity, 0.6);
+                    }
+                    // Check for common stem (first 4 characters)
+                    if (word1.substring(0, Math.min(4, word1.length())).equals(
+                        word2.substring(0, Math.min(4, word2.length())))) {
+                        jaccardSimilarity = Math.max(jaccardSimilarity, 0.5);
+                    }
+                }
+            }
+        }
+
+        return jaccardSimilarity;
+    }
+
+    private static class FaqMatchResult {
+        private final FaqEntry faqEntry;
+        private final double confidenceScore;
+
+        public FaqMatchResult(FaqEntry faqEntry, double confidenceScore) {
+            this.faqEntry = faqEntry;
+            this.confidenceScore = confidenceScore;
+        }
+
+        public FaqEntry getFaqEntry() {
+            return faqEntry;
+        }
+
+        public double getConfidenceScore() {
+            return confidenceScore;
+        }
+    }
+}
