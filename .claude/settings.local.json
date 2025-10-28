@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(if not exist \"target\\classes\" mkdir \"target\\classes\")",
+      "Bash(if not exist \"target\\generated-sources\\annotations\" mkdir \"target\\generated-sources\\annotations\")",
+      "Bash(./mvnw.cmd clean:*)",
+      "Bash(mvn clean compile:*)",
+      "Bash(mvn spring-boot:run:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill /F /PID 33980)",
+      "Bash(taskkill //F //PID 33980)",
+      "mcp__MCP_DOCKER__create_entities",
+      "mcp__MCP_DOCKER__create_relations",
+      "Bash(.mvnw.cmd clean compile:*)",
+      "Bash(mvnw.cmd clean compile:*)",
+      "Bash(./mvnw clean:*)",
+      "Bash(cmd /c \"mvnw.cmd clean compile\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

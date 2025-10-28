@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: chatq-postgres
+    environment:
+      POSTGRES_DB: chatq_assist
+      POSTGRES_USER: chatq
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatq"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - chatq-network
+
+  backend:
+    build:
+      context: ./chatq-assist-backend
+      dockerfile: Dockerfile
+    container_name: chatq-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: chatq_assist
+      DB_USER: chatq
+      DB_PASSWORD: changeme
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: gpt-4-turbo-preview
+      OPENAI_EMBEDDING_MODEL: text-embedding-3-small
+      JWT_SECRET: ${JWT_SECRET:-your-256-bit-secret-key-change-in-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4200,http://localhost:80}
+      LOG_LEVEL: INFO
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - chatq-network
+    restart: unless-stopped
+
+  # Optional: Nginx for serving the Angular widget
+  frontend:
+    image: nginx:alpine
+    container_name: chatq-frontend
+    volumes:
+      - ./chatq-assist-frontend/dist/chatq-assist-widget:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - chatq-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  chatq-network:
+    driver: bridge

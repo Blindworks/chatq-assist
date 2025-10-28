@@ -1,0 +1,151 @@
+### ChatQ Assist API Tests
+### Verwende diese Datei in IntelliJ IDEA zum Testen der API
+
+### Variables
+@baseUrl = http://localhost:8080
+@tenantId = default-tenant
+
+### Health Check
+GET {{baseUrl}}/actuator/health
+
+### ==================== FAQ Management ====================
+
+### Create FAQ 1 - Öffnungszeiten
+POST {{baseUrl}}/api/faq
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Was sind Ihre Öffnungszeiten?",
+  "answer": "Wir sind von Montag bis Freitag von 9:00 bis 18:00 Uhr für Sie da. Am Wochenende haben wir geschlossen.",
+  "tags": ["öffnungszeiten", "service", "zeit"],
+  "isActive": true,
+  "displayOrder": 1
+}
+
+### Create FAQ 2 - Versand
+POST {{baseUrl}}/api/faq
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Wie lange dauert der Versand?",
+  "answer": "Der Standardversand dauert 3-5 Werktage. Expressversand ist innerhalb von 1-2 Werktagen möglich.",
+  "tags": ["versand", "lieferung", "shipping"],
+  "isActive": true,
+  "displayOrder": 2
+}
+
+### Create FAQ 3 - Rückgabe
+POST {{baseUrl}}/api/faq
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Kann ich Artikel zurückgeben?",
+  "answer": "Ja, Sie haben ein 30-tägiges Rückgaberecht. Die Artikel müssen unbenutzt und in der Originalverpackung sein.",
+  "tags": ["rückgabe", "retoure", "umtausch"],
+  "isActive": true,
+  "displayOrder": 3
+}
+
+### Create FAQ 4 - Zahlungsmethoden
+POST {{baseUrl}}/api/faq
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Welche Zahlungsmethoden akzeptieren Sie?",
+  "answer": "Wir akzeptieren Kreditkarten (Visa, Mastercard), PayPal, SEPA-Lastschrift und Rechnung.",
+  "tags": ["zahlung", "payment", "kreditkarte"],
+  "isActive": true,
+  "displayOrder": 4
+}
+
+### Create FAQ 5 - Kontakt
+POST {{baseUrl}}/api/faq
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Wie kann ich Sie kontaktieren?",
+  "answer": "Sie erreichen uns per E-Mail unter support@chatq.com oder telefonisch unter +49 123 456789.",
+  "tags": ["kontakt", "support", "hilfe"],
+  "isActive": true,
+  "displayOrder": 5
+}
+
+### Get all FAQs
+GET {{baseUrl}}/api/faq
+X-Tenant-ID: {{tenantId}}
+
+### ==================== Chat Tests ====================
+
+### Chat Request 1 - Öffnungszeiten (should match FAQ)
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Wann habt ihr geöffnet?"
+}
+
+### Chat Request 2 - Versand (should match FAQ)
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Wie schnell wird geliefert?",
+  "sessionId": "test-session-123"
+}
+
+### Chat Request 3 - Zahlungsmethoden (should match FAQ)
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Kann ich mit PayPal bezahlen?",
+  "sessionId": "test-session-123"
+}
+
+### Chat Request 4 - Unbekannte Frage (should trigger handoff)
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Kann ich einen Rabatt bekommen?",
+  "sessionId": "test-session-456"
+}
+
+### Chat Request 5 - Kontakt
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Wie erreiche ich den Support?"
+}
+
+### ==================== FAQ Update/Delete ====================
+
+### Update FAQ (replace {id} with actual FAQ ID)
+PUT {{baseUrl}}/api/faq/1
+Content-Type: application/json
+X-Tenant-ID: {{tenantId}}
+
+{
+  "question": "Was sind Ihre Öffnungszeiten?",
+  "answer": "Wir sind von Montag bis Freitag von 8:00 bis 19:00 Uhr für Sie da. Samstag von 10:00 bis 14:00 Uhr.",
+  "tags": ["öffnungszeiten", "service", "zeit"],
+  "isActive": true,
+  "displayOrder": 1
+}
+
+### Delete FAQ (replace {id} with actual FAQ ID)
+DELETE {{baseUrl}}/api/faq/1
+X-Tenant-ID: {{tenantId}}
+
+###
