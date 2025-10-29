@@ -1,0 +1,160 @@
+<div class="admin-dashboard">
+  <div class="header">
+    <h1>FAQ Management Dashboard</h1>
+    <button class="btn btn-primary" (click)="openCreateForm()">
+      <span class="icon">+</span> Create New FAQ
+    </button>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button class="close-btn" (click)="error = null">&times;</button>
+  </div>
+
+  <!-- Search and Filter Bar -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search questions, answers, or tags..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Status:</label>
+      <select [(ngModel)]="filterActive" (ngModelChange)="onFilterChange()" class="filter-select">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading">Loading FAQs...</div>
+
+  <!-- FAQ List -->
+  <div class="faq-list" *ngIf="!isLoading">
+    <div *ngIf="filteredFaqs.length === 0" class="empty-state">
+      <p>No FAQs found. {{ searchQuery ? 'Try adjusting your search.' : 'Create your first FAQ to get started.' }}</p>
+    </div>
+
+    <div *ngFor="let faq of filteredFaqs" class="faq-card" [class.inactive]="!faq.isActive">
+      <div class="faq-header">
+        <div class="faq-status">
+          <span class="status-badge" [class.active]="faq.isActive" [class.inactive]="!faq.isActive">
+            {{ faq.isActive ? 'Active' : 'Inactive' }}
+          </span>
+          <span class="usage-count" title="Usage count">📊 {{ faq.usageCount || 0 }}</span>
+        </div>
+        <div class="faq-actions">
+          <button class="btn-icon" (click)="toggleActive(faq)" title="Toggle active status">
+            {{ faq.isActive ? '👁️' : '🚫' }}
+          </button>
+          <button class="btn-icon" (click)="openEditForm(faq)" title="Edit">✏️</button>
+          <button class="btn-icon btn-delete" (click)="deleteFaq(faq)" title="Delete">🗑️</button>
+        </div>
+      </div>
+
+      <div class="faq-content">
+        <div class="question">
+          <strong>Q:</strong> {{ faq.question }}
+        </div>
+        <div class="answer">
+          <strong>A:</strong> {{ faq.answer }}
+        </div>
+      </div>
+
+      <div class="faq-footer" *ngIf="faq.tags && faq.tags.length > 0">
+        <div class="tags">
+          <span *ngFor="let tag of faq.tags" class="tag">{{ tag }}</span>
+        </div>
+      </div>
+
+      <div class="faq-meta">
+        <small>Created: {{ faq.createdAt | date:'short' }}</small>
+        <small *ngIf="faq.displayOrder !== undefined">Order: {{ faq.displayOrder }}</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Form Modal -->
+  <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editingFaq ? 'Edit FAQ' : 'Create New FAQ' }}</h2>
+        <button class="close-btn" (click)="closeForm()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="question">Question *</label>
+          <textarea
+            id="question"
+            [(ngModel)]="formData.question"
+            rows="3"
+            placeholder="Enter the question..."
+            class="form-control"
+            maxlength="1000"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="answer">Answer *</label>
+          <textarea
+            id="answer"
+            [(ngModel)]="formData.answer"
+            rows="6"
+            placeholder="Enter the answer..."
+            class="form-control"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Tags</label>
+          <div class="tags-container">
+            <span *ngFor="let tag of formData.tags" class="tag editable">
+              {{ tag }}
+              <button class="tag-remove" (click)="removeTag(tag)">&times;</button>
+            </span>
+            <button class="btn-add-tag" (click)="addTag()">+ Add Tag</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="displayOrder">Display Order</label>
+            <input
+              id="displayOrder"
+              type="number"
+              [(ngModel)]="formData.displayOrder"
+              class="form-control"
+              min="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                [(ngModel)]="formData.isActive"
+              />
+              Active
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveFaq()">
+          {{ editingFaq ? 'Update' : 'Create' }} FAQ
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
