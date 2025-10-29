@@ -11,6 +11,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
       <nav class="app-nav">
         <a routerLink="/" class="nav-link">Chat Widget</a>
         <a routerLink="/admin" class="nav-link">Admin Dashboard</a>
+        <a routerLink="/analytics" class="nav-link">Analytics</a>
       </nav>
       <router-outlet></router-outlet>
     </div>

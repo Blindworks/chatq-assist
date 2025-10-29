@@ -1,0 +1,189 @@
+<div class="analytics-dashboard">
+  <div class="header">
+    <h1>Analytics Dashboard</h1>
+    <div class="time-filter">
+      <label for="daysBack">Time Period:</label>
+      <select id="daysBack" [(ngModel)]="daysBack" (ngModelChange)="onDaysBackChange()" class="filter-select">
+        <option [value]="7">Last 7 days</option>
+        <option [value]="30">Last 30 days</option>
+        <option [value]="60">Last 60 days</option>
+        <option [value]="90">Last 90 days</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button class="close-btn" (click)="error = null">&times;</button>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading">Loading analytics...</div>
+
+  <!-- Analytics Content -->
+  <div *ngIf="!isLoading && analytics" class="analytics-content">
+
+    <!-- Key Metrics Cards -->
+    <div class="metrics-grid">
+      <!-- Feedback Metrics -->
+      <div class="metric-card feedback-card">
+        <div class="card-header">
+          <h3>📊 Feedback Overview</h3>
+        </div>
+        <div class="card-body">
+          <div class="big-number">{{ analytics.feedbackMetrics.totalFeedback }}</div>
+          <div class="metric-label">Total Feedbacks</div>
+
+          <div class="feedback-breakdown">
+            <div class="feedback-item positive">
+              <span class="icon">👍</span>
+              <div class="feedback-details">
+                <div class="count">{{ analytics.feedbackMetrics.positiveFeedback }}</div>
+                <div class="rate" [class]="getFeedbackClass(analytics.feedbackMetrics.positiveRate)">
+                  {{ analytics.feedbackMetrics.positiveRate }}%
+                </div>
+              </div>
+            </div>
+            <div class="feedback-item negative">
+              <span class="icon">👎</span>
+              <div class="feedback-details">
+                <div class="count">{{ analytics.feedbackMetrics.negativeFeedback }}</div>
+                <div class="rate">{{ analytics.feedbackMetrics.negativeRate }}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation Metrics -->
+      <div class="metric-card conversation-card">
+        <div class="card-header">
+          <h3>💬 Conversations</h3>
+        </div>
+        <div class="card-body">
+          <div class="big-number">{{ analytics.conversationMetrics.totalConversations }}</div>
+          <div class="metric-label">Total Conversations</div>
+
+          <div class="conversation-stats">
+            <div class="stat-row">
+              <span class="stat-label">Active:</span>
+              <span class="stat-value">{{ analytics.conversationMetrics.activeConversations }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Closed:</span>
+              <span class="stat-value">{{ analytics.conversationMetrics.closedConversations }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Handed Off:</span>
+              <span class="stat-value">{{ analytics.conversationMetrics.handedOffConversations }}</span>
+            </div>
+            <div class="stat-row highlight">
+              <span class="stat-label">Avg Messages:</span>
+              <span class="stat-value">{{ analytics.conversationMetrics.averageMessagesPerConversation }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Metrics -->
+      <div class="metric-card messages-card">
+        <div class="card-header">
+          <h3>✉️ Messages</h3>
+        </div>
+        <div class="card-body">
+          <div class="big-number">{{ analytics.conversationMetrics.totalMessages }}</div>
+          <div class="metric-label">Total Messages</div>
+
+          <div class="message-stats">
+            <div class="stat-item">
+              <div class="stat-icon">👤</div>
+              <div class="stat-info">
+                <div class="stat-number">{{ analytics.totalQuestions || 0 }}</div>
+                <div class="stat-text">User Questions</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Chart -->
+    <div class="chart-section">
+      <div class="section-header">
+        <h2>📈 Daily Activity</h2>
+        <p class="section-subtitle">Questions per day over the selected period</p>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-y-axis">
+          <span>{{ maxCount }}</span>
+          <span>{{ Math.floor(maxCount / 2) }}</span>
+          <span>0</span>
+        </div>
+        <div class="chart">
+          <div *ngFor="let count of chartCounts; let i = index" class="bar-wrapper">
+            <div class="bar" [style.height]="getBarHeight(count)">
+              <div class="bar-tooltip">{{ count }} questions</div>
+            </div>
+            <div class="bar-label">{{ chartDates[i] }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top FAQs Table -->
+    <div class="table-section">
+      <div class="section-header">
+        <h2>🏆 Top Performing FAQs</h2>
+        <p class="section-subtitle">Most frequently used FAQs with satisfaction metrics</p>
+      </div>
+
+      <div class="table-container">
+        <table class="faq-table">
+          <thead>
+            <tr>
+              <th class="rank-col">#</th>
+              <th class="question-col">Question</th>
+              <th class="usage-col">Usage</th>
+              <th class="confidence-col">Confidence</th>
+              <th class="feedback-col">Feedback</th>
+              <th class="satisfaction-col">Satisfaction</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let faq of analytics.topFaqs; let i = index">
+              <td class="rank-col">{{ i + 1 }}</td>
+              <td class="question-col">{{ faq.question }}</td>
+              <td class="usage-col">
+                <span class="usage-badge">{{ faq.usageCount }}</span>
+              </td>
+              <td class="confidence-col">
+                <span *ngIf="faq.averageConfidence" class="confidence-badge">
+                  {{ faq.averageConfidence }}%
+                </span>
+                <span *ngIf="!faq.averageConfidence" class="no-data">-</span>
+              </td>
+              <td class="feedback-col">
+                <div class="feedback-mini">
+                  <span class="mini-positive">👍 {{ faq.positiveFeedbackCount }}</span>
+                  <span class="mini-negative">👎 {{ faq.negativeFeedbackCount }}</span>
+                </div>
+              </td>
+              <td class="satisfaction-col">
+                <div class="satisfaction-rate" [class]="getFeedbackClass(faq.satisfactionRate)">
+                  <span class="satisfaction-emoji">{{ getSatisfactionEmoji(faq.satisfactionRate) }}</span>
+                  <span class="satisfaction-percent">{{ faq.satisfactionRate }}%</span>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="analytics.topFaqs.length === 0">
+              <td colspan="6" class="no-data-row">No FAQ data available for this period</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
