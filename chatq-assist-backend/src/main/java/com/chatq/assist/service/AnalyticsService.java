@@ -143,7 +143,9 @@ public class AnalyticsService {
 
         // Populate with actual data
         for (Object[] result : results) {
-            LocalDate date = (LocalDate) result[0];
+            // Convert java.sql.Date to java.time.LocalDate
+            java.sql.Date sqlDate = (java.sql.Date) result[0];
+            LocalDate date = sqlDate.toLocalDate();
             Long count = ((Number) result[1]).longValue();
             questionsByDate.put(date, count);
         }
