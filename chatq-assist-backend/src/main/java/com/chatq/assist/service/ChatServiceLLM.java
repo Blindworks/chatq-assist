@@ -323,9 +323,14 @@ public class ChatServiceLLM {
                             )));
 
                         // Save complete message
-                        saveMessage(conversation, MessageRole.ASSISTANT, fullResponse.toString(), 0.8, bestMatch.getId());
+                        Message savedMessage = saveMessage(conversation, MessageRole.ASSISTANT, fullResponse.toString(), 0.8, bestMatch.getId());
                         conversation.setLastActivityAt(Instant.now());
                         conversationRepository.save(conversation);
+
+                        // Send message ID for feedback
+                        emitter.send(SseEmitter.event()
+                            .name("messageId")
+                            .data(Map.of("messageId", savedMessage.getId())));
 
                         emitter.complete();
                         log.info("Streaming chat completed for session: {}", conversation.getSessionId());

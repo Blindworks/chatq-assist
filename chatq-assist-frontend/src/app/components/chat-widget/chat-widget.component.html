@@ -66,6 +66,25 @@
           <span *ngIf="!source.url">{{ source.title }}</span>
         </div>
       </div>
+      <!-- Feedback buttons for assistant messages -->
+      <div *ngIf="message.role === 'assistant' && message.id" class="message-feedback">
+        <button
+          class="feedback-btn"
+          [class.active]="message.feedbackGiven === 'POSITIVE'"
+          [disabled]="message.feedbackGiven !== null"
+          (click)="giveFeedback(message, 'POSITIVE')"
+          aria-label="Helpful">
+          👍
+        </button>
+        <button
+          class="feedback-btn"
+          [class.active]="message.feedbackGiven === 'NEGATIVE'"
+          [disabled]="message.feedbackGiven !== null"
+          (click)="giveFeedback(message, 'NEGATIVE')"
+          aria-label="Not helpful">
+          👎
+        </button>
+      </div>
     </div>
 
     <div *ngIf="isLoading" class="message typing">

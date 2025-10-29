@@ -2,11 +2,15 @@ package com.chatq.assist.controller;
 
 import com.chatq.assist.domain.dto.ChatRequest;
 import com.chatq.assist.domain.dto.ChatResponse;
+import com.chatq.assist.domain.dto.FeedbackRequest;
 import com.chatq.assist.domain.dto.MessageDto;
+import com.chatq.assist.domain.entity.MessageFeedback;
 import com.chatq.assist.service.ChatServiceLLM;
+import com.chatq.assist.service.FeedbackService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,7 @@ public class ChatController {
     private static final String DEFAULT_TENANT_ID = "default-tenant";
 
     private final ChatServiceLLM chatService;
+    private final FeedbackService feedbackService;
 
     @PostMapping
     public ResponseEntity<ChatResponse> chat(
@@ -65,5 +70,18 @@ public class ChatController {
         List<MessageDto> history = chatService.getConversationHistory(sessionId, tenantId);
 
         return ResponseEntity.ok(history);
+    }
+
+    @PostMapping("/feedback")
+    public ResponseEntity<MessageFeedback> submitFeedback(
+            @Valid @RequestBody FeedbackRequest request,
+            @RequestHeader(value = "X-Tenant-ID", required = false, defaultValue = DEFAULT_TENANT_ID) String tenantId) {
+
+        log.info("Received feedback for messageId: {}, type: {}, tenant: {}",
+                 request.getMessageId(), request.getFeedbackType(), tenantId);
+
+        MessageFeedback feedback = feedbackService.submitFeedback(request, tenantId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(feedback);
     }
 }

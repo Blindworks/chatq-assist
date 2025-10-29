@@ -7,6 +7,8 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   sources?: any[];
+  id?: number; // Message ID for feedback
+  feedbackGiven?: 'POSITIVE' | 'NEGATIVE' | null;
 }
 
 @Component({
@@ -50,7 +52,9 @@ export class ChatWidgetComponent implements OnInit {
         this.messages = history.map(msg => ({
           role: msg.role === 'USER' ? 'user' : 'assistant',
           content: msg.content,
-          sources: []
+          sources: [],
+          id: msg.id,
+          feedbackGiven: null
         }));
       },
       error: (error) => {
@@ -119,6 +123,10 @@ export class ChatWidgetComponent implements OnInit {
               content: 'Ich verbinde Sie mit einem Mitarbeiter.'
             });
           }
+        } else if (streamEvent.type === 'messageId' && streamEvent.messageId) {
+          // Store message ID for feedback
+          assistantMessage.id = streamEvent.messageId;
+          assistantMessage.feedbackGiven = null;
         } else if (streamEvent.type === 'complete') {
           this.isLoading = false;
         } else if (streamEvent.type === 'error') {
@@ -143,5 +151,31 @@ export class ChatWidgetComponent implements OnInit {
       event.preventDefault();
       this.sendMessage();
     }
+  }
+
+  giveFeedback(message: Message, feedbackType: 'POSITIVE' | 'NEGATIVE') {
+    if (!message.id) {
+      console.warn('Cannot give feedback: message has no ID');
+      return;
+    }
+
+    // Prevent duplicate feedback
+    if (message.feedbackGiven) {
+      console.log('Feedback already given for this message');
+      return;
+    }
+
+    this.chatService.submitFeedback({
+      messageId: message.id,
+      feedbackType: feedbackType
+    }).subscribe({
+      next: () => {
+        message.feedbackGiven = feedbackType;
+        console.log('Feedback submitted successfully:', feedbackType);
+      },
+      error: (error) => {
+        console.error('Failed to submit feedback:', error);
+      }
+    });
   }
 }

@@ -25,7 +25,7 @@ export interface SourceReference {
 }
 
 export interface StreamingChatResponse {
-  type: 'token' | 'metadata' | 'complete' | 'error';
+  type: 'token' | 'metadata' | 'messageId' | 'complete' | 'error';
   token?: string;
   metadata?: {
     sessionId: string;
@@ -33,6 +33,7 @@ export interface StreamingChatResponse {
     sources?: SourceReference[];
     handoffTriggered: boolean;
   };
+  messageId?: number;
   error?: string;
 }
 
@@ -43,6 +44,12 @@ export interface MessageDto {
   confidenceScore?: number;
   faqEntryId?: number;
   createdAt: string;
+}
+
+export interface FeedbackRequest {
+  messageId: number;
+  feedbackType: 'POSITIVE' | 'NEGATIVE';
+  comment?: string;
 }
 
 @Injectable({
@@ -118,6 +125,13 @@ export class ChatService {
                 } catch (e) {
                   console.error('Failed to parse metadata:', e);
                 }
+              } else if (eventType === 'messageId') {
+                try {
+                  const data = JSON.parse(eventData.trim());
+                  subject.next({ type: 'messageId', messageId: data.messageId });
+                } catch (e) {
+                  console.error('Failed to parse messageId:', e);
+                }
               } else if (eventType === 'message') {
                 // Fallback message
                 subject.next({ type: 'token', token: eventData });
@@ -147,5 +161,14 @@ export class ChatService {
     });
 
     return this.http.get<MessageDto[]>(`${this.apiUrl}/history/${sessionId}`, { headers });
+  }
+
+  submitFeedback(request: FeedbackRequest): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-Tenant-ID': 'default-tenant'
+    });
+
+    return this.http.post(`${this.apiUrl}/feedback`, request, { headers });
   }
 }
