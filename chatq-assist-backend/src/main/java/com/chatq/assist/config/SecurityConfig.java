@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll() // Test endpoints
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/chat/**").permitAll() // Chat widget is public
 

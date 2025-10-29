@@ -46,10 +46,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Extract JWT token
             jwt = authHeader.substring(7);
             username = jwtService.extractUsername(jwt);
+            log.info("Extracted username from JWT: {}", username);
 
             // If username is valid and user is not already authenticated
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                log.info("Loaded user details for: {}, authorities: {}", username, userDetails.getAuthorities());
 
                 // Validate token
                 if (jwtService.isTokenValid(jwt, userDetails)) {
@@ -60,11 +62,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    log.debug("Authenticated user: {}", username);
+                    log.info("Successfully authenticated user: {} with authorities: {}", username, userDetails.getAuthorities());
+                } else {
+                    log.warn("Token validation failed for user: {}", username);
                 }
+            } else {
+                log.info("Username is null or user already authenticated");
             }
         } catch (Exception e) {
-            log.error("JWT authentication error: {}", e.getMessage());
+            log.error("JWT authentication error: {}", e.getMessage(), e);
         }
 
         filterChain.doFilter(request, response);

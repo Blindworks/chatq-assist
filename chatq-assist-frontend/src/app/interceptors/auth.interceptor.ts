@@ -15,6 +15,8 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Get the auth token from the service
     const token = this.authService.getToken();
+    console.log('Interceptor - Token from storage:', token ? 'exists' : 'missing');
+    console.log('Interceptor - Request URL:', request.url);
 
     // Clone the request and add the authorization header if token exists
     if (token) {
@@ -23,6 +25,9 @@ export class AuthInterceptor implements HttpInterceptor {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log('Interceptor - Added Authorization header');
+    } else {
+      console.warn('Interceptor - No token found, request will be sent without auth');
     }
 
     // Handle the request and catch errors

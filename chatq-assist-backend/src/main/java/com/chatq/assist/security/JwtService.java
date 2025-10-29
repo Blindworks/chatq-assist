@@ -27,6 +27,15 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public java.util.List<String> extractAuthorities(String token) {
+        Claims claims = extractAllClaims(token);
+        Object authorities = claims.get("authorities");
+        if (authorities instanceof java.util.List) {
+            return (java.util.List<String>) authorities;
+        }
+        return java.util.Collections.emptyList();
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

@@ -11,9 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +47,13 @@ public class AuthService {
             User user = userRepository.findByUsername(request.getUsername())
                     .orElseThrow(() -> new BadCredentialsException("User not found"));
 
-            // Generate JWT token
-            String token = jwtService.generateToken(userDetails);
+            // Generate JWT token with role claims
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role", user.getRole().name());
+            claims.put("authorities", userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList()));
+            String token = jwtService.generateToken(claims, userDetails);
 
             log.info("User {} logged in successfully with role {}", user.getUsername(), user.getRole());
 
