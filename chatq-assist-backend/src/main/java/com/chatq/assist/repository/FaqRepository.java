@@ -14,6 +14,9 @@ public interface FaqRepository extends JpaRepository<FaqEntry, Long> {
     List<FaqEntry> findByTenantIdOrderByDisplayOrderAsc(String tenantId);
     List<FaqEntry> findByTenantIdAndIsActive(String tenantId, Boolean isActive);
 
+    // Analytics methods
+    List<FaqEntry> findByTenantIdOrderByUsageCountDesc(String tenantId);
+
     /**
      * Find FAQs by vector similarity using pgvector cosine distance
      * Returns top N most similar FAQs for given embedding
