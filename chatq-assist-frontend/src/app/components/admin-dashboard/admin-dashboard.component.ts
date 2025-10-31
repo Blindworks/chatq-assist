@@ -2,15 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FaqService, FaqEntry } from '../../services/faq.service';
+import { DocumentManagementComponent } from '../document-management/document-management.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DocumentManagementComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
+  // Tab state
+  activeTab: 'faqs' | 'documents' = 'faqs';
+
   faqs: FaqEntry[] = [];
   filteredFaqs: FaqEntry[] = [];
   searchQuery: string = '';
@@ -27,6 +31,10 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFaqs();
+  }
+
+  switchTab(tab: 'faqs' | 'documents'): void {
+    this.activeTab = tab;
   }
 
   loadFaqs(): void {

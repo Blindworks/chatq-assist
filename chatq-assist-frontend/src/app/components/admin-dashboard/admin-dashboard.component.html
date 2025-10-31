@@ -1,10 +1,32 @@
 <div class="admin-dashboard">
   <div class="header">
-    <h1>FAQ Management Dashboard</h1>
-    <button class="btn btn-primary" (click)="openCreateForm()">
-      <span class="icon">+</span> Create New FAQ
+    <h1>Admin Dashboard</h1>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tabs">
+    <button
+      class="tab"
+      [class.active]="activeTab === 'faqs'"
+      (click)="switchTab('faqs')">
+      📋 FAQ Management
+    </button>
+    <button
+      class="tab"
+      [class.active]="activeTab === 'documents'"
+      (click)="switchTab('documents')">
+      📄 Document Management
     </button>
   </div>
+
+  <!-- FAQ Management Content -->
+  <div *ngIf="activeTab === 'faqs'" class="tab-content">
+    <div class="section-header">
+      <h2>FAQ Management</h2>
+      <button class="btn btn-primary" (click)="openCreateForm()">
+        <span class="icon">+</span> Create New FAQ
+      </button>
+    </div>
 
   <!-- Error message -->
   <div *ngIf="error" class="error-message">
@@ -156,5 +178,11 @@
         </button>
       </div>
     </div>
+  </div>
+  </div>
+
+  <!-- Document Management Content -->
+  <div *ngIf="activeTab === 'documents'" class="tab-content">
+    <app-document-management></app-document-management>
   </div>
 </div>

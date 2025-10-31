@@ -4,11 +4,13 @@ import com.chatq.assist.domain.dto.ChatRequest;
 import com.chatq.assist.domain.dto.ChatResponse;
 import com.chatq.assist.domain.dto.MessageDto;
 import com.chatq.assist.domain.entity.Conversation;
+import com.chatq.assist.domain.entity.DocumentChunk;
 import com.chatq.assist.domain.entity.FaqEntry;
 import com.chatq.assist.domain.entity.Message;
 import com.chatq.assist.domain.enums.ConversationStatus;
 import com.chatq.assist.domain.enums.MessageRole;
 import com.chatq.assist.repository.ConversationRepository;
+import com.chatq.assist.repository.DocumentChunkRepository;
 import com.chatq.assist.repository.FaqRepository;
 import com.chatq.assist.repository.MessageRepository;
 import dev.langchain4j.data.message.AiMessage;
@@ -37,12 +39,14 @@ public class ChatServiceLLM {
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
     private final FaqRepository faqRepository;
+    private final DocumentChunkRepository documentChunkRepository;
     private final EmbeddingService embeddingService;
     private final ChatLanguageModel chatLanguageModel;
     private final StreamingChatLanguageModel streamingChatLanguageModel;
 
     private static final double CONFIDENCE_THRESHOLD = 0.75; // Cosine similarity threshold
     private static final int MAX_SIMILAR_FAQS = 3;
+    private static final int MAX_SIMILAR_DOCUMENT_CHUNKS = 5;
 
     @Transactional
     public ChatResponse processChat(ChatRequest request, String tenantId) {
@@ -60,29 +64,34 @@ public class ChatServiceLLM {
         // Find similar FAQs using vector similarity
         List<FaqEntry> similarFaqs = findSimilarFaqs(questionEmbedding, tenantId);
 
+        // Find similar document chunks using vector similarity
+        List<DocumentChunk> similarDocumentChunks = findSimilarDocumentChunks(questionEmbedding, tenantId);
+
         String answer;
         List<ChatResponse.SourceReference> sources = new ArrayList<>();
         boolean handoffTriggered = false;
         Double confidenceScore = null;
 
-        if (!similarFaqs.isEmpty()) {
-            // We have similar FAQs - use them as context for GPT-4
-            FaqEntry bestMatch = similarFaqs.get(0);
+        if (!similarFaqs.isEmpty() || !similarDocumentChunks.isEmpty()) {
+            // We have similar FAQs or documents - use them as context for GPT-4
+            FaqEntry bestMatch = similarFaqs.isEmpty() ? null : similarFaqs.get(0);
 
             // Calculate approximate confidence (inverse of cosine distance would be better, but we'll estimate)
             confidenceScore = 0.8; // High confidence when we have vector matches
 
-            // Build context from similar FAQs
-            String context = buildContextFromFaqs(similarFaqs);
+            // Build context from similar FAQs and documents
+            String context = buildContextFromFaqsAndDocuments(similarFaqs, similarDocumentChunks);
 
             // Generate answer using GPT-4 with RAG
             answer = generateAnswerWithRAG(request.getQuestion(), context, conversation);
 
-            // Track usage
-            bestMatch.setUsageCount(bestMatch.getUsageCount() + 1);
-            faqRepository.save(bestMatch);
+            // Track usage for best matching FAQ
+            if (bestMatch != null) {
+                bestMatch.setUsageCount(bestMatch.getUsageCount() + 1);
+                faqRepository.save(bestMatch);
+            }
 
-            // Add source references
+            // Add source references for FAQs
             for (FaqEntry faq : similarFaqs) {
                 sources.add(ChatResponse.SourceReference.builder()
                     .type("FAQ")
@@ -91,8 +100,18 @@ public class ChatServiceLLM {
                     .build());
             }
 
+            // Add source references for documents
+            for (DocumentChunk chunk : similarDocumentChunks) {
+                sources.add(ChatResponse.SourceReference.builder()
+                    .type("DOCUMENT")
+                    .title(chunk.getDocument().getTitle() + " (Chunk " + chunk.getChunkIndex() + ")")
+                    .id(chunk.getDocument().getId())
+                    .build());
+            }
+
             // Save assistant message
-            saveMessage(conversation, MessageRole.ASSISTANT, answer, confidenceScore, bestMatch.getId());
+            saveMessage(conversation, MessageRole.ASSISTANT, answer, confidenceScore,
+                       bestMatch != null ? bestMatch.getId() : null);
 
         } else {
             // No similar FAQs found - trigger handoff
@@ -132,15 +151,49 @@ public class ChatServiceLLM {
     @Cacheable(value = "faqMatches", key = "#tenantId + '_' + T(java.util.Arrays).hashCode(#embedding)")
     private List<FaqEntry> findSimilarFaqs(float[] embedding, String tenantId) {
         // Convert float[] to PostgreSQL vector format string
+        String embeddingString = vectorToString(embedding);
+        return faqRepository.findSimilarByEmbedding(tenantId, embeddingString, MAX_SIMILAR_FAQS);
+    }
+
+    @Cacheable(value = "documentChunkMatches", key = "#tenantId + '_' + T(java.util.Arrays).hashCode(#embedding)")
+    private List<DocumentChunk> findSimilarDocumentChunks(float[] embedding, String tenantId) {
+        // Convert float[] to PostgreSQL vector format string
+        String embeddingString = vectorToString(embedding);
+        return documentChunkRepository.findSimilarCompletedDocumentChunks(tenantId, embeddingString, MAX_SIMILAR_DOCUMENT_CHUNKS);
+    }
+
+    private String vectorToString(float[] embedding) {
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < embedding.length; i++) {
             if (i > 0) sb.append(",");
             sb.append(embedding[i]);
         }
         sb.append("]");
-        String embeddingString = sb.toString();
+        return sb.toString();
+    }
 
-        return faqRepository.findSimilarByEmbedding(tenantId, embeddingString, MAX_SIMILAR_FAQS);
+    private String buildContextFromFaqsAndDocuments(List<FaqEntry> faqs, List<DocumentChunk> documentChunks) {
+        StringBuilder context = new StringBuilder();
+
+        if (!faqs.isEmpty()) {
+            context.append("Relevante FAQ-Einträge aus unserer Wissensdatenbank:\n\n");
+            for (int i = 0; i < faqs.size(); i++) {
+                FaqEntry faq = faqs.get(i);
+                context.append(String.format("%d. Frage: %s\n", i + 1, faq.getQuestion()));
+                context.append(String.format("   Antwort: %s\n\n", faq.getAnswer()));
+            }
+        }
+
+        if (!documentChunks.isEmpty()) {
+            context.append("Relevante Informationen aus unseren Dokumenten:\n\n");
+            for (int i = 0; i < documentChunks.size(); i++) {
+                DocumentChunk chunk = documentChunks.get(i);
+                context.append(String.format("%d. Aus Dokument '%s':\n", i + 1, chunk.getDocument().getTitle()));
+                context.append(String.format("   %s\n\n", chunk.getContent()));
+            }
+        }
+
+        return context.toString();
     }
 
     private String buildContextFromFaqs(List<FaqEntry> faqs) {
@@ -250,7 +303,10 @@ public class ChatServiceLLM {
             // Find similar FAQs using vector similarity
             List<FaqEntry> similarFaqs = findSimilarFaqs(questionEmbedding, tenantId);
 
-            if (similarFaqs.isEmpty()) {
+            // Find similar document chunks using vector similarity
+            List<DocumentChunk> similarDocumentChunks = findSimilarDocumentChunks(questionEmbedding, tenantId);
+
+            if (similarFaqs.isEmpty() && similarDocumentChunks.isEmpty()) {
                 // No FAQs found - send handoff message
                 String fallbackMessage = "Entschuldigung, ich konnte in unserer Wissensdatenbank keine passende Antwort finden.";
 
@@ -274,15 +330,17 @@ public class ChatServiceLLM {
                 return;
             }
 
-            // Build context from FAQs
-            String context = buildContextFromFaqs(similarFaqs);
+            // Build context from FAQs and documents
+            String context = buildContextFromFaqsAndDocuments(similarFaqs, similarDocumentChunks);
             List<Message> history = messageRepository.findByConversationIdOrderByCreatedAtAsc(conversation.getId());
             String prompt = buildPrompt(request.getQuestion(), context, history);
 
-            // Track usage
-            FaqEntry bestMatch = similarFaqs.get(0);
-            bestMatch.setUsageCount(bestMatch.getUsageCount() + 1);
-            faqRepository.save(bestMatch);
+            // Track usage for best matching FAQ
+            FaqEntry bestMatch = similarFaqs.isEmpty() ? null : similarFaqs.get(0);
+            if (bestMatch != null) {
+                bestMatch.setUsageCount(bestMatch.getUsageCount() + 1);
+                faqRepository.save(bestMatch);
+            }
 
             // Stream response from GPT-4
             StringBuilder fullResponse = new StringBuilder();
@@ -304,14 +362,26 @@ public class ChatServiceLLM {
                 @Override
                 public void onComplete(Response<AiMessage> response) {
                     try {
-                        // Send metadata
-                        List<Map<String, Object>> sourcesData = similarFaqs.stream()
+                        // Send metadata with sources from both FAQs and documents
+                        List<Map<String, Object>> sourcesData = new ArrayList<>();
+
+                        // Add FAQ sources
+                        similarFaqs.stream()
                             .map(faq -> Map.of(
                                 "type", (Object) "FAQ",
                                 "title", faq.getQuestion(),
                                 "id", faq.getId()
                             ))
-                            .collect(Collectors.toList());
+                            .forEach(sourcesData::add);
+
+                        // Add document sources
+                        similarDocumentChunks.stream()
+                            .map(chunk -> Map.of(
+                                "type", (Object) "DOCUMENT",
+                                "title", chunk.getDocument().getTitle() + " (Chunk " + chunk.getChunkIndex() + ")",
+                                "id", chunk.getDocument().getId()
+                            ))
+                            .forEach(sourcesData::add);
 
                         emitter.send(SseEmitter.event()
                             .name("metadata")
@@ -323,7 +393,8 @@ public class ChatServiceLLM {
                             )));
 
                         // Save complete message
-                        Message savedMessage = saveMessage(conversation, MessageRole.ASSISTANT, fullResponse.toString(), 0.8, bestMatch.getId());
+                        Message savedMessage = saveMessage(conversation, MessageRole.ASSISTANT, fullResponse.toString(), 0.8,
+                                                          bestMatch != null ? bestMatch.getId() : null);
                         conversation.setLastActivityAt(Instant.now());
                         conversationRepository.save(conversation);
 

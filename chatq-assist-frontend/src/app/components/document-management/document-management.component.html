@@ -1,0 +1,114 @@
+<div class="document-management">
+  <div class="header">
+    <h2>Document Management</h2>
+    <button class="btn btn-primary" (click)="toggleUploadForm()">
+      {{ showUploadForm ? 'Cancel' : '+ Add Document' }}
+    </button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">
+    {{ error }}
+    <button class="alert-close" (click)="error = null">×</button>
+  </div>
+
+  <!-- Upload Form -->
+  <div *ngIf="showUploadForm" class="upload-form">
+    <h3>Add New Document</h3>
+
+    <div class="form-group">
+      <label>Document Type</label>
+      <select [(ngModel)]="uploadType" class="form-control">
+        <option value="PDF">PDF</option>
+        <option value="DOCX">Word Document (DOCX)</option>
+        <option value="TXT">Text File (TXT)</option>
+        <option value="URL">Website URL</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="uploadTitle" class="form-control" placeholder="Enter document title">
+    </div>
+
+    <div *ngIf="uploadType === 'URL'" class="form-group">
+      <label>URL</label>
+      <input type="url" [(ngModel)]="uploadUrl" class="form-control" placeholder="https://example.com/page">
+    </div>
+
+    <div *ngIf="uploadType !== 'URL'" class="form-group">
+      <label>File</label>
+      <input type="file" (change)="onFileSelected($event)"
+             [accept]="uploadType === 'PDF' ? '.pdf' : uploadType === 'DOCX' ? '.docx' : '.txt'"
+             class="form-control">
+      <div *ngIf="selectedFile" class="file-info">
+        Selected: {{ selectedFile.name }} ({{ (selectedFile.size / 1024).toFixed(1) }} KB)
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" (click)="uploadDocument()" [disabled]="isUploading">
+        {{ isUploading ? 'Uploading...' : 'Upload' }}
+      </button>
+      <button class="btn btn-secondary" (click)="toggleUploadForm()" [disabled]="isUploading">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Documents List -->
+  <div class="documents-list">
+    <div *ngIf="documents.length === 0 && !isLoading" class="empty-state">
+      <p>No documents yet. Add your first document to get started!</p>
+    </div>
+
+    <div *ngFor="let doc of documents" class="document-card">
+      <div class="document-header">
+        <div class="document-title">
+          <span class="document-icon">📄</span>
+          <h4>{{ doc.title }}</h4>
+        </div>
+        <div class="document-actions">
+          <button class="btn btn-danger btn-sm" (click)="deleteDocument(doc.id)" title="Delete">
+            🗑️
+          </button>
+        </div>
+      </div>
+
+      <div class="document-body">
+        <div class="document-info">
+          <span class="info-label">Type:</span>
+          <span class="info-value">{{ doc.documentType }}</span>
+        </div>
+
+        <div class="document-info">
+          <span class="info-label">Status:</span>
+          <span class="info-value" [ngClass]="getStatusClass(doc.status)">
+            <span class="status-icon">{{ getStatusIcon(doc.status) }}</span>
+            {{ doc.status }}
+          </span>
+        </div>
+
+        <div *ngIf="doc.chunkCount" class="document-info">
+          <span class="info-label">Chunks:</span>
+          <span class="info-value">{{ doc.chunkCount }}</span>
+        </div>
+
+        <div *ngIf="doc.sourceUrl" class="document-info">
+          <span class="info-label">Source:</span>
+          <span class="info-value">
+            <a [href]="doc.sourceUrl" target="_blank" rel="noopener">{{ doc.sourceUrl }}</a>
+          </span>
+        </div>
+
+        <div class="document-info">
+          <span class="info-label">Created:</span>
+          <span class="info-value">{{ formatDate(doc.createdAt) }}</span>
+        </div>
+
+        <div *ngIf="doc.errorMessage" class="document-error">
+          <strong>Error:</strong> {{ doc.errorMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
