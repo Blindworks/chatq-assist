@@ -1,11 +1,12 @@
 /* CSS Variables for Branding */
-:root {
+:host {
   --chatq-primary-color: #667eea;
   --chatq-secondary-color: #764ba2;
   --chatq-header-bg: linear-gradient(135deg, var(--chatq-primary-color) 0%, var(--chatq-secondary-color) 100%);
   --chatq-header-text: #ffffff;
   --chatq-user-msg-bg: #007bff;
   --chatq-bot-msg-bg: #f1f3f5;
+  display: block;
 }
 
 /* Chat Button */
@@ -27,7 +28,7 @@
 }
 
 .chat-button[data-theme="light"] {
-  background: var(--chatq-header-bg);
+  background: linear-gradient(135deg, var(--chatq-primary-color) 0%, var(--chatq-secondary-color) 100%);
   color: var(--chatq-header-text);
 }
 
@@ -81,7 +82,7 @@
 /* Header */
 .chat-header {
   padding: 20px;
-  background: var(--chatq-header-bg);
+  background: linear-gradient(135deg, var(--chatq-primary-color) 0%, var(--chatq-secondary-color) 100%);
   color: var(--chatq-header-text);
   display: flex;
   justify-content: space-between;

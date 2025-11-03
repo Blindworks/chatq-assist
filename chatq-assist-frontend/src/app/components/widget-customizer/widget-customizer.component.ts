@@ -44,6 +44,17 @@ export class WidgetCustomizerComponent implements OnInit {
   }
 
   loadTenantSettings() {
+    // Ensure widget object exists
+    if (!this.widgetSettings.widget) {
+      this.widgetSettings.widget = {
+        position: 'bottom-right',
+        primaryColor: '#667eea',
+        secondaryColor: '#764ba2',
+        showLogo: true,
+        enableFeedback: true
+      };
+    }
+
     if (this.tenant.settings) {
       try {
         const settings = typeof this.tenant.settings === 'string'
@@ -58,6 +69,8 @@ export class WidgetCustomizerComponent implements OnInit {
             ...(settings.widget || {})
           }
         };
+
+        console.log('Loaded tenant settings:', this.widgetSettings);
       } catch (e) {
         console.error('Failed to parse tenant settings:', e);
       }
@@ -96,6 +109,8 @@ export class WidgetCustomizerComponent implements OnInit {
   saveSettings() {
     this.isSaving = true;
 
+    console.log('Saving widget settings:', this.widgetSettings);
+
     // Prepare the update request with settings as JSON string
     const updateRequest = {
       name: this.tenant.name,
@@ -105,6 +120,8 @@ export class WidgetCustomizerComponent implements OnInit {
       maxDocuments: this.tenant.maxDocuments,
       settings: JSON.stringify(this.widgetSettings)
     };
+
+    console.log('Update request:', updateRequest);
 
     this.tenantService.updateTenant(this.tenant.id, updateRequest).subscribe({
       next: (updatedTenant) => {
@@ -136,6 +153,10 @@ export class WidgetCustomizerComponent implements OnInit {
       showThemeToggle: this.widgetSettings.widget?.showThemeToggle,
       enableFeedback: this.widgetSettings.widget?.enableFeedback
     };
+
+    console.log('Preview config created:', this.previewConfig);
+    console.log('Primary color:', this.previewConfig.primaryColor);
+    console.log('Secondary color:', this.previewConfig.secondaryColor);
 
     this.showPreview = true;
   }

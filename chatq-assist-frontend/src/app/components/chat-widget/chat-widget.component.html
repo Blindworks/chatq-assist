@@ -3,6 +3,7 @@
   *ngIf="!isOpen"
   class="chat-button"
   [attr.data-theme]="theme"
+  [style.background]="theme === 'light' ? 'linear-gradient(135deg, ' + config.primaryColor + ' 0%, ' + config.secondaryColor + ' 100%)' : null"
   (click)="toggleWidget()"
   aria-label="Open chat">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -13,7 +14,7 @@
 <!-- Chat Panel -->
 <div *ngIf="isOpen" class="chat-panel" [attr.data-theme]="theme">
   <!-- Header -->
-  <div class="chat-header">
+  <div class="chat-header" [style.background]="theme === 'light' ? 'linear-gradient(135deg, ' + config.primaryColor + ' 0%, ' + config.secondaryColor + ' 100%)' : null">
     <div class="header-content">
       <img *ngIf="config.showLogo && config.logoUrl" [src]="config.logoUrl" alt="Logo" class="header-logo">
       <div>
@@ -110,6 +111,7 @@
     <button
       (click)="sendMessage()"
       [disabled]="!currentMessage.trim() || isLoading"
+      [style.background]="'linear-gradient(135deg, ' + config.primaryColor + ' 0%, ' + config.secondaryColor + ' 100%)'"
       aria-label="Send message">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="22" y1="2" x2="11" y2="13"></line>

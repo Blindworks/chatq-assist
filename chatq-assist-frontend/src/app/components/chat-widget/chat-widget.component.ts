@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Input, ElementRef, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatRequest, ChatResponse } from '../../services/chat.service';
@@ -19,7 +19,7 @@ interface Message {
   templateUrl: './chat-widget.component.html',
   styleUrls: ['./chat-widget.component.css']
 })
-export class ChatWidgetComponent implements OnInit {
+export class ChatWidgetComponent implements OnInit, OnChanges {
   @Input() config: WidgetConfig = {
     tenantId: 'default-tenant',
     primaryColor: '#007bff',
@@ -40,7 +40,11 @@ export class ChatWidgetComponent implements OnInit {
   isLoading = false;
   theme: 'light' | 'dark' = 'light';
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private elementRef: ElementRef,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit() {
     // Load config from window.chatqConfig if embedded
@@ -65,28 +69,40 @@ export class ChatWidgetComponent implements OnInit {
     }
   }
 
-  applyBranding() {
-    if (typeof document !== 'undefined') {
-      const root = document.documentElement;
-      if (this.config.primaryColor) {
-        root.style.setProperty('--chatq-primary-color', this.config.primaryColor);
-      }
-      if (this.config.secondaryColor) {
-        root.style.setProperty('--chatq-secondary-color', this.config.secondaryColor);
-      }
-      if (this.config.headerBackgroundColor) {
-        root.style.setProperty('--chatq-header-bg', this.config.headerBackgroundColor);
-      }
-      if (this.config.headerTextColor) {
-        root.style.setProperty('--chatq-header-text', this.config.headerTextColor);
-      }
-      if (this.config.userMessageColor) {
-        root.style.setProperty('--chatq-user-msg-bg', this.config.userMessageColor);
-      }
-      if (this.config.botMessageColor) {
-        root.style.setProperty('--chatq-bot-msg-bg', this.config.botMessageColor);
-      }
+  ngOnChanges(changes: SimpleChanges) {
+    // Re-apply branding when config changes
+    if (changes['config']) {
+      console.log('Config changed, reapplying branding:', this.config);
+      this.applyBranding();
     }
+  }
+
+  applyBranding() {
+    const hostElement = this.elementRef.nativeElement;
+
+    if (this.config.primaryColor) {
+      this.renderer.setStyle(hostElement, '--chatq-primary-color', this.config.primaryColor);
+    }
+    if (this.config.secondaryColor) {
+      this.renderer.setStyle(hostElement, '--chatq-secondary-color', this.config.secondaryColor);
+    }
+    if (this.config.headerBackgroundColor) {
+      this.renderer.setStyle(hostElement, '--chatq-header-bg', this.config.headerBackgroundColor);
+    }
+    if (this.config.headerTextColor) {
+      this.renderer.setStyle(hostElement, '--chatq-header-text', this.config.headerTextColor);
+    }
+    if (this.config.userMessageColor) {
+      this.renderer.setStyle(hostElement, '--chatq-user-msg-bg', this.config.userMessageColor);
+    }
+    if (this.config.botMessageColor) {
+      this.renderer.setStyle(hostElement, '--chatq-bot-msg-bg', this.config.botMessageColor);
+    }
+
+    console.log('Applied branding with colors:', {
+      primary: this.config.primaryColor,
+      secondary: this.config.secondaryColor
+    });
   }
 
   loadConversationHistory() {

@@ -65,6 +65,8 @@
               [(ngModel)]="widgetSettings.widget!.primaryColor"
               class="color-text"
               placeholder="#667eea"
+              pattern="^#[0-9A-Fa-f]{6}$"
+              maxlength="7"
             />
           </div>
         </div>
@@ -83,6 +85,8 @@
               [(ngModel)]="widgetSettings.widget!.secondaryColor"
               class="color-text"
               placeholder="#764ba2"
+              pattern="^#[0-9A-Fa-f]{6}$"
+              maxlength="7"
             />
           </div>
         </div>
