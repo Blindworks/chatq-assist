@@ -126,11 +126,26 @@
       </div>
     </div>
 
+    <!-- Live Preview -->
+    <div class="section preview-section" *ngIf="showPreview">
+      <div class="preview-header">
+        <h4>👁️ Live Preview</h4>
+        <button class="btn btn-sm btn-secondary" (click)="closePreview()">✕ Schließen</button>
+      </div>
+      <div class="preview-container">
+        <p class="preview-info">So wird das Widget auf der Website Ihres Kunden aussehen:</p>
+        <div class="preview-mockup">
+          <!-- Render the actual chat widget with custom config -->
+          <app-chat-widget [config]="previewConfig!"></app-chat-widget>
+        </div>
+      </div>
+    </div>
+
     <!-- Preview & Actions -->
     <div class="section actions-section">
       <div class="button-group">
         <button class="btn btn-secondary" (click)="previewWidget()">
-          👁️ Preview Widget
+          👁️ {{ showPreview ? 'Preview aktualisieren' : 'Preview Widget' }}
         </button>
         <button class="btn btn-primary" (click)="saveSettings()">
           💾 Save Settings

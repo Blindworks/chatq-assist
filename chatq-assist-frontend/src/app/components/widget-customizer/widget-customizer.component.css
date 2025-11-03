@@ -246,3 +246,40 @@
 .actions-section {
   border-bottom: none !important;
 }
+
+.preview-section {
+  background: #f8f9fa;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.preview-header h4 {
+  margin: 0;
+}
+
+.preview-info {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.preview-mockup {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  min-height: 400px;
+  border: 2px dashed #dee2e6;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}

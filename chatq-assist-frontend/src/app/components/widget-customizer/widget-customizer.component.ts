@@ -2,17 +2,21 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TenantDto } from '../../services/tenant.service';
-import { TenantSettings } from '../../models/widget-config.model';
+import { TenantSettings, WidgetConfig } from '../../models/widget-config.model';
+import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
 
 @Component({
   selector: 'app-widget-customizer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ChatWidgetComponent],
   templateUrl: './widget-customizer.component.html',
   styleUrls: ['./widget-customizer.component.css']
 })
 export class WidgetCustomizerComponent implements OnInit {
   @Input() tenant!: TenantDto;
+
+  showPreview: boolean = false;
+  previewConfig: WidgetConfig | null = null;
 
   widgetSettings: TenantSettings = {
     widget: {
@@ -93,20 +97,24 @@ export class WidgetCustomizerComponent implements OnInit {
   }
 
   previewWidget() {
-    // Open demo page with current settings
-    const params = new URLSearchParams();
-    const config = {
+    // Show inline preview with the actual Angular widget component
+    this.previewConfig = {
+      tenantId: this.tenant.tenantId,
+      apiKey: this.tenant.apiKey,
       ...this.widgetSettings,
-      ...this.widgetSettings.widget,
-      tenantId: this.tenant.tenantId
+      primaryColor: this.widgetSettings.widget?.primaryColor,
+      secondaryColor: this.widgetSettings.widget?.secondaryColor,
+      position: this.widgetSettings.widget?.position,
+      showLogo: this.widgetSettings.widget?.showLogo,
+      showThemeToggle: this.widgetSettings.widget?.showThemeToggle,
+      enableFeedback: this.widgetSettings.widget?.enableFeedback
     };
 
-    Object.entries(config).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        params.append(key, String(value));
-      }
-    });
+    this.showPreview = true;
+  }
 
-    window.open(`/widget-demo.html?${params.toString()}`, '_blank');
+  closePreview() {
+    this.showPreview = false;
+    this.previewConfig = null;
   }
 }
