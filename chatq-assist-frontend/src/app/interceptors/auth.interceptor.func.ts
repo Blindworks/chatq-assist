@@ -17,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   let authReq = req;
   if (token) {
     // Get tenant ID from localStorage or use default
-    const tenantId = localStorage.getItem('tenant_id') || 'system';
+    const tenantId = localStorage.getItem('tenant_id') || 'default-tenant';
 
     authReq = req.clone({
       setHeaders: {

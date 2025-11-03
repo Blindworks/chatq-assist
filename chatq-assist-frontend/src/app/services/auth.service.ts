@@ -37,8 +37,8 @@ export class AuthService {
           this.setToken(response.token);
           this.setUsername(response.username || '');
           this.setRole(response.role || '');
-          // Set tenant_id based on role - SUPER_ADMIN uses 'system', others use their tenant
-          const tenantId = (response.role === 'SUPER_ADMIN' || response.role === 'ADMIN') ? 'system' : 'default-tenant';
+          // Set tenant_id based on role - only SUPER_ADMIN uses 'system', everyone else uses 'default-tenant'
+          const tenantId = (response.role === 'SUPER_ADMIN') ? 'system' : 'default-tenant';
           this.setTenantId(tenantId);
           this.currentUserSubject.next(response.username || null);
         }
