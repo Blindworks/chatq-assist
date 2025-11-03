@@ -7,6 +7,12 @@
   <div class="tabs">
     <button
       class="tab"
+      [class.active]="activeTab === 'analytics'"
+      (click)="switchTab('analytics')">
+      📊 Analytics
+    </button>
+    <button
+      class="tab"
       [class.active]="activeTab === 'faqs'"
       (click)="switchTab('faqs')">
       📋 FAQ Management
@@ -29,6 +35,11 @@
       (click)="switchTab('users')">
       👥 User Management
     </button>
+  </div>
+
+  <!-- Analytics Content -->
+  <div *ngIf="activeTab === 'analytics'" class="tab-content">
+    <app-analytics-dashboard></app-analytics-dashboard>
   </div>
 
   <!-- FAQ Management Content -->

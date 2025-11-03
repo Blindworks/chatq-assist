@@ -5,17 +5,18 @@ import { FaqService, FaqEntry } from '../../services/faq.service';
 import { DocumentManagementComponent } from '../document-management/document-management.component';
 import { TenantManagementComponent } from '../tenant-management/tenant-management.component';
 import { UserManagementComponent } from '../user-management/user-management.component';
+import { AnalyticsDashboardComponent } from '../analytics-dashboard/analytics-dashboard.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, DocumentManagementComponent, TenantManagementComponent, UserManagementComponent],
+  imports: [CommonModule, FormsModule, DocumentManagementComponent, TenantManagementComponent, UserManagementComponent, AnalyticsDashboardComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
   // Tab state
-  activeTab: 'faqs' | 'documents' | 'tenants' | 'users' = 'faqs';
+  activeTab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' = 'faqs';
 
   faqs: FaqEntry[] = [];
   filteredFaqs: FaqEntry[] = [];
@@ -35,7 +36,7 @@ export class AdminDashboardComponent implements OnInit {
     this.loadFaqs();
   }
 
-  switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users'): void {
+  switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics'): void {
     this.activeTab = tab;
   }
 
