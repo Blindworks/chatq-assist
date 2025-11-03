@@ -23,6 +23,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USERNAME_KEY = 'auth_username';
   private readonly ROLE_KEY = 'auth_role';
+  private readonly TENANT_ID_KEY = 'tenant_id';
 
   private currentUserSubject = new BehaviorSubject<string | null>(this.getUsername());
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -36,6 +37,9 @@ export class AuthService {
           this.setToken(response.token);
           this.setUsername(response.username || '');
           this.setRole(response.role || '');
+          // Set tenant_id based on role - SUPER_ADMIN uses 'system', others use their tenant
+          const tenantId = (response.role === 'SUPER_ADMIN' || response.role === 'ADMIN') ? 'system' : 'default-tenant';
+          this.setTenantId(tenantId);
           this.currentUserSubject.next(response.username || null);
         }
       })
@@ -46,6 +50,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USERNAME_KEY);
     localStorage.removeItem(this.ROLE_KEY);
+    localStorage.removeItem(this.TENANT_ID_KEY);
     this.currentUserSubject.next(null);
   }
 
@@ -66,7 +71,8 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.getRole() === 'ADMIN';
+    const role = this.getRole();
+    return role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'TENANT_ADMIN';
   }
 
   getToken(): string | null {
@@ -91,5 +97,13 @@ export class AuthService {
 
   private setRole(role: string): void {
     localStorage.setItem(this.ROLE_KEY, role);
+  }
+
+  private setTenantId(tenantId: string): void {
+    localStorage.setItem(this.TENANT_ID_KEY, tenantId);
+  }
+
+  getTenantId(): string | null {
+    return localStorage.getItem(this.TENANT_ID_KEY);
   }
 }
