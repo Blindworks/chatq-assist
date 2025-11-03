@@ -43,10 +43,19 @@ CREATE INDEX idx_documents_created ON documents(created_at DESC);
 CREATE INDEX idx_document_chunks_document ON document_chunks(document_id);
 CREATE INDEX idx_document_chunks_tenant ON document_chunks(tenant_id);
 
--- Create vector similarity search index for document chunks
-CREATE INDEX idx_document_chunks_embedding ON document_chunks
-    USING ivfflat (embedding vector_cosine_ops)
-    WITH (lists = 100);
+-- Create vector similarity search index for document chunks (only if pgvector exists)
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'vector') THEN
+        CREATE INDEX idx_document_chunks_embedding ON document_chunks
+            USING ivfflat (embedding vector_cosine_ops)
+            WITH (lists = 100);
+        RAISE NOTICE 'Document chunks vector index created successfully';
+    ELSE
+        RAISE NOTICE 'Skipping document chunks vector index - pgvector extension not available';
+    END IF;
+END
+$$;
 
 -- Add comment for documentation
 COMMENT ON TABLE documents IS 'Stores uploaded documents (PDFs, URLs, etc.) with processing status';
