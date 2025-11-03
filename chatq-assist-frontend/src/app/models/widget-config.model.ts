@@ -33,10 +33,11 @@ export interface TenantSettings {
   companyName?: string;
   welcomeMessage?: string;
   widget?: {
-    position?: string;
+    position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     primaryColor?: string;
     secondaryColor?: string;
     showLogo?: boolean;
+    showThemeToggle?: boolean;
     enableFeedback?: boolean;
   };
 }
