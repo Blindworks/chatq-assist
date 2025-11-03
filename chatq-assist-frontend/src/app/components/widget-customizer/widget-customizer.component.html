@@ -1,0 +1,162 @@
+<div class="widget-customizer">
+  <div class="customizer-header">
+    <h3>🎨 Widget Customization</h3>
+    <p>Customize the chat widget appearance for {{ tenant.name }}</p>
+  </div>
+
+  <div class="customizer-body">
+    <!-- Branding Section -->
+    <div class="section">
+      <h4>Branding</h4>
+
+      <div class="form-group">
+        <label for="companyName">Company Name</label>
+        <input
+          id="companyName"
+          type="text"
+          [(ngModel)]="widgetSettings.companyName"
+          placeholder="Your Company Name"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="welcomeMessage">Welcome Message</label>
+        <input
+          id="welcomeMessage"
+          type="text"
+          [(ngModel)]="widgetSettings.welcomeMessage"
+          placeholder="How can we help you?"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="logoUrl">Logo URL</label>
+        <input
+          id="logoUrl"
+          type="url"
+          [(ngModel)]="widgetSettings.logoUrl"
+          placeholder="https://example.com/logo.png"
+          class="form-control"
+        />
+        <small *ngIf="widgetSettings.logoUrl" class="logo-preview">
+          <img [src]="widgetSettings.logoUrl" alt="Logo preview" />
+        </small>
+      </div>
+    </div>
+
+    <!-- Colors Section -->
+    <div class="section">
+      <h4>Colors</h4>
+
+      <div class="color-row">
+        <div class="form-group">
+          <label for="primaryColor">Primary Color</label>
+          <div class="color-input-group">
+            <input
+              id="primaryColor"
+              type="color"
+              [(ngModel)]="widgetSettings.widget!.primaryColor"
+              class="color-picker"
+            />
+            <input
+              type="text"
+              [(ngModel)]="widgetSettings.widget!.primaryColor"
+              class="color-text"
+              placeholder="#667eea"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="secondaryColor">Secondary Color</label>
+          <div class="color-input-group">
+            <input
+              id="secondaryColor"
+              type="color"
+              [(ngModel)]="widgetSettings.widget!.secondaryColor"
+              class="color-picker"
+            />
+            <input
+              type="text"
+              [(ngModel)]="widgetSettings.widget!.secondaryColor"
+              class="color-text"
+              placeholder="#764ba2"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Position & Features Section -->
+    <div class="section">
+      <h4>Position & Features</h4>
+
+      <div class="form-group">
+        <label for="position">Widget Position</label>
+        <select
+          id="position"
+          [(ngModel)]="widgetSettings.widget!.position"
+          class="form-control"
+        >
+          <option value="bottom-right">Bottom Right</option>
+          <option value="bottom-left">Bottom Left</option>
+          <option value="top-right">Top Right</option>
+          <option value="top-left">Top Left</option>
+        </select>
+      </div>
+
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="widgetSettings.widget!.showLogo"
+          />
+          Show Logo in Header
+        </label>
+
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="widgetSettings.widget!.enableFeedback"
+          />
+          Enable User Feedback
+        </label>
+      </div>
+    </div>
+
+    <!-- Preview & Actions -->
+    <div class="section actions-section">
+      <div class="button-group">
+        <button class="btn btn-secondary" (click)="previewWidget()">
+          👁️ Preview Widget
+        </button>
+        <button class="btn btn-primary" (click)="saveSettings()">
+          💾 Save Settings
+        </button>
+        <button class="btn btn-success" (click)="showEmbedCode = !showEmbedCode">
+          📋 {{ showEmbedCode ? 'Hide' : 'Get' }} Embed Code
+        </button>
+      </div>
+    </div>
+
+    <!-- Embed Code Section -->
+    <div *ngIf="showEmbedCode" class="section embed-section">
+      <h4>📋 Embed Code</h4>
+      <p>Copy and paste this code before the closing &lt;/body&gt; tag on your website:</p>
+
+      <div class="embed-code-container">
+        <pre>{{ embedCode }}</pre>
+        <button class="copy-btn" (click)="copyEmbedCode()">
+          📋 Copy Code
+        </button>
+      </div>
+
+      <div class="embed-info">
+        <p><strong>Tenant ID:</strong> {{ tenant.tenantId }}</p>
+        <p><strong>API Key:</strong> {{ tenant.apiKey || 'Not generated' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
