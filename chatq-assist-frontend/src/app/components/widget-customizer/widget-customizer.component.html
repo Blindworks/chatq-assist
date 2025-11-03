@@ -133,12 +133,23 @@
         <button class="btn btn-sm btn-secondary" (click)="closePreview()">✕ Schließen</button>
       </div>
       <div class="preview-container">
-        <p class="preview-info">So wird das Widget auf der Website Ihres Kunden aussehen. Klicken Sie auf den Chat-Button um das Widget zu öffnen:</p>
+        <p class="preview-info">So wird das Widget auf der Website Ihres Kunden aussehen:</p>
         <div class="preview-mockup">
+          <div class="preview-content">
+            <h3>Beispiel-Website</h3>
+            <p>Das ist eine simulierte Kunden-Website. Das Chat-Widget erscheint in der unteren rechten Ecke.</p>
+
+            <div class="config-preview">
+              <strong>Aktuelle Konfiguration:</strong><br>
+              Firmenname: {{ widgetSettings.companyName || 'ChatQ Assist' }}<br>
+              Primärfarbe: <span class="color-box" [style.background]="widgetSettings.widget?.primaryColor"></span> {{ widgetSettings.widget?.primaryColor }}<br>
+              Position: {{ widgetSettings.widget?.position || 'bottom-right' }}
+            </div>
+          </div>
+
           <!-- Render the actual chat widget with custom config -->
-          <app-chat-widget *ngIf="previewConfig" [config]="previewConfig"></app-chat-widget>
-          <div class="preview-hint">
-            👆 Klicken Sie auf den Chat-Button in der Ecke
+          <div class="widget-preview-wrapper">
+            <app-chat-widget *ngIf="previewConfig" [config]="previewConfig"></app-chat-widget>
           </div>
         </div>
       </div>

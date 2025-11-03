@@ -272,30 +272,73 @@
 
 .preview-mockup {
   position: relative;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 0;
+  min-height: 600px;
+  border: 2px solid #dee2e6;
+  overflow: hidden;
+}
+
+.preview-content {
+  padding: 32px;
   background: white;
-  border-radius: 8px;
-  padding: 24px;
-  min-height: 500px;
-  border: 2px dashed #dee2e6;
+  min-height: 400px;
 }
 
-.preview-hint {
-  position: absolute;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(102, 126, 234, 0.1);
-  padding: 12px 24px;
+.preview-content h3 {
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.preview-content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.config-preview {
+  background: #f8f9fa;
+  padding: 16px;
   border-radius: 8px;
-  color: #667eea;
   font-size: 14px;
-  font-weight: 600;
-  animation: pulse 2s infinite;
+  line-height: 1.8;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+.color-box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+  margin-right: 8px;
+}
+
+/* Widget wrapper that makes position:fixed work relative to this container */
+.widget-preview-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.widget-preview-wrapper ::ng-deep .chat-button,
+.widget-preview-wrapper ::ng-deep .chat-panel {
+  pointer-events: auto;
+  position: absolute !important;
+}
+
+.widget-preview-wrapper ::ng-deep .chat-button {
+  bottom: 24px !important;
+  right: 24px !important;
+}
+
+.widget-preview-wrapper ::ng-deep .chat-panel {
+  bottom: 24px !important;
+  right: 24px !important;
 }
 
 .btn-sm {
