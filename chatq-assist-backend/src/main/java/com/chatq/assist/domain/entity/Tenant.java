@@ -3,6 +3,8 @@ package com.chatq.assist.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 
@@ -45,6 +47,7 @@ public class Tenant {
     private Integer maxDocuments = 100;
 
     @Column(name = "settings", columnDefinition = "JSONB")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String settings; // JSON string for tenant-specific settings
 
     @Column(name = "created_at", nullable = false, updatable = false)
