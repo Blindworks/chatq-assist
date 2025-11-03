@@ -13,15 +13,19 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   console.log('Functional Interceptor - Token from storage:', token ? 'exists' : 'missing');
   console.log('Functional Interceptor - Request URL:', req.url);
 
-  // Clone the request and add the authorization header if token exists
+  // Clone the request and add the authorization header and tenant ID if token exists
   let authReq = req;
   if (token) {
+    // Get tenant ID from localStorage or use default
+    const tenantId = localStorage.getItem('tenant_id') || 'system';
+
     authReq = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'X-Tenant-ID': tenantId
       }
     });
-    console.log('Functional Interceptor - Added Authorization header');
+    console.log('Functional Interceptor - Added Authorization header and X-Tenant-ID:', tenantId);
   } else {
     console.warn('Functional Interceptor - No token found, request will be sent without auth');
   }
