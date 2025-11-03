@@ -1,3 +1,13 @@
+/* CSS Variables for Branding */
+:root {
+  --chatq-primary-color: #667eea;
+  --chatq-secondary-color: #764ba2;
+  --chatq-header-bg: linear-gradient(135deg, var(--chatq-primary-color) 0%, var(--chatq-secondary-color) 100%);
+  --chatq-header-text: #ffffff;
+  --chatq-user-msg-bg: #007bff;
+  --chatq-bot-msg-bg: #f1f3f5;
+}
+
 /* Chat Button */
 .chat-button {
   position: fixed;
@@ -17,8 +27,8 @@
 }
 
 .chat-button[data-theme="light"] {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--chatq-header-bg);
+  color: var(--chatq-header-text);
 }
 
 .chat-button[data-theme="dark"] {
@@ -71,8 +81,8 @@
 /* Header */
 .chat-header {
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--chatq-header-bg);
+  color: var(--chatq-header-text);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,6 +90,14 @@
 
 .chat-panel[data-theme="dark"] .chat-header {
   background: linear-gradient(135deg, #434343 0%, #000000 100%);
+}
+
+.header-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
 }
 
 .header-content h3 {
@@ -189,7 +207,7 @@
 }
 
 .message.user .message-content {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--chatq-user-msg-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
   color: white;
   border-bottom-right-radius: 4px;
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatRequest, ChatResponse } from '../../services/chat.service';
+import { WidgetConfig } from '../../models/widget-config.model';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -19,6 +20,19 @@ interface Message {
   styleUrls: ['./chat-widget.component.css']
 })
 export class ChatWidgetComponent implements OnInit {
+  @Input() config: WidgetConfig = {
+    tenantId: 'default-tenant',
+    primaryColor: '#007bff',
+    secondaryColor: '#6c757d',
+    companyName: 'ChatQ Assist',
+    welcomeMessage: 'How can we help you?',
+    placeholderText: 'Type your message...',
+    position: 'bottom-right',
+    showLogo: true,
+    showThemeToggle: true,
+    enableFeedback: true
+  };
+
   isOpen = false;
   messages: Message[] = [];
   currentMessage = '';
@@ -29,6 +43,14 @@ export class ChatWidgetComponent implements OnInit {
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {
+    // Load config from window.chatqConfig if embedded
+    if (typeof window !== 'undefined' && (window as any).chatqConfig) {
+      this.config = { ...this.config, ...(window as any).chatqConfig };
+    }
+
+    // Apply custom CSS variables for branding
+    this.applyBranding();
+
     // Check for saved session
     this.sessionId = localStorage.getItem('chatq-session-id');
 
@@ -40,6 +62,30 @@ export class ChatWidgetComponent implements OnInit {
     // Check system theme preference
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.theme = 'dark';
+    }
+  }
+
+  applyBranding() {
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      if (this.config.primaryColor) {
+        root.style.setProperty('--chatq-primary-color', this.config.primaryColor);
+      }
+      if (this.config.secondaryColor) {
+        root.style.setProperty('--chatq-secondary-color', this.config.secondaryColor);
+      }
+      if (this.config.headerBackgroundColor) {
+        root.style.setProperty('--chatq-header-bg', this.config.headerBackgroundColor);
+      }
+      if (this.config.headerTextColor) {
+        root.style.setProperty('--chatq-header-text', this.config.headerTextColor);
+      }
+      if (this.config.userMessageColor) {
+        root.style.setProperty('--chatq-user-msg-bg', this.config.userMessageColor);
+      }
+      if (this.config.botMessageColor) {
+        root.style.setProperty('--chatq-bot-msg-bg', this.config.botMessageColor);
+      }
     }
   }
 
