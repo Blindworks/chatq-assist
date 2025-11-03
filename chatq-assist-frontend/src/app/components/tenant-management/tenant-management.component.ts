@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TenantService, TenantDto, CreateTenantRequest } from '../../services/tenant.service';
+import { WidgetCustomizerComponent } from '../widget-customizer/widget-customizer.component';
 
 @Component({
   selector: 'app-tenant-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, WidgetCustomizerComponent],
   templateUrl: './tenant-management.component.html',
   styleUrls: ['./tenant-management.component.css']
 })
@@ -15,7 +16,9 @@ export class TenantManagementComponent implements OnInit {
   loading = false;
   error: string | null = null;
   showCreateForm = false;
+  showWidgetCustomizer = false;
   editingTenant: TenantDto | null = null;
+  customizingTenant: TenantDto | null = null;
 
   newTenant: CreateTenantRequest = {
     name: '',
@@ -151,5 +154,15 @@ export class TenantManagementComponent implements OnInit {
     navigator.clipboard.writeText(text).then(() => {
       alert('In Zwischenablage kopiert!');
     });
+  }
+
+  openWidgetCustomizer(tenant: TenantDto) {
+    this.customizingTenant = tenant;
+    this.showWidgetCustomizer = true;
+  }
+
+  closeWidgetCustomizer() {
+    this.showWidgetCustomizer = false;
+    this.customizingTenant = null;
   }
 }

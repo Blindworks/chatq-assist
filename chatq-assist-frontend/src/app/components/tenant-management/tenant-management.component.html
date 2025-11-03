@@ -108,10 +108,29 @@
           </button>
         </div>
       </div>
+
+      <div class="widget-config-section">
+        <button class="btn btn-primary btn-widget-config" (click)="openWidgetCustomizer(tenant)">
+          🎨 Widget konfigurieren & Embed-Code generieren
+        </button>
+      </div>
     </div>
 
     <div class="empty-state" *ngIf="tenants.length === 0">
       <p>Keine Tenants vorhanden. Erstellen Sie den ersten Tenant!</p>
+    </div>
+  </div>
+
+  <!-- Widget Customizer Modal -->
+  <div class="modal modal-large" *ngIf="showWidgetCustomizer && customizingTenant">
+    <div class="modal-content modal-content-large">
+      <div class="modal-header">
+        <h3>🎨 Widget-Konfiguration für {{ customizingTenant.name }}</h3>
+        <button class="close-btn" (click)="closeWidgetCustomizer()">✕</button>
+      </div>
+      <div class="modal-body">
+        <app-widget-customizer [tenant]="customizingTenant"></app-widget-customizer>
+      </div>
     </div>
   </div>
 </div>
