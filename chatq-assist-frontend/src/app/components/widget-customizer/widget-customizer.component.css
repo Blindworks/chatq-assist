@@ -275,7 +275,8 @@
   background: #f0f0f0;
   border-radius: 8px;
   padding: 0;
-  min-height: 600px;
+  min-height: 750px;
+  height: 750px;
   border: 2px solid #dee2e6;
   overflow: hidden;
 }
