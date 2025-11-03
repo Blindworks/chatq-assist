@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TenantDto } from '../../services/tenant.service';
+import { TenantDto, TenantService } from '../../services/tenant.service';
 import { TenantSettings, WidgetConfig } from '../../models/widget-config.model';
 import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
 
@@ -14,9 +14,11 @@ import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
 })
 export class WidgetCustomizerComponent implements OnInit {
   @Input() tenant!: TenantDto;
+  @Output() settingsSaved = new EventEmitter<void>();
 
   showPreview: boolean = false;
   previewConfig: WidgetConfig | null = null;
+  isSaving: boolean = false;
 
   widgetSettings: TenantSettings = {
     widget: {
@@ -33,6 +35,8 @@ export class WidgetCustomizerComponent implements OnInit {
 
   embedCode: string = '';
   showEmbedCode: boolean = false;
+
+  constructor(private tenantService: TenantService) {}
 
   ngOnInit() {
     this.loadTenantSettings();
@@ -90,10 +94,33 @@ export class WidgetCustomizerComponent implements OnInit {
   }
 
   saveSettings() {
-    // This would call the tenant service to update settings
-    console.log('Saving widget settings:', this.widgetSettings);
-    this.generateEmbedCode();
-    alert('Widget settings saved! (Note: Backend integration pending)');
+    this.isSaving = true;
+
+    // Prepare the update request with settings as JSON string
+    const updateRequest = {
+      name: this.tenant.name,
+      contactEmail: this.tenant.contactEmail,
+      domain: this.tenant.domain,
+      maxUsers: this.tenant.maxUsers,
+      maxDocuments: this.tenant.maxDocuments,
+      settings: JSON.stringify(this.widgetSettings)
+    };
+
+    this.tenantService.updateTenant(this.tenant.id, updateRequest).subscribe({
+      next: (updatedTenant) => {
+        console.log('Widget settings saved successfully:', updatedTenant);
+        this.tenant.settings = updatedTenant.settings;
+        this.generateEmbedCode();
+        this.isSaving = false;
+        this.settingsSaved.emit();
+        alert('Widget-Einstellungen erfolgreich gespeichert!');
+      },
+      error: (error) => {
+        console.error('Failed to save widget settings:', error);
+        this.isSaving = false;
+        alert('Fehler beim Speichern der Einstellungen: ' + (error.error?.message || error.message));
+      }
+    });
   }
 
   previewWidget() {

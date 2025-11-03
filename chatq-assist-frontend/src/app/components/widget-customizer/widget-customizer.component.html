@@ -161,11 +161,11 @@
         <button class="btn btn-secondary" (click)="previewWidget()">
           👁️ {{ showPreview ? 'Preview aktualisieren' : 'Preview Widget' }}
         </button>
-        <button class="btn btn-primary" (click)="saveSettings()">
-          💾 Save Settings
+        <button class="btn btn-primary" (click)="saveSettings()" [disabled]="isSaving">
+          {{ isSaving ? '💾 Speichert...' : '💾 Einstellungen speichern' }}
         </button>
         <button class="btn btn-success" (click)="showEmbedCode = !showEmbedCode">
-          📋 {{ showEmbedCode ? 'Hide' : 'Get' }} Embed Code
+          📋 {{ showEmbedCode ? 'Ausblenden' : 'Embed-Code anzeigen' }}
         </button>
       </div>
     </div>
