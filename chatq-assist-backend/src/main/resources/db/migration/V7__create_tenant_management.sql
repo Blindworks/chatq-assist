@@ -21,10 +21,21 @@ ALTER TABLE users ADD CONSTRAINT fk_users_tenant
     FOREIGN KEY (tenant_ref_id) REFERENCES tenants(id) ON DELETE CASCADE;
 
 -- Update user roles to support RBAC
--- Current users.role is VARCHAR(50) with check constraint
--- We need to update the constraint to include new roles
-ALTER TABLE users DROP CONSTRAINT IF EXISTS chk_user_role;
-ALTER TABLE users ADD CONSTRAINT chk_user_role
+-- Current users.role is VARCHAR(20) with inline check constraint
+-- We need to drop the old constraint and add new one with new roles
+-- PostgreSQL auto-generates constraint names like "users_role_check"
+DO $$
+BEGIN
+    -- Try to drop the existing check constraint (name may vary)
+    ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
+    -- Also try alternative naming patterns
+    ALTER TABLE users DROP CONSTRAINT IF EXISTS chk_user_role;
+EXCEPTION
+    WHEN undefined_object THEN NULL;
+END $$;
+
+-- Add new constraint with all roles
+ALTER TABLE users ADD CONSTRAINT users_role_check
     CHECK (role IN ('USER', 'ADMIN', 'SUPER_ADMIN', 'TENANT_ADMIN', 'TENANT_USER'));
 
 -- Create indexes for efficient queries
