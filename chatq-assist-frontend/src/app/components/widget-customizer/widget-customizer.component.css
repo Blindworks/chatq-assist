@@ -275,8 +275,27 @@
   background: white;
   border-radius: 8px;
   padding: 24px;
-  min-height: 400px;
+  min-height: 500px;
   border: 2px dashed #dee2e6;
+}
+
+.preview-hint {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(102, 126, 234, 0.1);
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .btn-sm {

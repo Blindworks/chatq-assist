@@ -133,10 +133,13 @@
         <button class="btn btn-sm btn-secondary" (click)="closePreview()">✕ Schließen</button>
       </div>
       <div class="preview-container">
-        <p class="preview-info">So wird das Widget auf der Website Ihres Kunden aussehen:</p>
+        <p class="preview-info">So wird das Widget auf der Website Ihres Kunden aussehen. Klicken Sie auf den Chat-Button um das Widget zu öffnen:</p>
         <div class="preview-mockup">
           <!-- Render the actual chat widget with custom config -->
-          <app-chat-widget [config]="previewConfig!"></app-chat-widget>
+          <app-chat-widget *ngIf="previewConfig" [config]="previewConfig"></app-chat-widget>
+          <div class="preview-hint">
+            👆 Klicken Sie auf den Chat-Button in der Ecke
+          </div>
         </div>
       </div>
     </div>
