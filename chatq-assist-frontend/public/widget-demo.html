@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatQ Widget Demo - Customer Website</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .demo-container {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 800px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      color: #333;
+      margin: 0 0 16px 0;
+    }
+
+    p {
+      color: #666;
+      line-height: 1.6;
+      margin: 0 0 24px 0;
+    }
+
+    .config-display {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+
+    .config-display pre {
+      margin: 0;
+    }
+
+    .api-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+
+    .feature-list li {
+      padding: 8px 0;
+      color: #666;
+    }
+
+    .feature-list li:before {
+      content: "✓ ";
+      color: #667eea;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <h1>🎉 ChatQ Widget Demo</h1>
+    <p>This is a demo page showing how the ChatQ Assist widget can be embedded into any website. The widget appears as a floating button in the bottom-right corner.</p>
+
+    <h2>✨ Features</h2>
+    <ul class="feature-list">
+      <li>Customizable colors and branding</li>
+      <li>Streaming AI responses with GPT-4</li>
+      <li>Document & FAQ search with RAG</li>
+      <li>Multi-tenant isolation</li>
+      <li>Session persistence</li>
+      <li>User feedback collection</li>
+      <li>GDPR compliant</li>
+    </ul>
+
+    <h2>📋 Current Configuration</h2>
+    <div class="config-display">
+      <pre>{
+  tenantId: "demo-customer",
+  apiKey: "demo-api-key-12345",
+  primaryColor: "#667eea",
+  secondaryColor: "#764ba2",
+  companyName: "Demo Corp",
+  welcomeMessage: "Welcome to Demo Corp! How can we help?",
+  logoUrl: "https://via.placeholder.com/40",
+  position: "bottom-right",
+  showLogo: true,
+  showThemeToggle: true,
+  enableFeedback: true
+}</pre>
+    </div>
+
+    <h2>🎮 Widget API</h2>
+    <p>You can programmatically control the widget using JavaScript:</p>
+    <div class="api-buttons">
+      <button onclick="window.ChatQWidget.open()">Open Widget</button>
+      <button onclick="window.ChatQWidget.close()">Close Widget</button>
+      <button onclick="window.ChatQWidget.toggle()">Toggle Widget</button>
+    </div>
+  </div>
+
+  <!-- ChatQ Widget Integration -->
+  <script>
+    // Configure the widget before loading
+    window.chatqConfig = {
+      tenantId: 'demo-customer',
+      apiKey: 'demo-api-key-12345',
+      primaryColor: '#667eea',
+      secondaryColor: '#764ba2',
+      companyName: 'Demo Corp',
+      welcomeMessage: 'Welcome to Demo Corp! How can we help?',
+      logoUrl: 'https://via.placeholder.com/40',
+      position: 'bottom-right',
+      showLogo: true,
+      showThemeToggle: true,
+      enableFeedback: true
+    };
+  </script>
+  <script src="chatq-widget.js"></script>
+</body>
+</html>
