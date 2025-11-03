@@ -326,8 +326,15 @@ public class DocumentService {
                 chunks.add(chunk);
             }
 
-            // Move start position with overlap
-            start = end - chunkOverlap;
+            // Move start position forward, minus overlap for context
+            // Ensure we always move forward and don't go negative
+            int nextStart = end - chunkOverlap;
+            if (nextStart <= start) {
+                // If overlap would not move us forward, just move to end
+                nextStart = end;
+            }
+
+            start = nextStart;
             if (start >= text.length()) {
                 break;
             }

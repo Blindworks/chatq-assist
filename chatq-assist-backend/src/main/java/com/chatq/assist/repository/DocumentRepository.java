@@ -20,4 +20,6 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     List<Document> findByTenantIdAndStatusOrderByCreatedAtDesc(String tenantId, DocumentStatus status);
 
     long countByTenantIdAndStatus(String tenantId, DocumentStatus status);
+
+    long countByTenantId(String tenantId);
 }

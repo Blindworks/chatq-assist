@@ -8,7 +8,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "users", indexes = {
     @Index(name = "idx_users_username", columnList = "username"),
-    @Index(name = "idx_users_tenant", columnList = "tenant_id")
+    @Index(name = "idx_users_tenant", columnList = "tenant_id"),
+    @Index(name = "idx_users_tenant_id_role", columnList = "tenant_id, role")
 })
 @Getter
 @Setter
@@ -25,8 +26,12 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
-    private UserRole role = UserRole.USER;
+    private UserRole role = UserRole.TENANT_USER;
 
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tenant_ref_id")
+    private Tenant tenant;
 }

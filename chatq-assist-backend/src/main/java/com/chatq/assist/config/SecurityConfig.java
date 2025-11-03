@@ -40,9 +40,18 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/chat/**").permitAll() // Chat widget is public
 
-                        // Admin endpoints require ADMIN role
-                        .requestMatchers("/api/faq/**").hasRole("ADMIN")
-                        .requestMatchers("/api/analytics/**").hasRole("ADMIN")
+                        // Tenant management - SUPER_ADMIN only
+                        .requestMatchers("/api/tenants/**").hasAnyRole("SUPER_ADMIN", "TENANT_ADMIN")
+
+                        // User management - SUPER_ADMIN and TENANT_ADMIN
+                        .requestMatchers("/api/users/**").hasAnyRole("SUPER_ADMIN", "TENANT_ADMIN")
+
+                        // FAQ and Analytics - All admin roles
+                        .requestMatchers("/api/faq/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "TENANT_ADMIN")
+                        .requestMatchers("/api/analytics/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "TENANT_ADMIN")
+
+                        // Document management - All admin roles
+                        .requestMatchers("/api/documents/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "TENANT_ADMIN")
 
                         // All other requests require authentication
                         .anyRequest().authenticated()

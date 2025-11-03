@@ -17,6 +17,18 @@
       (click)="switchTab('documents')">
       📄 Document Management
     </button>
+    <button
+      class="tab"
+      [class.active]="activeTab === 'tenants'"
+      (click)="switchTab('tenants')">
+      🏢 Tenant Management
+    </button>
+    <button
+      class="tab"
+      [class.active]="activeTab === 'users'"
+      (click)="switchTab('users')">
+      👥 User Management
+    </button>
   </div>
 
   <!-- FAQ Management Content -->
@@ -184,5 +196,15 @@
   <!-- Document Management Content -->
   <div *ngIf="activeTab === 'documents'" class="tab-content">
     <app-document-management></app-document-management>
+  </div>
+
+  <!-- Tenant Management Content -->
+  <div *ngIf="activeTab === 'tenants'" class="tab-content">
+    <app-tenant-management></app-tenant-management>
+  </div>
+
+  <!-- User Management Content -->
+  <div *ngIf="activeTab === 'users'" class="tab-content">
+    <app-user-management></app-user-management>
   </div>
 </div>

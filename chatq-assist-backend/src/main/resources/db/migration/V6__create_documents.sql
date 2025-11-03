@@ -28,7 +28,7 @@ CREATE TABLE document_chunks (
     content TEXT NOT NULL,
     embedding vector(1536), -- OpenAI text-embedding-3-small dimension
     token_count INTEGER,
-    metadata JSONB, -- Store additional metadata like page number, headers, etc.
+    metadata TEXT, -- Store additional metadata as JSON string (page number, headers, etc.)
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_document_chunks_document FOREIGN KEY (document_id)

@@ -1,0 +1,137 @@
+<div class="user-management">
+  <div class="header">
+    <h2>👥 Benutzer Verwaltung</h2>
+    <div class="header-actions">
+      <select [(ngModel)]="selectedTenantFilter" (change)="onTenantFilterChange()" class="tenant-filter">
+        <option value="">Alle Tenants</option>
+        <option *ngFor="let tenant of tenants" [value]="tenant.tenantId">{{ tenant.name }}</option>
+      </select>
+      <button class="btn btn-primary" (click)="openCreateForm()" [disabled]="loading">
+        ➕ Neuer Benutzer
+      </button>
+    </div>
+  </div>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+
+  <div class="loading" *ngIf="loading && !showCreateForm">Lädt...</div>
+
+  <!-- Create/Edit Form -->
+  <div class="modal" *ngIf="showCreateForm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>{{ editingUser ? 'Benutzer bearbeiten' : 'Neuen Benutzer erstellen' }}</h3>
+        <button class="close-btn" (click)="closeForm()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label>Benutzername *</label>
+        <input type="text" [(ngModel)]="newUser.username" placeholder="benutzername"
+               class="form-control" [disabled]="editingUser !== null" />
+      </div>
+
+      <div class="form-group" *ngIf="!editingUser">
+        <label>Passwort *</label>
+        <input type="password" [(ngModel)]="newUser.password" placeholder="Passwort" class="form-control" />
+      </div>
+
+      <div class="form-group" *ngIf="editingUser">
+        <label>Neues Passwort (leer lassen für unverändert)</label>
+        <input type="password" [(ngModel)]="newUser.password" placeholder="Neues Passwort" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label>E-Mail</label>
+        <input type="email" [(ngModel)]="newUser.email" placeholder="email@firma.de" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label>Tenant *</label>
+        <select [(ngModel)]="newUser.tenantId" class="form-control" [disabled]="editingUser !== null">
+          <option *ngFor="let tenant of tenants" [value]="tenant.tenantId">
+            {{ tenant.name }} ({{ tenant.tenantId }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Rolle *</label>
+        <select [(ngModel)]="newUser.role" class="form-control">
+          <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="newUser.enabled" />
+          Benutzer ist aktiv
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeForm()">Abbrechen</button>
+        <button class="btn btn-primary" (click)="saveUser()" [disabled]="loading">
+          {{ editingUser ? 'Speichern' : 'Erstellen' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="users-table-container" *ngIf="!loading || showCreateForm">
+    <table class="users-table" *ngIf="users.length > 0">
+      <thead>
+        <tr>
+          <th>Benutzername</th>
+          <th>E-Mail</th>
+          <th>Tenant</th>
+          <th>Rolle</th>
+          <th>Status</th>
+          <th>Erstellt</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users" [class.inactive]="!user.enabled">
+          <td>
+            <strong>{{ user.username }}</strong>
+          </td>
+          <td>{{ user.email || '-' }}</td>
+          <td>
+            <span class="tenant-badge">{{ user.tenantName || user.tenantId }}</span>
+          </td>
+          <td>
+            <span class="role-badge" [ngClass]="getRoleBadgeClass(user.role)">
+              {{ getRoleLabel(user.role) }}
+            </span>
+          </td>
+          <td>
+            <span class="status-badge" [class.active]="user.enabled" [class.inactive]="!user.enabled">
+              {{ user.enabled ? '✓ Aktiv' : '✕ Inaktiv' }}
+            </span>
+          </td>
+          <td>{{ user.createdAt | date: 'dd.MM.yyyy' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-sm btn-primary" (click)="openEditForm(user)">✏️</button>
+              <button class="btn btn-sm"
+                      [class.btn-warning]="user.enabled"
+                      [class.btn-success]="!user.enabled"
+                      (click)="toggleStatus(user)">
+                {{ user.enabled ? '🚫' : '✓' }}
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteUser(user)"
+                      *ngIf="user.username !== 'admin'">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="users.length === 0">
+      <p>{{ selectedTenantFilter ? 'Keine Benutzer für diesen Tenant gefunden.' : 'Keine Benutzer vorhanden.' }}</p>
+    </div>
+  </div>
+</div>

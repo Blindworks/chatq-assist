@@ -1,0 +1,117 @@
+<div class="tenant-management">
+  <div class="header">
+    <h2>🏢 Tenant Verwaltung</h2>
+    <button class="btn btn-primary" (click)="openCreateForm()" [disabled]="loading">
+      ➕ Neuer Tenant
+    </button>
+  </div>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+
+  <div class="loading" *ngIf="loading && !showCreateForm">Lädt...</div>
+
+  <!-- Create/Edit Form -->
+  <div class="modal" *ngIf="showCreateForm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>{{ editingTenant ? 'Tenant bearbeiten' : 'Neuen Tenant erstellen' }}</h3>
+        <button class="close-btn" (click)="closeForm()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" [(ngModel)]="newTenant.name" placeholder="Firmenname" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label>Kontakt E-Mail *</label>
+        <input type="email" [(ngModel)]="newTenant.contactEmail" placeholder="kontakt@firma.de" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label>Domain (optional)</label>
+        <input type="text" [(ngModel)]="newTenant.domain" placeholder="www.firma.de" class="form-control" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Max. Benutzer</label>
+          <input type="number" [(ngModel)]="newTenant.maxUsers" min="1" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Max. Dokumente</label>
+          <input type="number" [(ngModel)]="newTenant.maxDocuments" min="1" class="form-control" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeForm()">Abbrechen</button>
+        <button class="btn btn-primary" (click)="saveTenant()" [disabled]="loading">
+          {{ editingTenant ? 'Speichern' : 'Erstellen' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tenants List -->
+  <div class="tenants-list" *ngIf="!loading || showCreateForm">
+    <div class="tenant-card" *ngFor="let tenant of tenants" [class.inactive]="!tenant.isActive">
+      <div class="tenant-header">
+        <div class="tenant-info">
+          <h3>{{ tenant.name }}</h3>
+          <span class="tenant-id">ID: {{ tenant.tenantId }}</span>
+          <span class="status-badge" [class.active]="tenant.isActive" [class.inactive]="!tenant.isActive">
+            {{ tenant.isActive ? '✓ Aktiv' : '✕ Inaktiv' }}
+          </span>
+        </div>
+        <div class="tenant-actions">
+          <button class="btn btn-sm btn-primary" (click)="openEditForm(tenant)">✏️ Bearbeiten</button>
+          <button class="btn btn-sm" [class.btn-warning]="tenant.isActive" [class.btn-success]="!tenant.isActive"
+                  (click)="toggleStatus(tenant)">
+            {{ tenant.isActive ? '🚫 Deaktivieren' : '✓ Aktivieren' }}
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deleteTenant(tenant)"
+                  *ngIf="tenant.tenantId !== 'system'">
+            🗑️ Löschen
+          </button>
+        </div>
+      </div>
+
+      <div class="tenant-details">
+        <div class="detail-item">
+          <strong>E-Mail:</strong> {{ tenant.contactEmail }}
+        </div>
+        <div class="detail-item" *ngIf="tenant.domain">
+          <strong>Domain:</strong> {{ tenant.domain }}
+        </div>
+        <div class="detail-item">
+          <strong>Benutzer:</strong> {{ tenant.currentUserCount || 0 }} / {{ tenant.maxUsers }}
+        </div>
+        <div class="detail-item">
+          <strong>Dokumente:</strong> {{ tenant.currentDocumentCount || 0 }} / {{ tenant.maxDocuments }}
+        </div>
+        <div class="detail-item">
+          <strong>Erstellt:</strong> {{ tenant.createdAt | date: 'dd.MM.yyyy HH:mm' }}
+        </div>
+      </div>
+
+      <div class="api-key-section">
+        <label><strong>API Key:</strong></label>
+        <div class="api-key-row">
+          <input type="text" [value]="tenant.apiKey" readonly class="api-key-input" />
+          <button class="btn btn-sm btn-secondary" (click)="copyToClipboard(tenant.apiKey!)">
+            📋 Kopieren
+          </button>
+          <button class="btn btn-sm btn-warning" (click)="regenerateApiKey(tenant)">
+            🔄 Neu generieren
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="tenants.length === 0">
+      <p>Keine Tenants vorhanden. Erstellen Sie den ersten Tenant!</p>
+    </div>
+  </div>
+</div>
