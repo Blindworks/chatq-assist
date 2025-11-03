@@ -39,9 +39,11 @@ export class LoginComponent {
 
     this.authService.login({ username: this.username, password: this.password }).subscribe({
       next: (response) => {
+        console.log('Login response:', response);
         if (response.token) {
           // Successful login
-          console.log('Login successful:', response.username);
+          console.log('Login successful:', response.username, 'Role:', response.role);
+          this.isLoading = false;
           this.router.navigate(['/admin']);
         } else {
           this.errorMessage = response.message || 'Login failed';
@@ -51,6 +53,10 @@ export class LoginComponent {
       error: (error) => {
         console.error('Login error:', error);
         this.errorMessage = error.error?.message || 'Invalid username or password';
+        this.isLoading = false;
+      },
+      complete: () => {
+        // Ensure isLoading is reset even if something goes wrong
         this.isLoading = false;
       }
     });
