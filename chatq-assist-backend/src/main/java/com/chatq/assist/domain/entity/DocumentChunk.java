@@ -24,7 +24,7 @@ public class DocumentChunk {
     @Column(name = "tenant_id", nullable = false)
     private String tenantId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "document_id", nullable = false)
     private Document document;
 
@@ -41,7 +41,7 @@ public class DocumentChunk {
     @Column(name = "token_count")
     private Integer tokenCount;
 
-    @Column(name = "metadata", columnDefinition = "JSONB")
+    @Column(name = "metadata", columnDefinition = "TEXT")
     private String metadata; // JSON string for page numbers, headers, etc.
 
     @Column(name = "created_at", nullable = false)
