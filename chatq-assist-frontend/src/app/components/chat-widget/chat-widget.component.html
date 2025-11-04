@@ -128,3 +128,59 @@
     <small>Your privacy matters. We process data according to GDPR.</small>
   </div>
 </div>
+
+<!-- Handoff Modal -->
+<div *ngIf="showHandoffModal" class="modal-overlay" (click)="closeHandoffModal()">
+  <div class="modal-content" [attr.data-theme]="theme" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Connect with a Human</h3>
+      <button class="modal-close" (click)="closeHandoffModal()" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-description">We couldn't find a perfect answer. Leave your contact details and a team member will reach out to you shortly.</p>
+
+      <div class="form-group">
+        <label for="handoff-name">Name (optional)</label>
+        <input
+          id="handoff-name"
+          type="text"
+          [(ngModel)]="handoffForm.name"
+          placeholder="Your name"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="handoff-email">Email *</label>
+        <input
+          id="handoff-email"
+          type="email"
+          [(ngModel)]="handoffForm.email"
+          placeholder="your.email@example.com"
+          required
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="handoff-phone">Phone (optional)</label>
+        <input
+          id="handoff-phone"
+          type="tel"
+          [(ngModel)]="handoffForm.phone"
+          placeholder="+49 123 456789"
+          class="form-input">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeHandoffModal()" [disabled]="handoffSubmitting">
+        Cancel
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="submitHandoffRequest()"
+        [disabled]="handoffSubmitting"
+        [style.background]="'linear-gradient(135deg, ' + config.primaryColor + ' 0%, ' + config.secondaryColor + ' 100%)'">
+        {{ handoffSubmitting ? 'Submitting...' : 'Submit Request' }}
+      </button>
+    </div>
+  </div>
+</div>

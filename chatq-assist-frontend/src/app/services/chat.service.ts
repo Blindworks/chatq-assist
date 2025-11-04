@@ -52,6 +52,13 @@ export interface FeedbackRequest {
   comment?: string;
 }
 
+export interface HandoffRequest {
+  sessionId: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -170,5 +177,14 @@ export class ChatService {
     });
 
     return this.http.post(`${this.apiUrl}/feedback`, request, { headers });
+  }
+
+  submitHandoffRequest(request: HandoffRequest): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-Tenant-ID': 'default-tenant'
+    });
+
+    return this.http.post(`${this.apiUrl}/handoff`, request, { headers });
   }
 }

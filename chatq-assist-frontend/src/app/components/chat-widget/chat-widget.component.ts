@@ -41,6 +41,15 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
   typingStatus: string = 'Typing...';
   theme: 'light' | 'dark' = 'light';
 
+  // Handoff modal
+  showHandoffModal = false;
+  handoffForm = {
+    name: '',
+    email: '',
+    phone: ''
+  };
+  handoffSubmitting = false;
+
   constructor(
     private chatService: ChatService,
     private elementRef: ElementRef,
@@ -186,10 +195,8 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
           }
 
           if (streamEvent.metadata.handoffTriggered) {
-            this.messages.push({
-              role: 'assistant',
-              content: 'Ich verbinde Sie mit einem Mitarbeiter.'
-            });
+            // Show handoff modal instead of just a message
+            this.showHandoffModal = true;
           }
         } else if (streamEvent.type === 'messageId' && streamEvent.messageId) {
           // Store message ID for feedback
@@ -247,6 +254,45 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
       },
       error: (error) => {
         console.error('Failed to submit feedback:', error);
+      }
+    });
+  }
+
+  closeHandoffModal() {
+    this.showHandoffModal = false;
+    this.handoffForm = {
+      name: '',
+      email: '',
+      phone: ''
+    };
+  }
+
+  submitHandoffRequest() {
+    if (!this.handoffForm.email.trim()) {
+      alert('Please provide your email address so we can contact you.');
+      return;
+    }
+
+    this.handoffSubmitting = true;
+
+    this.chatService.submitHandoffRequest({
+      sessionId: this.sessionId || '',
+      name: this.handoffForm.name,
+      email: this.handoffForm.email,
+      phone: this.handoffForm.phone
+    }).subscribe({
+      next: () => {
+        this.messages.push({
+          role: 'assistant',
+          content: 'Thank you! A team member will contact you shortly at ' + this.handoffForm.email
+        });
+        this.closeHandoffModal();
+        this.handoffSubmitting = false;
+      },
+      error: (error) => {
+        console.error('Failed to submit handoff request:', error);
+        alert('Sorry, there was an error. Please try again.');
+        this.handoffSubmitting = false;
       }
     });
   }

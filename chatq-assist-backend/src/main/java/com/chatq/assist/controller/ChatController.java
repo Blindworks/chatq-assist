@@ -3,10 +3,13 @@ package com.chatq.assist.controller;
 import com.chatq.assist.domain.dto.ChatRequest;
 import com.chatq.assist.domain.dto.ChatResponse;
 import com.chatq.assist.domain.dto.FeedbackRequest;
+import com.chatq.assist.domain.dto.HandoffRequestDto;
 import com.chatq.assist.domain.dto.MessageDto;
 import com.chatq.assist.domain.entity.MessageFeedback;
+import com.chatq.assist.domain.entity.SupportTicket;
 import com.chatq.assist.service.ChatServiceLLM;
 import com.chatq.assist.service.FeedbackService;
+import com.chatq.assist.service.SupportTicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,7 @@ public class ChatController {
 
     private final ChatServiceLLM chatService;
     private final FeedbackService feedbackService;
+    private final SupportTicketService supportTicketService;
 
     @PostMapping
     public ResponseEntity<ChatResponse> chat(
@@ -83,5 +87,20 @@ public class ChatController {
         MessageFeedback feedback = feedbackService.submitFeedback(request, tenantId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(feedback);
+    }
+
+    @PostMapping("/handoff")
+    public ResponseEntity<SupportTicket> submitHandoffRequest(
+            @Valid @RequestBody HandoffRequestDto request,
+            @RequestHeader(value = "X-Tenant-ID", required = false, defaultValue = DEFAULT_TENANT_ID) String tenantId) {
+
+        log.info("Received handoff request for sessionId: {}, email: {}, tenant: {}",
+                 request.getSessionId(), request.getEmail(), tenantId);
+
+        SupportTicket ticket = supportTicketService.createHandoffTicket(request, tenantId);
+
+        log.info("Created support ticket #{} for handoff request", ticket.getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
 }
