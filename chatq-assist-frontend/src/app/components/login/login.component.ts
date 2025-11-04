@@ -43,6 +43,11 @@ export class LoginComponent {
         if (response.token) {
           // Successful login
           console.log('Login successful:', response.username, 'Role:', response.role);
+          // Debug: Check if tenant_id was set
+          setTimeout(() => {
+            const tenantId = localStorage.getItem('tenant_id');
+            console.log('Tenant ID in localStorage after login:', tenantId);
+          }, 100);
           this.isLoading = false;
           this.router.navigate(['/admin']);
         } else {
