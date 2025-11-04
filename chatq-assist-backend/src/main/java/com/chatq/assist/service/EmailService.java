@@ -77,6 +77,10 @@ public class EmailService {
             ? DATE_FORMATTER.format(ticket.getCreatedAt().atZone(java.time.ZoneId.systemDefault()))
             : "N/A";
 
+        String customerName = ticket.getCustomerName() != null ? ticket.getCustomerName() : "Not provided";
+        String customerPhone = ticket.getCustomerPhone() != null ? ticket.getCustomerPhone() : "Not provided";
+
+        // Use string concatenation instead of String.format to avoid issues with CSS semicolons
         return """
             <!DOCTYPE html>
             <html lang="de">
@@ -107,7 +111,7 @@ public class EmailService {
                                     <td style="padding: 0;">
                                         <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0;">
                                             <span style="display: inline-block; background-color: #667eea; color: white; padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 14px;">
-                                                Ticket #%d
+                                                Ticket #""" + ticket.getId() + """
                                             </span>
                                         </div>
                                     </td>
@@ -124,17 +128,17 @@ public class EmailService {
                                             <table style="width: 100%; border-collapse: collapse;">
                                                 <tr>
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500; width: 120px;">Name:</td>
-                                                    <td style="padding: 8px 0; color: #1e293b; font-weight: 600;">%s</td>
+                                                    <td style="padding: 8px 0; color: #1e293b; font-weight: 600;">""" + customerName + """</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500;">Email:</td>
                                                     <td style="padding: 8px 0;">
-                                                        <a href="mailto:%s" style="color: #667eea; text-decoration: none;">%s</a>
+                                                        <a href="mailto:""" + ticket.getCustomerEmail() + """" style="color: #667eea; text-decoration: none;">""" + ticket.getCustomerEmail() + """</a>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500;">Phone:</td>
-                                                    <td style="padding: 8px 0; color: #1e293b;">%s</td>
+                                                    <td style="padding: 8px 0; color: #1e293b;">""" + customerPhone + """</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -149,7 +153,7 @@ public class EmailService {
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500; width: 120px;">Status:</td>
                                                     <td style="padding: 8px 0;">
                                                         <span style="background-color: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-                                                            %s
+                                                            """ + ticket.getStatus() + """
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -157,21 +161,21 @@ public class EmailService {
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500;">Priority:</td>
                                                     <td style="padding: 8px 0;">
                                                         <span style="background-color: #fed7aa; color: #92400e; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
-                                                            %s
+                                                            """ + ticket.getPriority() + """
                                                         </span>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500;">Created:</td>
-                                                    <td style="padding: 8px 0; color: #1e293b;">%s</td>
+                                                    <td style="padding: 8px 0; color: #1e293b;">""" + formattedDate + """</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500;">Tenant:</td>
-                                                    <td style="padding: 8px 0; color: #1e293b;">%s</td>
+                                                    <td style="padding: 8px 0; color: #1e293b;">""" + ticket.getTenantId() + """</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding: 8px 0; color: #64748b; font-weight: 500;">Session ID:</td>
-                                                    <td style="padding: 8px 0; color: #1e293b; font-family: monospace; font-size: 12px;">%s</td>
+                                                    <td style="padding: 8px 0; color: #1e293b; font-family: monospace; font-size: 12px;">""" + sessionId + """</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -203,18 +207,7 @@ public class EmailService {
                 </table>
             </body>
             </html>
-            """.formatted(
-                ticket.getId(),
-                ticket.getCustomerName() != null ? ticket.getCustomerName() : "Not provided",
-                ticket.getCustomerEmail(),
-                ticket.getCustomerEmail(),
-                ticket.getCustomerPhone() != null ? ticket.getCustomerPhone() : "Not provided",
-                ticket.getStatus(),
-                ticket.getPriority(),
-                formattedDate,
-                ticket.getTenantId(),
-                sessionId
-            );
+            """;
     }
 
     /**
