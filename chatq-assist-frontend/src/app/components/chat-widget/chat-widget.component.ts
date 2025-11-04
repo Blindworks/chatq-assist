@@ -38,6 +38,7 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
   currentMessage = '';
   sessionId: string | null = null;
   isLoading = false;
+  typingStatus: string = 'Typing...';
   theme: 'light' | 'dark' = 'light';
 
   constructor(
@@ -154,6 +155,7 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
 
     this.currentMessage = '';
     this.isLoading = true;
+    this.typingStatus = 'Searching knowledge base...';
 
     // Add placeholder for assistant response (will be filled with streaming tokens)
     const assistantMessage: Message = {
@@ -167,6 +169,10 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
     this.chatService.sendMessageStreaming(request).subscribe({
       next: (streamEvent) => {
         if (streamEvent.type === 'token' && streamEvent.token) {
+          // Update status when we start receiving tokens
+          if (assistantMessage.content === '') {
+            this.typingStatus = 'Generating response...';
+          }
           // Append token exactly as received from backend
           console.log('Received token:', JSON.stringify(streamEvent.token));
           assistantMessage.content += streamEvent.token;
@@ -191,19 +197,23 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
           assistantMessage.feedbackGiven = null;
         } else if (streamEvent.type === 'complete') {
           this.isLoading = false;
+          this.typingStatus = 'Typing...';
         } else if (streamEvent.type === 'error') {
           console.error('Streaming error:', streamEvent.error);
           assistantMessage.content = 'Sorry, I encountered an error. Please try again.';
           this.isLoading = false;
+          this.typingStatus = 'Typing...';
         }
       },
       error: (error) => {
         console.error('Chat error:', error);
         assistantMessage.content = 'Sorry, I encountered an error. Please try again.';
         this.isLoading = false;
+        this.typingStatus = 'Typing...';
       },
       complete: () => {
         this.isLoading = false;
+        this.typingStatus = 'Typing...';
       }
     });
   }
