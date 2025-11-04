@@ -53,6 +53,9 @@ public class SecurityConfig {
                         // Document management - All admin roles
                         .requestMatchers("/api/documents/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "TENANT_ADMIN")
 
+                        // Support ticket management - All admin roles
+                        .requestMatchers("/api/tickets/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "TENANT_ADMIN")
+
                         // All other requests require authentication
                         .anyRequest().authenticated()
                 )

@@ -1,0 +1,284 @@
+<div class="ticket-management">
+  <!-- Header -->
+  <div class="section-header">
+    <h2>Support Ticket Management</h2>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+    <button class="close-btn" (click)="clearError()">&times;</button>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card stat-total">
+      <div class="stat-value">{{ stats.total }}</div>
+      <div class="stat-label">Total Tickets</div>
+    </div>
+    <div class="stat-card stat-open">
+      <div class="stat-value">{{ stats.open }}</div>
+      <div class="stat-label">Open</div>
+    </div>
+    <div class="stat-card stat-in-progress">
+      <div class="stat-value">{{ stats.inProgress }}</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+    <div class="stat-card stat-resolved">
+      <div class="stat-value">{{ stats.resolved }}</div>
+      <div class="stat-label">Resolved</div>
+    </div>
+    <div class="stat-card stat-closed">
+      <div class="stat-value">{{ stats.closed }}</div>
+      <div class="stat-label">Closed</div>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search by customer name, email, or phone..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Status:</label>
+      <select
+        [(ngModel)]="filterStatus"
+        (ngModelChange)="onFilterChange()"
+        class="filter-select">
+        <option value="ALL">All</option>
+        <option value="OPEN">Open</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="RESOLVED">Resolved</option>
+        <option value="CLOSED">Closed</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Sort by:</label>
+      <select
+        [(ngModel)]="sortBy"
+        (ngModelChange)="onSortChange()"
+        class="filter-select">
+        <option value="createdAt">Date Created</option>
+        <option value="priority">Priority</option>
+        <option value="status">Status</option>
+      </select>
+    </div>
+
+    <button
+      class="btn-sort-direction"
+      (click)="toggleSortDirection()"
+      title="Toggle sort direction">
+      {{ sortDirection === 'desc' ? '↓' : '↑' }}
+    </button>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading tickets...</p>
+  </div>
+
+  <!-- Tickets Table -->
+  <div class="tickets-container" *ngIf="!isLoading">
+    <!-- Empty State -->
+    <div *ngIf="filteredTickets.length === 0" class="empty-state">
+      <div class="empty-icon">📋</div>
+      <p>{{ searchQuery || filterStatus !== 'ALL' ? 'No tickets match your filters.' : 'No support tickets yet.' }}</p>
+      <p class="empty-hint" *ngIf="searchQuery || filterStatus !== 'ALL'">Try adjusting your search or filters.</p>
+    </div>
+
+    <!-- Tickets Table -->
+    <div class="table-responsive" *ngIf="filteredTickets.length > 0">
+      <table class="tickets-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Assigned To</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let ticket of filteredTickets"
+            class="ticket-row"
+            (click)="openTicketDetail(ticket)">
+            <td class="ticket-id">#{{ ticket.id }}</td>
+            <td class="customer-name">
+              <div class="name-cell">
+                <strong>{{ ticket.customerName }}</strong>
+              </div>
+            </td>
+            <td class="contact-info">
+              <div class="email">{{ ticket.customerEmail }}</div>
+              <div class="phone" *ngIf="ticket.customerPhone">{{ ticket.customerPhone }}</div>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(ticket.status)">
+                {{ getStatusLabel(ticket.status) }}
+              </span>
+            </td>
+            <td>
+              <span class="priority-badge" [ngClass]="getPriorityClass(ticket.priority)">
+                {{ ticket.priority }}
+              </span>
+            </td>
+            <td class="assigned-to">
+              {{ ticket.assignedTo || '-' }}
+            </td>
+            <td class="created-date">
+              {{ formatDate(ticket.createdAt) }}
+            </td>
+            <td class="actions" (click)="$event.stopPropagation()">
+              <button
+                class="btn-icon btn-delete"
+                (click)="deleteTicket(ticket)"
+                title="Delete ticket">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Ticket Detail Modal -->
+  <div class="modal-overlay" *ngIf="showDetailModal" (click)="closeDetailModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Ticket Details - #{{ selectedTicket?.id }}</h2>
+        <button class="close-btn" (click)="closeDetailModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedTicket">
+        <!-- Customer Information -->
+        <div class="detail-section">
+          <h3>Customer Information</h3>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Name:</label>
+              <span>{{ selectedTicket.customerName }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Email:</label>
+              <span>{{ selectedTicket.customerEmail }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Phone:</label>
+              <span>{{ selectedTicket.customerPhone || 'Not provided' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="selectedTicket.sessionId">
+              <label>Session ID:</label>
+              <span class="session-id">{{ selectedTicket.sessionId }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ticket Metadata -->
+        <div class="detail-section">
+          <h3>Ticket Metadata</h3>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Created:</label>
+              <span>{{ formatDateTime(selectedTicket.createdAt) }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Last Updated:</label>
+              <span>{{ formatDateTime(selectedTicket.updatedAt) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="detail-section">
+          <h3>Ticket Management</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select
+                id="status"
+                [(ngModel)]="editForm.status"
+                class="form-control">
+                <option *ngFor="let status of statusOptions" [value]="status">
+                  {{ getStatusLabel(status) }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="priority">Priority</label>
+              <select
+                id="priority"
+                [(ngModel)]="editForm.priority"
+                class="form-control">
+                <option *ngFor="let priority of priorityOptions" [value]="priority">
+                  {{ priority }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="assignedTo">Assigned To</label>
+              <input
+                id="assignedTo"
+                type="text"
+                [(ngModel)]="editForm.assignedTo"
+                placeholder="Enter assignee name or email..."
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group full-width">
+              <label for="notes">Notes</label>
+              <textarea
+                id="notes"
+                [(ngModel)]="editForm.notes"
+                rows="4"
+                placeholder="Add internal notes about this ticket..."
+                class="form-control"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Existing Notes Display -->
+        <div class="detail-section" *ngIf="selectedTicket.notes">
+          <h3>Previous Notes</h3>
+          <div class="notes-display">
+            {{ selectedTicket.notes }}
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn btn-danger"
+          (click)="deleteTicket(selectedTicket!)"
+          *ngIf="selectedTicket">
+          Delete Ticket
+        </button>
+        <div class="modal-footer-right">
+          <button class="btn btn-secondary" (click)="closeDetailModal()">
+            Cancel
+          </button>
+          <button class="btn btn-primary" (click)="saveTicket()">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

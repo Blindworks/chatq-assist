@@ -19,6 +19,12 @@
     </button>
     <button
       class="tab"
+      [class.active]="activeTab === 'tickets'"
+      (click)="switchTab('tickets')">
+      🎫 Support Tickets
+    </button>
+    <button
+      class="tab"
       [class.active]="activeTab === 'documents'"
       (click)="switchTab('documents')">
       📄 Document Management
@@ -202,6 +208,11 @@
       </div>
     </div>
   </div>
+  </div>
+
+  <!-- Ticket Management Content -->
+  <div *ngIf="activeTab === 'tickets'" class="tab-content">
+    <app-ticket-management></app-ticket-management>
   </div>
 
   <!-- Document Management Content -->

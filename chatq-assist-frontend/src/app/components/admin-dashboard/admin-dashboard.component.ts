@@ -6,17 +6,18 @@ import { DocumentManagementComponent } from '../document-management/document-man
 import { TenantManagementComponent } from '../tenant-management/tenant-management.component';
 import { UserManagementComponent } from '../user-management/user-management.component';
 import { AnalyticsDashboardComponent } from '../analytics-dashboard/analytics-dashboard.component';
+import { TicketManagementComponent } from '../ticket-management/ticket-management.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, DocumentManagementComponent, TenantManagementComponent, UserManagementComponent, AnalyticsDashboardComponent],
+  imports: [CommonModule, FormsModule, DocumentManagementComponent, TenantManagementComponent, UserManagementComponent, AnalyticsDashboardComponent, TicketManagementComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
   // Tab state
-  activeTab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' = 'faqs';
+  activeTab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets' = 'faqs';
 
   faqs: FaqEntry[] = [];
   filteredFaqs: FaqEntry[] = [];
@@ -36,7 +37,7 @@ export class AdminDashboardComponent implements OnInit {
     this.loadFaqs();
   }
 
-  switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics'): void {
+  switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets'): void {
     this.activeTab = tab;
   }
 
