@@ -173,3 +173,4 @@ When implementing these features, note:
 - Environment variables for OpenAI are already set up in docker-compose
 - DTO classes exist for ChatRequest, ChatResponse, DocumentDto, AnalyticsDto
 - Enums are defined for future use cases
+- Ich kompiliere und starte das Backend.

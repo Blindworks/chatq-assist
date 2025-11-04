@@ -19,12 +19,15 @@ public interface DocumentChunkRepository extends JpaRepository<DocumentChunk, Lo
 
     /**
      * Find document chunks by vector similarity using pgvector cosine distance
-     * Returns top N most similar chunks for given embedding
+     * Returns top N most similar chunks for given embedding that meet the similarity threshold
+     * Cosine distance: 0 = identical, 1 = orthogonal, 2 = opposite
+     * We use 0.25 as threshold (corresponding to ~0.75 cosine similarity)
      */
     @Query(value = """
         SELECT * FROM document_chunks
         WHERE tenant_id = :tenantId
         AND embedding IS NOT NULL
+        AND (embedding <=> CAST(:embedding AS vector)) < 0.25
         ORDER BY embedding <=> CAST(:embedding AS vector)
         LIMIT :limit
         """, nativeQuery = true)
@@ -36,6 +39,7 @@ public interface DocumentChunkRepository extends JpaRepository<DocumentChunk, Lo
 
     /**
      * Find document chunks by vector similarity for specific documents
+     * Only returns completed documents with similarity above threshold
      */
     @Query(value = """
         SELECT dc.* FROM document_chunks dc
@@ -43,6 +47,7 @@ public interface DocumentChunkRepository extends JpaRepository<DocumentChunk, Lo
         WHERE dc.tenant_id = :tenantId
         AND d.status = 'COMPLETED'
         AND dc.embedding IS NOT NULL
+        AND (dc.embedding <=> CAST(:embedding AS vector)) < 0.25
         ORDER BY dc.embedding <=> CAST(:embedding AS vector)
         LIMIT :limit
         """, nativeQuery = true)

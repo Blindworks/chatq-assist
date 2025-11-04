@@ -27,6 +27,7 @@ public class SupportTicket {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "conversation_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Conversation conversation;
 
     @Column(name = "customer_name")

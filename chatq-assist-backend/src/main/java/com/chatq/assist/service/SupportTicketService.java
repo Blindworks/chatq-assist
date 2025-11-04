@@ -29,11 +29,13 @@ public class SupportTicketService {
         log.info("Creating handoff ticket for sessionId: {}, tenant: {}, email: {}",
                 request.getSessionId(), tenantId, request.getEmail());
 
-        // Find conversation by sessionId
-        Optional<Conversation> conversationOpt = conversationRepository.findBySessionId(request.getSessionId());
+        // Find conversation by sessionId and tenantId
+        Optional<Conversation> conversationOpt = conversationRepository.findBySessionIdAndTenantId(
+                request.getSessionId(), tenantId);
 
         if (conversationOpt.isEmpty()) {
-            log.warn("Conversation not found for sessionId: {}", request.getSessionId());
+            log.warn("Conversation not found for sessionId: {} and tenantId: {}",
+                    request.getSessionId(), tenantId);
         }
 
         // Create ticket

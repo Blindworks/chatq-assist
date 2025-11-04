@@ -19,13 +19,16 @@ public interface FaqRepository extends JpaRepository<FaqEntry, Long> {
 
     /**
      * Find FAQs by vector similarity using pgvector cosine distance
-     * Returns top N most similar FAQs for given embedding
+     * Returns top N most similar FAQs for given embedding that meet the similarity threshold
+     * Cosine distance: 0 = identical, 1 = orthogonal, 2 = opposite
+     * We use 0.25 as threshold (corresponding to ~0.75 cosine similarity)
      */
     @Query(value = """
         SELECT * FROM faq_entries
         WHERE tenant_id = :tenantId
         AND is_active = true
         AND embedding IS NOT NULL
+        AND (embedding <=> CAST(:embedding AS vector)) < 0.25
         ORDER BY embedding <=> CAST(:embedding AS vector)
         LIMIT :limit
         """, nativeQuery = true)
