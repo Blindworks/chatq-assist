@@ -38,6 +38,14 @@ services:
       JWT_SECRET: ${JWT_SECRET:-your-256-bit-secret-key-change-in-production}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4200,http://localhost:80}
       LOG_LEVEL: INFO
+      # Email Configuration
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      EMAIL_FROM: ${EMAIL_FROM:-noreply@chatq-assist.com}
+      EMAIL_ADMIN: ${EMAIL_ADMIN:-admin@chatq-assist.com}
+      EMAIL_ENABLED: ${EMAIL_ENABLED:-false}
     ports:
       - "8080:8080"
     depends_on:
