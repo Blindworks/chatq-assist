@@ -51,6 +51,7 @@ public class SupportTicketService {
                 .customerName(request.getName())
                 .customerEmail(request.getEmail())
                 .customerPhone(request.getPhone())
+                .customerQuestion(request.getQuestion())
                 .status(TicketStatus.OPEN)
                 .priority(TicketPriority.MEDIUM)
                 .build();
@@ -208,6 +209,7 @@ public class SupportTicketService {
                 .customerName(ticket.getCustomerName())
                 .customerEmail(ticket.getCustomerEmail())
                 .customerPhone(ticket.getCustomerPhone())
+                .customerQuestion(ticket.getCustomerQuestion())
                 .status(ticket.getStatus())
                 .priority(ticket.getPriority())
                 .createdAt(ticket.getCreatedAt())

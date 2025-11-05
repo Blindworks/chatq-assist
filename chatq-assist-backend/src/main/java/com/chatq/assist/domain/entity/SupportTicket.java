@@ -39,6 +39,9 @@ public class SupportTicket {
     @Column(name = "customer_phone", length = 50)
     private String customerPhone;
 
+    @Column(name = "customer_question", columnDefinition = "TEXT")
+    private String customerQuestion;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     @Builder.Default

@@ -49,6 +49,7 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
     phone: ''
   };
   handoffSubmitting = false;
+  lastUserQuestion = ''; // Store the last question that triggered handoff
 
   constructor(
     private chatService: ChatService,
@@ -161,6 +162,9 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
       question: this.currentMessage,
       sessionId: this.sessionId || undefined
     };
+
+    // Store the question in case handoff is triggered
+    this.lastUserQuestion = this.currentMessage;
 
     this.currentMessage = '';
     this.isLoading = true;
@@ -279,7 +283,8 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
       sessionId: this.sessionId || '',
       name: this.handoffForm.name,
       email: this.handoffForm.email,
-      phone: this.handoffForm.phone
+      phone: this.handoffForm.phone,
+      question: this.lastUserQuestion
     }).subscribe({
       next: () => {
         this.messages.push({

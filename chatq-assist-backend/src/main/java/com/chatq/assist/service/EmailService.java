@@ -79,6 +79,7 @@ public class EmailService {
 
         String customerName = ticket.getCustomerName() != null ? ticket.getCustomerName() : "Not provided";
         String customerPhone = ticket.getCustomerPhone() != null ? ticket.getCustomerPhone() : "Not provided";
+        String customerQuestion = ticket.getCustomerQuestion() != null ? ticket.getCustomerQuestion() : "Not provided";
 
         return "<!DOCTYPE html>" +
             "<html lang=\"de\">" +
@@ -137,6 +138,15 @@ public class EmailService {
             "                                        <td style=\"padding: 8px 0; color: #1e293b;\">" + customerPhone + "</td>" +
             "                                    </tr>" +
             "                                </table>" +
+            "                            </div>" +
+            "                            <!-- Customer Question -->" +
+            "                            <div style=\"margin-bottom: 25px;\">" +
+            "                                <h2 style=\"margin: 0 0 15px 0; color: #1e293b; font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;\">" +
+            "                                    💬 Customer Question" +
+            "                                </h2>" +
+            "                                <div style=\"background-color: #f8fafc; padding: 15px; border-left: 4px solid #667eea; border-radius: 4px;\">" +
+            "                                    <p style=\"margin: 0; color: #1e293b; font-size: 14px; line-height: 1.6;\">" + customerQuestion + "</p>" +
+            "                                </div>" +
             "                            </div>" +
             "                            <!-- Ticket Details -->" +
             "                            <div style=\"margin-bottom: 25px;\">" +
@@ -210,6 +220,7 @@ public class EmailService {
         log.info("Support Ticket #{} created", ticket.getId());
         log.info("Customer: {} ({})", ticket.getCustomerName(), ticket.getCustomerEmail());
         log.info("Phone: {}", ticket.getCustomerPhone());
+        log.info("Question: {}", ticket.getCustomerQuestion());
         log.info("Tenant: {}", ticket.getTenantId());
         log.info("Status: {}", ticket.getStatus());
         log.info("Priority: {}", ticket.getPriority());

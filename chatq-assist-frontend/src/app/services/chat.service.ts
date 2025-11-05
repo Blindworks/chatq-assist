@@ -57,6 +57,7 @@ export interface HandoffRequest {
   name: string;
   email: string;
   phone?: string;
+  question?: string;
 }
 
 @Injectable({

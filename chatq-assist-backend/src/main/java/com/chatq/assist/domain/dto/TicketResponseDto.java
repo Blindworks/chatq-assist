@@ -32,6 +32,8 @@ public class TicketResponseDto {
 
     private String customerPhone;
 
+    private String customerQuestion;
+
     private TicketStatus status;
 
     private TicketPriority priority;

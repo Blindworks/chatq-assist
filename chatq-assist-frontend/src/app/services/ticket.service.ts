@@ -12,6 +12,7 @@ export interface SupportTicket {
   customerName: string;
   customerEmail: string;
   customerPhone?: string;
+  customerQuestion?: string;
   status: TicketStatus;
   priority: TicketPriority;
   createdAt?: string;

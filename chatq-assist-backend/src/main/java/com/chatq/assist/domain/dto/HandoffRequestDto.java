@@ -23,4 +23,6 @@ public class HandoffRequestDto {
     private String email;
 
     private String phone;
+
+    private String question;
 }

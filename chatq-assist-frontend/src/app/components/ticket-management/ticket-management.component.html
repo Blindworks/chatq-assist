@@ -180,6 +180,10 @@
               <label>Phone:</label>
               <span>{{ selectedTicket.customerPhone || 'Not provided' }}</span>
             </div>
+            <div class="detail-item full-width" *ngIf="selectedTicket.customerQuestion">
+              <label>Customer Question:</label>
+              <div class="customer-question">{{ selectedTicket.customerQuestion }}</div>
+            </div>
             <div class="detail-item" *ngIf="selectedTicket.sessionId">
               <label>Session ID:</label>
               <span class="session-id">{{ selectedTicket.sessionId }}</span>
