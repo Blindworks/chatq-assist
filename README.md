@@ -1,46 +1,61 @@
-# ChatQ Assist - AI-Powered FAQ Chatbot
+# ChatQ Assist - FAQ & Support Ticket System
 
-An intelligent, LLM-based FAQ/Support chatbot for SMBs featuring **RAG (Retrieval-Augmented Generation)**, **streaming responses**, and **intelligent performance optimization**. The system uses OpenAI GPT-4 and vector similarity search to generate precise answers based on your FAQ database.
+A GDPR-compliant FAQ management and support ticket system for SMBs, featuring an embeddable chat widget with intelligent handoff capabilities.
 
 ## 🚀 Features
 
 ### ✅ Implemented (v0.1)
 
-#### Core Functionality
-- **🤖 LLM-based Chat**: OpenAI GPT-4 for natural, context-aware responses
-- **🔍 RAG Pipeline**: Retrieval-Augmented Generation with pgvector similarity search
-- **⚡ Streaming Responses**: Real-time answers via Server-Sent Events (SSE)
-- **📝 FAQ Management**: Complete CRUD system for FAQ entries
-- **🏷️ Tag System**: Organize FAQs with tags
-- **💬 Conversation History**: Context-aware multi-turn conversations
-- **🎯 Confidence Scoring**: Automatic quality assessment of responses
-- **🔄 Smart Handoff**: Automatic escalation when no answer is found
+#### FAQ Management
+- **📝 Full CRUD System**: Create, Read, Update, Delete FAQ entries
+- **🏷️ Tag System**: Organize FAQs with tags for better categorization
+- **📊 Usage Tracking**: Track how often each FAQ is accessed
+- **🔄 Display Order**: Custom ordering for FAQ presentation
+- **✅ Active/Inactive**: Soft enable/disable FAQs without deletion
 
-#### Performance Optimization
-- **💾 Embedding Cache**: Repeated texts don't generate new OpenAI API calls
-- **🚀 FAQ Match Cache**: Vector similarity search results are cached
-- **📦 Batch Processing**: Bulk import of FAQs in a single transaction
-- **⏱️ Cache TTL**: 24h TTL, 10,000 entries per cache (Caffeine)
+#### Support Ticket System
+- **🎫 Complete Ticket Management**: Full CRUD API for support tickets
+- **📋 Status Tracking**: OPEN, IN_PROGRESS, RESOLVED, CLOSED
+- **⚡ Priority Levels**: LOW, MEDIUM, HIGH, URGENT
+- **👤 Customer Information**: Name, email, phone, original question
+- **📊 Statistics Dashboard**: Real-time ticket metrics and counts
+- **🔍 Filtering & Search**: Filter by status, search by customer details
+- **📧 Email Notifications**: Automatic HTML email alerts on handoff
+- **💼 Assignment System**: Assign tickets to team members
+- **📝 Internal Notes**: Add notes and comments to tickets
 
-#### Frontend
-- **🎨 Modern Chat Widget**: Angular 17 Standalone Component
-- **📱 Responsive Design**: Mobile-first UI with custom CSS
-- **🌊 Streaming UI**: Token-based real-time display
-- **💭 Source References**: Display of used FAQ sources
+#### Chat Widget (Frontend)
+- **🎨 Modern Angular 17 Widget**: Standalone component architecture
+- **📱 Responsive Design**: Mobile-first UI with clean styling
+- **💬 Handoff Modal**: Customer information collection form
+- **🎯 Smart Question Capture**: Stores the original customer question
+- **🌙 Theme Support**: Light/dark mode toggle
+- **🔄 Session Management**: Persistent chat sessions via localStorage
+- **👍 Feedback System**: Thumbs up/down for responses
+- **🎨 Customizable Branding**: Configure colors and appearance
 
 #### Multi-Tenancy
 - **🏢 Tenant Isolation**: Header-based tenant separation (`X-Tenant-ID`)
 - **🗄️ Data Isolation**: All queries filter by tenant ID
+- **🔐 Secure by Default**: Role-based access control (ADMIN, TENANT_ADMIN)
+
+#### Production Features
+- **🚨 Global Exception Handling**: Centralized error handling with consistent responses
+- **📝 Structured Logging**: Separate log files with rolling policy (30-day retention)
+- **🔍 Request Tracking**: Unique request IDs for correlation across logs
+- **⚡ Async Logging**: Non-blocking logging with Logback async appenders
+- **📊 Custom Error Responses**: Standardized error format across all endpoints
 
 ### 🚧 Planned (Roadmap)
 
+- [ ] **LLM Integration**: RAG pipeline with OpenAI GPT-4 and vector embeddings
+- [ ] **Streaming Responses**: Server-Sent Events (SSE) for real-time chat
 - [ ] **Document Ingestion**: Upload and process URLs, PDFs, DOCX
-- [ ] **Analytics Dashboard**: Top questions, deflection rate, confidence trends
-- [ ] **Admin Panel**: Web UI for FAQ management
-- [ ] **E-Mail Notifications**: Automatic notifications on handoff
-- [ ] **Multi-Language Support**: i18n for different languages
+- [ ] **Analytics Dashboard**: Top questions, deflection rate, trends
 - [ ] **Rate Limiting**: API protection against overload
 - [ ] **Monitoring & Metrics**: Prometheus/Grafana integration
+- [ ] **Multi-Language Support**: i18n for different languages
+- [ ] **File Attachments**: Upload files with support tickets
 
 ## 🛠️ Tech Stack
 
@@ -50,18 +65,16 @@ An intelligent, LLM-based FAQ/Support chatbot for SMBs featuring **RAG (Retrieva
 | **Spring Boot** | 3.2.0 | Application Framework |
 | **Java** | 21 | Programming Language |
 | **PostgreSQL** | 16+ | Primary Database |
-| **pgvector** | latest | Vector Similarity Search |
-| **LangChain4j** | 0.35.0 | LLM Integration Framework |
-| **OpenAI API** | GPT-4 | Language Model |
-| **OpenAI Embeddings** | text-embedding-3-small | Embedding Model (1536 dim) |
+| **pgvector** | latest | Vector Extension (prepared for future RAG) |
 | **Flyway** | 9.x | Database Migration |
-| **Caffeine** | latest | In-Memory Cache |
+| **Spring Mail** | - | SMTP Email Integration |
+| **Logback** | - | Structured Logging |
 | **Lombok** | latest | Boilerplate Reduction |
 
 ### Frontend
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Angular** | 17.x | Frontend Framework |
+| **Angular** | 17.x | Frontend Framework (Standalone Components) |
 | **TypeScript** | 5.x | Programming Language |
 | **RxJS** | 7.x | Reactive Programming |
 | **HttpClient** | Angular | HTTP Communication |
@@ -78,38 +91,46 @@ ChatQ-Assist/
 ├── chatq-assist-backend/              # Spring Boot Backend
 │   ├── src/main/java/com/chatq/assist/
 │   │   ├── config/
-│   │   │   ├── OpenAiConfig.java      # LangChain4j & OpenAI Configuration
-│   │   │   └── CacheConfig.java       # Caffeine Cache Setup
+│   │   │   ├── WebMvcConfig.java      # Request Interceptor Config
+│   │   │   └── LoggingInterceptor.java # HTTP Request Tracking
 │   │   ├── controller/
-│   │   │   ├── ChatController.java    # /api/chat (+ /stream)
-│   │   │   └── FaqController.java     # /api/faq (+ /batch)
+│   │   │   ├── FaqController.java     # /api/faq
+│   │   │   └── SupportTicketController.java  # /api/tickets
 │   │   ├── domain/
 │   │   │   ├── entity/
-│   │   │   │   ├── FaqEntry.java      # FAQ Entity with Embeddings
+│   │   │   │   ├── FaqEntry.java      # FAQ Entity
 │   │   │   │   ├── Conversation.java  # Chat Sessions
-│   │   │   │   └── Message.java       # Chat Messages
+│   │   │   │   ├── Message.java       # Chat Messages
+│   │   │   │   └── SupportTicket.java # Support Tickets
 │   │   │   ├── dto/
-│   │   │   │   ├── ChatRequest.java
-│   │   │   │   ├── ChatResponse.java
-│   │   │   │   └── FaqEntryDto.java
+│   │   │   │   ├── FaqEntryDto.java
+│   │   │   │   ├── HandoffRequestDto.java
+│   │   │   │   ├── TicketResponseDto.java
+│   │   │   │   └── ErrorResponse.java
 │   │   │   └── enums/
-│   │   │       ├── ConversationStatus.java
-│   │   │       └── MessageRole.java
+│   │   │       ├── TicketStatus.java
+│   │   │       └── TicketPriority.java
 │   │   ├── repository/
-│   │   │   ├── FaqRepository.java     # incl. Vector Similarity Query
+│   │   │   ├── FaqRepository.java
 │   │   │   ├── ConversationRepository.java
-│   │   │   └── MessageRepository.java
+│   │   │   ├── MessageRepository.java
+│   │   │   └── SupportTicketRepository.java
 │   │   ├── service/
-│   │   │   ├── ChatServiceLLM.java    # RAG Pipeline + Streaming
-│   │   │   ├── EmbeddingService.java  # OpenAI Embedding Generation
-│   │   │   └── FaqService.java        # FAQ CRUD + Batch Import
-│   │   └── util/
-│   │       └── VectorType.java        # Hibernate pgvector UserType
+│   │   │   ├── FaqService.java        # FAQ CRUD
+│   │   │   ├── SupportTicketService.java  # Ticket Management
+│   │   │   └── EmailService.java      # SMTP Email Sender
+│   │   └── exception/
+│   │       ├── GlobalExceptionHandler.java
+│   │       ├── ResourceNotFoundException.java
+│   │       └── BusinessException.java
 │   ├── src/main/resources/
 │   │   ├── db/migration/
 │   │   │   ├── V1__init_schema.sql
 │   │   │   ├── V2__add_chat_tables.sql
-│   │   │   └── V3__add_embeddings_to_faq.sql
+│   │   │   ├── ...
+│   │   │   ├── V8__create_support_tickets_table.sql
+│   │   │   └── V9__add_customer_question_to_support_tickets.sql
+│   │   ├── logback-spring.xml         # Logging Configuration
 │   │   └── application.properties
 │   ├── Dockerfile
 │   └── pom.xml
@@ -117,12 +138,17 @@ ChatQ-Assist/
 ├── chatq-assist-frontend/             # Angular Widget
 │   ├── src/app/
 │   │   ├── components/
-│   │   │   └── chat-widget/
-│   │   │       ├── chat-widget.component.ts    # Main Chat UI
-│   │   │       ├── chat-widget.component.html
-│   │   │       └── chat-widget.component.css
+│   │   │   ├── chat-widget/
+│   │   │   │   ├── chat-widget.component.ts
+│   │   │   │   ├── chat-widget.component.html
+│   │   │   │   └── chat-widget.component.css
+│   │   │   └── ticket-management/
+│   │   │       ├── ticket-management.component.ts
+│   │   │       ├── ticket-management.component.html
+│   │   │       └── ticket-management.component.css
 │   │   └── services/
-│   │       └── chat.service.ts        # HTTP + SSE Handling
+│   │       ├── chat.service.ts        # Chat API Client
+│   │       └── ticket.service.ts      # Ticket API Client
 │   ├── package.json
 │   └── angular.json
 │
@@ -139,23 +165,18 @@ ChatQ-Assist/
 - **Java 21** (for local backend development)
 - **Node.js 18+** (for frontend development)
 - **PostgreSQL 16+** with **pgvector extension** (if running locally without Docker)
-- **OpenAI API Key** ([create one here](https://platform.openai.com/api-keys))
 
 ### Option 1: Docker Compose (Recommended)
 
 ```bash
 # 1. Clone repository
-git clone <repository-url>
+git clone https://github.com/Blindworks/chatq-assist.git
 cd ChatQ-Assist
 
-# 2. Set environment variables
-# Create docker-compose.yml or set env vars:
-export OPENAI_API_KEY="sk-..."
-
-# 3. Start
+# 2. Start all services
 docker-compose up -d
 
-# 4. Follow logs
+# 3. Follow logs
 docker-compose logs -f backend
 ```
 
@@ -192,55 +213,7 @@ Widget runs on http://localhost:4200
 
 ## 📋 API Documentation
 
-### Chat Endpoints
-
-#### POST /api/chat
-Standard chat (non-streaming)
-
-**Request**:
-```json
-{
-  "question": "What are your business hours?",
-  "sessionId": "optional-uuid",
-  "userEmail": "user@example.com"
-}
-```
-
-**Response**:
-```json
-{
-  "sessionId": "uuid",
-  "answer": "Our business hours are...",
-  "confidenceScore": 0.85,
-  "sources": [
-    {
-      "type": "FAQ",
-      "title": "Business Hours",
-      "id": 42
-    }
-  ],
-  "handoffTriggered": false
-}
-```
-
-#### POST /api/chat/stream
-Chat with streaming response (SSE)
-
-**Request**: Same as `/api/chat`
-
-**Response**: Server-Sent Events
-```
-event: token
-data: Our
-
-event: token
-data:  business
-
-event: metadata
-data: {"sessionId":"uuid","confidenceScore":0.85,"sources":[...],"handoffTriggered":false}
-```
-
-### FAQ Management Endpoints
+### FAQ Endpoints
 
 #### GET /api/faq
 Get all FAQs for a tenant
@@ -280,47 +253,104 @@ Create a single FAQ entry
 }
 ```
 
-**Response**: Created FAQ entry with ID
+#### PUT /api/faq/{id}
+Update FAQ entry
 
-#### POST /api/faq/batch
-Create multiple FAQs at once (performance-optimized)
+#### DELETE /api/faq/{id}
+Delete FAQ entry
+
+### Support Ticket Endpoints
+
+All ticket endpoints require authentication with roles: `ADMIN`, `SUPER_ADMIN`, or `TENANT_ADMIN`.
+
+#### GET /api/tickets
+Get paginated list of tickets
+
+**Headers**: `X-Tenant-ID: default-tenant`
+
+**Query Parameters**:
+- `status` (optional): Filter by status (OPEN, IN_PROGRESS, RESOLVED, CLOSED)
+- `page` (optional): Page number (default: 0)
+- `size` (optional): Page size (default: 20)
+
+**Response**:
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "tenantId": "default-tenant",
+      "sessionId": "uuid-here",
+      "customerName": "John Doe",
+      "customerEmail": "john@example.com",
+      "customerPhone": "+49123456789",
+      "customerQuestion": "I need help with my account",
+      "status": "OPEN",
+      "priority": "MEDIUM",
+      "assignedTo": null,
+      "notes": null,
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "pageable": {...},
+  "totalElements": 10,
+  "totalPages": 1
+}
+```
+
+#### GET /api/tickets/{id}
+Get single ticket by ID
+
+#### PUT /api/tickets/{id}
+Update ticket (status, priority, assignment, notes)
+
+**Request**:
+```json
+{
+  "status": "IN_PROGRESS",
+  "priority": "HIGH",
+  "assignedTo": "admin@example.com",
+  "notes": "Working on this issue now"
+}
+```
+
+#### DELETE /api/tickets/{id}
+Delete ticket
+
+#### GET /api/tickets/stats
+Get ticket statistics for tenant
+
+**Response**:
+```json
+{
+  "total": 45,
+  "open": 12,
+  "inProgress": 8,
+  "resolved": 20,
+  "closed": 5
+}
+```
+
+### Chat & Handoff Endpoints
+
+#### POST /api/chat/handoff
+Submit handoff request and create support ticket
 
 **Headers**: `X-Tenant-ID: default-tenant`
 
 **Request**:
 ```json
-[
-  {
-    "question": "Question 1?",
-    "answer": "Answer 1",
-    "tags": ["tag1"],
-    "displayOrder": 1
-  },
-  {
-    "question": "Question 2?",
-    "answer": "Answer 2",
-    "tags": ["tag2"],
-    "displayOrder": 2
-  }
-]
+{
+  "sessionId": "uuid",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+49123456789",
+  "question": "I need help with my account"
+}
 ```
 
-**Benefits**:
-- ✅ Single database transaction
-- ✅ Embedding cache is utilized
-- ✅ ~70% faster than individual POST requests
-
-#### PUT /api/faq/{id}
-Update FAQ entry
-
-**Headers**: `X-Tenant-ID: default-tenant`
-
-**Request**: Same as POST, but on existing ID
-
-**Note**: Embedding is automatically regenerated!
-
-#### DELETE /api/faq/{id}
-Delete FAQ entry
+**Response**: Created ticket details
 
 ## 🔧 Configuration
 
@@ -328,130 +358,52 @@ Delete FAQ entry
 
 ```properties
 # Database
-spring.datasource.url=jdbc:postgresql://localhost:5433/chatq_assist
-spring.datasource.username=postgres
-spring.datasource.password=taxcRH51#
+spring.datasource.url=jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:chatq_assist}
+spring.datasource.username=${DB_USER:postgres}
+spring.datasource.password=${DB_PASSWORD:taxcRH51#}
 
-# OpenAI
-openai.api.key=${OPENAI_API_KEY}
-openai.model.chat=gpt-4
-openai.model.embedding=text-embedding-3-small
+# JPA (Flyway handles schema)
+spring.jpa.hibernate.ddl-auto=validate
 
 # Server
 server.port=8080
 
-# JPA (Flyway handles schema)
-spring.jpa.hibernate.ddl-auto=validate
+# Email Configuration
+spring.mail.host=${MAIL_HOST:smtp.gmail.com}
+spring.mail.port=${MAIL_PORT:587}
+spring.mail.username=${MAIL_USERNAME:benedikt.lind@gmail.com}
+spring.mail.password=${MAIL_PASSWORD:}
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Email Settings
+email.from=${EMAIL_FROM:noreply@chatq-assist.com}
+email.admin=${EMAIL_ADMIN:admin@chatq-assist.com}
+email.enabled=${EMAIL_ENABLED:true}
+
+# Logging
+logging.file.name=logs/chatq-assist.log
+logging.file.path=logs
+logging.level.com.chatq.assist=INFO
+logging.level.org.springframework.web=INFO
 ```
 
 ### Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `OPENAI_API_KEY` | OpenAI API Key | *required* |
 | `DB_HOST` | PostgreSQL Host | `localhost` |
 | `DB_PORT` | PostgreSQL Port | `5433` |
 | `DB_NAME` | Database Name | `chatq_assist` |
 | `DB_USER` | Database User | `postgres` |
 | `DB_PASSWORD` | Database Password | `taxcRH51#` |
-
-## 🎯 RAG Pipeline Explained
-
-```
-User Question: "What are your business hours?"
-        ↓
-[1] Embedding Generation (EmbeddingService)
-    → OpenAI text-embedding-3-small
-    → float[1536] vector
-    → Cached in Caffeine (24h TTL)
-        ↓
-[2] Vector Similarity Search (FaqRepository)
-    → pgvector <=> operator (cosine distance)
-    → SELECT * FROM faq_entries
-      ORDER BY embedding <=> query_embedding
-      LIMIT 3
-    → Results cached in Caffeine
-        ↓
-[3] Context Building (ChatServiceLLM)
-    → Top 3 FAQs as context
-    → Conversation history (last 5 messages)
-        ↓
-[4] LLM Generation (OpenAI GPT-4)
-    → System prompt + Context + History + Question
-    → Streaming via SSE
-        ↓
-[5] Response Processing
-    → Save to Message table
-    → Increment FAQ usage_count
-    → Return to user
-```
-
-## 🧪 Testing
-
-### IntelliJ HTTP Client
-
-Create a `test.http` file:
-
-```http
-### Create FAQ
-POST http://localhost:8080/api/faq
-Content-Type: application/json
-X-Tenant-ID: default-tenant
-
-{
-  "question": "What are your business hours?",
-  "answer": "Monday to Friday from 9am to 6pm.",
-  "tags": ["hours", "service"],
-  "displayOrder": 1
-}
-
-### Get all FAQs
-GET http://localhost:8080/api/faq
-X-Tenant-ID: default-tenant
-
-### Chat Request
-POST http://localhost:8080/api/chat
-Content-Type: application/json
-X-Tenant-ID: default-tenant
-
-{
-  "question": "When are you open?",
-  "sessionId": "test-session-123"
-}
-
-### Streaming Chat
-POST http://localhost:8080/api/chat/stream
-Content-Type: application/json
-X-Tenant-ID: default-tenant
-
-{
-  "question": "How can I reach you?",
-  "sessionId": "test-session-456"
-}
-```
-
-### cURL Examples
-
-```bash
-# Create FAQ
-curl -X POST http://localhost:8080/api/faq \
-  -H "Content-Type: application/json" \
-  -H "X-Tenant-ID: default-tenant" \
-  -d '{
-    "question": "What does the service cost?",
-    "answer": "Our prices start at $99/month.",
-    "tags": ["pricing"]
-  }'
-
-# Chat
-curl -X POST http://localhost:8080/api/chat \
-  -H "Content-Type: application/json" \
-  -H "X-Tenant-ID: default-tenant" \
-  -d '{
-    "question": "What does it cost?",
-    "sessionId": "curl-test"
-  }'
-```
+| `MAIL_HOST` | SMTP Server Host | `smtp.gmail.com` |
+| `MAIL_PORT` | SMTP Server Port | `587` |
+| `MAIL_USERNAME` | SMTP Username | - |
+| `MAIL_PASSWORD` | SMTP Password | - |
+| `EMAIL_FROM` | From Email Address | `noreply@chatq-assist.com` |
+| `EMAIL_ADMIN` | Admin Email Address | `admin@chatq-assist.com` |
+| `EMAIL_ENABLED` | Enable/Disable Emails | `true` |
 
 ## 🗄️ Database Schema
 
@@ -466,15 +418,36 @@ CREATE TABLE faq_entries (
     is_active BOOLEAN DEFAULT true,
     display_order INTEGER,
     usage_count BIGINT DEFAULT 0,
-    embedding vector(1536),  -- pgvector!
+    embedding vector(1536),  -- Prepared for future RAG
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     version INTEGER DEFAULT 0
 );
 
 CREATE INDEX idx_faq_tenant ON faq_entries(tenant_id);
-CREATE INDEX idx_faq_embedding ON faq_entries
-    USING ivfflat (embedding vector_cosine_ops);
+```
+
+### support_tickets
+```sql
+CREATE TABLE support_tickets (
+    id BIGSERIAL PRIMARY KEY,
+    tenant_id VARCHAR(255) NOT NULL,
+    conversation_id BIGINT REFERENCES conversations(id),
+    customer_name VARCHAR(255) NOT NULL,
+    customer_email VARCHAR(255) NOT NULL,
+    customer_phone VARCHAR(50),
+    customer_question TEXT,
+    status VARCHAR(50) NOT NULL DEFAULT 'OPEN',
+    priority VARCHAR(50) NOT NULL DEFAULT 'MEDIUM',
+    assigned_to VARCHAR(255),
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    version INTEGER DEFAULT 0
+);
+
+CREATE INDEX idx_tickets_tenant ON support_tickets(tenant_id);
+CREATE INDEX idx_tickets_status ON support_tickets(tenant_id, status);
 ```
 
 ### conversations
@@ -502,6 +475,35 @@ CREATE TABLE messages (
     tenant_id VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+```
+
+## 🧪 Testing
+
+### cURL Examples
+
+```bash
+# Create FAQ
+curl -X POST http://localhost:8080/api/faq \
+  -H "Content-Type: application/json" \
+  -H "X-Tenant-ID: default-tenant" \
+  -d '{
+    "question": "What are your business hours?",
+    "answer": "Monday to Friday from 9am to 6pm.",
+    "tags": ["hours", "service"],
+    "displayOrder": 1
+  }'
+
+# Get all FAQs
+curl -X GET http://localhost:8080/api/faq \
+  -H "X-Tenant-ID: default-tenant"
+
+# Get all tickets
+curl -X GET http://localhost:8080/api/tickets \
+  -H "X-Tenant-ID: default-tenant"
+
+# Get ticket statistics
+curl -X GET http://localhost:8080/api/tickets/stats \
+  -H "X-Tenant-ID: default-tenant"
 ```
 
 ## 🔐 pgvector Installation
@@ -545,20 +547,37 @@ FROM postgres:16
 RUN apt-get update && apt-get install -y postgresql-16-pgvector
 ```
 
-## 📊 Performance Benchmarks
+## 📝 Logging
 
-### Without Caching
-- First request: ~2.5s (Embedding: 200ms + Vector Search: 100ms + GPT-4: 2.2s)
-- Repeated request: ~2.5s (no cache)
+The application uses structured logging with Logback:
 
-### With Caching (current)
-- First request: ~2.5s
-- Repeated request: ~2.2s (Embedding cached: -200ms)
-- Identical FAQ search: ~2.0s (Embedding + Search cached: -300ms)
+- **Main Log**: `logs/chatq-assist.log` - All log messages
+- **Error Log**: `logs/chatq-assist-error.log` - Only ERROR level
+- **Rolling Policy**: Daily rotation, 30-day retention
+- **Async Appenders**: Non-blocking for better performance
+- **Request IDs**: Each HTTP request gets a unique UUID for tracing
 
-### Batch Import
-- 100 FAQs individually: ~45s
-- 100 FAQs batch: ~15s (**~70% faster**)
+Log pattern includes: timestamp, level, thread, logger, request ID, and message.
+
+## 🚨 Exception Handling
+
+The application uses a global exception handler (`@RestControllerAdvice`) that returns consistent error responses:
+
+```json
+{
+  "timestamp": "2024-01-15T10:00:00Z",
+  "status": 404,
+  "error": "Not Found",
+  "message": "Ticket not found with ID: 123",
+  "path": "/api/tickets/123"
+}
+```
+
+Handled exceptions:
+- **Validation Errors**: Field-level validation with detailed error messages
+- **Resource Not Found**: 404 with specific error message
+- **Business Logic Errors**: Custom business exceptions
+- **Generic Errors**: Catch-all for unexpected exceptions
 
 ## 🚨 Troubleshooting
 
@@ -568,37 +587,12 @@ RUN apt-get update && apt-get install -y postgresql-16-pgvector
 ### "Query returned no result" (Hibernate)
 → PostgreSQL dependency must have `compile` scope (not `runtime`)
 
-### Tokens without spaces in frontend
-→ SSE parser must not `.trim()` the `data:` field! See `chat.service.ts:97`
+### Email not sending
+→ Check SMTP credentials and ensure `EMAIL_ENABLED=true`
+→ For Gmail, use an App Password, not your regular password
 
-### OpenAI API Rate Limit
-→ Upgrade to Tier 2+, or implement longer rate limiting
-
-### pgvector index slow
-→ For >10,000 FAQs: `CREATE INDEX USING ivfflat ... WITH (lists = 100)`
-
-## 📈 Monitoring
-
-### Cache Statistics
-
-```java
-// recordStats() is enabled in CacheConfig
-CacheManager cacheManager = ...;
-Cache cache = cacheManager.getCache("embeddings");
-CaffeineCache caffeineCache = (CaffeineCache) cache;
-com.github.benmanes.caffeine.cache.Cache nativeCache =
-    caffeineCache.getNativeCache();
-CacheStats stats = nativeCache.stats();
-
-// Hit Rate, Miss Rate, Evictions, etc.
-```
-
-### Spring Boot Actuator
-
-Available endpoints (when enabled):
-- `/actuator/health` - Health Check
-- `/actuator/metrics` - Metrics
-- `/actuator/caches` - Cache information
+### "Access Denied" on ticket endpoints
+→ Ticket endpoints require authentication with ADMIN role
 
 ## 🤝 Contributing
 
@@ -614,16 +608,15 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for 
 
 ## 🙋 Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-org/chatq-assist/issues)
-- **Email**: support@your-domain.com
-- **Docs**: [Wiki](https://github.com/your-org/chatq-assist/wiki)
+- **Issues**: [GitHub Issues](https://github.com/Blindworks/chatq-assist/issues)
+- **Repository**: [https://github.com/Blindworks/chatq-assist](https://github.com/Blindworks/chatq-assist)
 
 ## 👏 Credits
 
-- **LangChain4j**: https://github.com/langchain4j/langchain4j
 - **pgvector**: https://github.com/pgvector/pgvector
-- **OpenAI**: https://openai.com
+- **Spring Boot**: https://spring.io/projects/spring-boot
+- **Angular**: https://angular.io
 
 ---
 
-**Built with ❤️ for SMBs who need smart, privacy-focused customer support**
+**Built for SMBs who need smart, GDPR-compliant customer support**
