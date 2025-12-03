@@ -1,61 +1,101 @@
-# ChatQ Assist - FAQ & Support Ticket System
+# ChatQ Assist - Intelligent FAQ & Support System
 
-A GDPR-compliant FAQ management and support ticket system for SMBs, featuring an embeddable chat widget with intelligent handoff capabilities.
+A GDPR-compliant, LLM-powered FAQ management and support ticket system for SMBs with multi-tenancy, embeddable chat widget, and intelligent escalation.
 
 ## 🚀 Features
 
-### ✅ Implemented (v0.1)
+### ✅ Fully Implemented
 
-#### FAQ Management
-- **📝 Full CRUD System**: Create, Read, Update, Delete FAQ entries
-- **🏷️ Tag System**: Organize FAQs with tags for better categorization
-- **📊 Usage Tracking**: Track how often each FAQ is accessed
-- **🔄 Display Order**: Custom ordering for FAQ presentation
-- **✅ Active/Inactive**: Soft enable/disable FAQs without deletion
+#### 🤖 LLM-Powered Chat
+- **RAG Pipeline**: OpenAI GPT-4 integration with pgvector for semantic search
+- **Streaming Responses**: Server-Sent Events (SSE) for real-time chat
+- **Intelligent Handoff Detection**: Automatic escalation based on low confidence scores
+- **Chat History**: Persistent conversation storage per session
+- **Confidence Scoring**: Quality assessment of responses
+- **Feedback System**: Thumbs up/down for user feedback
 
-#### Support Ticket System
-- **🎫 Complete Ticket Management**: Full CRUD API for support tickets
-- **📋 Status Tracking**: OPEN, IN_PROGRESS, RESOLVED, CLOSED
-- **⚡ Priority Levels**: LOW, MEDIUM, HIGH, URGENT
-- **👤 Customer Information**: Name, email, phone, original question
-- **📊 Statistics Dashboard**: Real-time ticket metrics and counts
-- **🔍 Filtering & Search**: Filter by status, search by customer details
-- **📧 Email Notifications**: Automatic HTML email alerts on handoff
-- **💼 Assignment System**: Assign tickets to team members
-- **📝 Internal Notes**: Add notes and comments to tickets
+#### 📝 FAQ Management
+- **Full CRUD System**: Create, Read, Update, Delete FAQ entries
+- **Tag System**: Flexible categorization with tags
+- **Vector Embeddings**: Automatic generation for semantic search
+- **Usage Tracking**: Count FAQ access frequency
+- **Display Order**: Customizable sorting
+- **Active/Inactive**: Soft enable/disable without deletion
 
-#### Chat Widget (Frontend)
-- **🎨 Modern Angular 17 Widget**: Standalone component architecture
-- **📱 Responsive Design**: Mobile-first UI with clean styling
-- **💬 Handoff Modal**: Customer information collection form
-- **🎯 Smart Question Capture**: Stores the original customer question
-- **🌙 Theme Support**: Light/dark mode toggle
-- **🔄 Session Management**: Persistent chat sessions via localStorage
-- **👍 Feedback System**: Thumbs up/down for responses
-- **🎨 Customizable Branding**: Configure colors and appearance
+#### 🎫 Support Ticket System
+- **Complete Ticket Management**: Full CRUD API for support tickets
+- **Status Tracking**: OPEN, IN_PROGRESS, RESOLVED, CLOSED
+- **Priority Levels**: LOW, MEDIUM, HIGH, URGENT
+- **Customer Information**: Name, email, phone, original question
+- **Statistics Dashboard**: Real-time metrics per tenant
+- **Filtering & Search**: By status, customer, time period
+- **Email Notifications**: Automatic HTML email alerts on escalation
+- **Assignment System**: Assign tickets to team members
+- **Internal Notes**: Comments and notes on tickets
 
-#### Multi-Tenancy
-- **🏢 Tenant Isolation**: Header-based tenant separation (`X-Tenant-ID`)
-- **🗄️ Data Isolation**: All queries filter by tenant ID
-- **🔐 Secure by Default**: Role-based access control (ADMIN, TENANT_ADMIN)
+#### 📄 Document Management
+- **File Upload**: Upload PDF, DOCX, TXT files
+- **URL Ingestion**: Automatic content extraction from web pages
+- **Sitemap Support**: Bulk import from website content (prepared)
+- **Text Extraction**: Automatic processing of various formats
+- **Embedding Generation**: Vectorization for RAG pipeline
+- **Document CRUD**: Complete management with status tracking
 
-#### Production Features
-- **🚨 Global Exception Handling**: Centralized error handling with consistent responses
-- **📝 Structured Logging**: Separate log files with rolling policy (30-day retention)
-- **🔍 Request Tracking**: Unique request IDs for correlation across logs
-- **⚡ Async Logging**: Non-blocking logging with Logback async appenders
-- **📊 Custom Error Responses**: Standardized error format across all endpoints
+#### 📊 Analytics & Reporting
+- **Dashboard Metrics**: Top FAQs, feedback statistics, conversation data
+- **Time-Based Filtering**: Analysis for custom time periods
+- **Feedback Evaluation**: Positive/negative ratings
+- **FAQ Performance**: Usage frequency and success rates
+- **Conversation Statistics**: Number of chats, average length
 
-### 🚧 Planned (Roadmap)
+#### 🔐 Authentication & Authorization
+- **JWT-Based Authentication**: Secure token-based auth
+- **Role-Based Access Control**: SUPER_ADMIN, TENANT_ADMIN, ADMIN, TENANT_USER
+- **Login/Logout**: Standard authentication endpoints
+- **Token Validation**: Automatic JWT verification
+- **Password Hashing**: BCrypt for secure password storage
 
-- [ ] **LLM Integration**: RAG pipeline with OpenAI GPT-4 and vector embeddings
-- [ ] **Streaming Responses**: Server-Sent Events (SSE) for real-time chat
-- [ ] **Document Ingestion**: Upload and process URLs, PDFs, DOCX
-- [ ] **Analytics Dashboard**: Top questions, deflection rate, trends
+#### 🏢 Multi-Tenancy & Tenant Management
+- **Tenant Management**: Full CRUD for tenants
+- **API Key System**: Generation and management of API keys
+- **Data Isolation**: Strict separation by tenant ID
+- **Tenant Status**: Activation/deactivation of tenants
+- **Separate Configuration**: Individual settings per tenant
+
+#### 👥 User Management
+- **User CRUD**: Complete user management
+- **Role Assignment**: Flexible role allocation
+- **Tenant Association**: Assign users to tenants
+- **Status Management**: Activation/deactivation of accounts
+- **Permission Control**: Cross-tenant access restrictions
+
+#### 💬 Chat Widget (Angular Frontend)
+- **Modern Angular 17**: Standalone component architecture
+- **Responsive Design**: Mobile-first UI
+- **Handoff Modal**: Customer data collection form
+- **Session Management**: Persistent chat sessions via localStorage
+- **Feedback Integration**: UI for thumbs up/down
+- **Theme Support**: Light/dark mode (prepared)
+- **Customizable Branding**: Configurable colors and appearance
+
+#### 🏭 Production-Ready Features
+- **Global Exception Handling**: Centralized error handling
+- **Structured Logging**: Separate log files with rolling policy (30 days)
+- **Request Tracking**: Unique request IDs for correlation
+- **Async Logging**: Non-blocking logging with Logback
+- **Standardized Error Responses**: Consistent error format
+- **CORS Configuration**: Flexible cross-origin settings
+- **Health Checks**: Actuator endpoints for monitoring
+
+### 🚧 Planned / In Progress
+
 - [ ] **Rate Limiting**: API protection against overload
-- [ ] **Monitoring & Metrics**: Prometheus/Grafana integration
+- [ ] **Prometheus/Grafana**: Metrics and monitoring integration
 - [ ] **Multi-Language Support**: i18n for different languages
-- [ ] **File Attachments**: Upload files with support tickets
+- [ ] **File Attachments for Tickets**: Upload files to support tickets
+- [ ] **Admin Dashboard (Frontend)**: Complete management UI
+- [ ] **WebSocket Support**: Alternative to SSE for bidirectional communication
+- [ ] **Advanced Sitemap Processing**: Automatic bulk import
 
 ## 🛠️ Tech Stack
 
@@ -65,11 +105,14 @@ A GDPR-compliant FAQ management and support ticket system for SMBs, featuring an
 | **Spring Boot** | 3.2.0 | Application Framework |
 | **Java** | 21 | Programming Language |
 | **PostgreSQL** | 16+ | Primary Database |
-| **pgvector** | latest | Vector Extension (prepared for future RAG) |
-| **Flyway** | 9.x | Database Migration |
+| **pgvector** | latest | Vector Extension for RAG |
+| **Flyway** | 9.x | Database Migrations |
+| **Spring Security** | 6.x | Authentication & Authorization |
+| **JWT (jjwt)** | 0.12.x | JSON Web Tokens |
 | **Spring Mail** | - | SMTP Email Integration |
 | **Logback** | - | Structured Logging |
 | **Lombok** | latest | Boilerplate Reduction |
+| **OpenAI Java Client** | latest | LLM Integration |
 
 ### Frontend
 | Technology | Version | Purpose |
@@ -91,47 +134,86 @@ ChatQ-Assist/
 ├── chatq-assist-backend/              # Spring Boot Backend
 │   ├── src/main/java/com/chatq/assist/
 │   │   ├── config/
-│   │   │   ├── WebMvcConfig.java      # Request Interceptor Config
-│   │   │   └── LoggingInterceptor.java # HTTP Request Tracking
+│   │   │   ├── SecurityConfig.java             # Spring Security Configuration
+│   │   │   ├── JwtTokenProvider.java           # JWT Token Handling
+│   │   │   ├── JwtAuthenticationFilter.java    # JWT Filter
+│   │   │   ├── WebMvcConfig.java               # Request Interceptor
+│   │   │   └── LoggingInterceptor.java         # HTTP Request Tracking
 │   │   ├── controller/
-│   │   │   ├── FaqController.java     # /api/faq
-│   │   │   └── SupportTicketController.java  # /api/tickets
+│   │   │   ├── FaqController.java              # /api/faq
+│   │   │   ├── ChatController.java             # /api/chat (LLM, Streaming, History)
+│   │   │   ├── SupportTicketController.java    # /api/tickets
+│   │   │   ├── DocumentController.java         # /api/documents
+│   │   │   ├── AnalyticsController.java        # /api/analytics
+│   │   │   ├── AuthController.java             # /api/auth
+│   │   │   ├── TenantController.java           # /api/tenants
+│   │   │   └── UserManagementController.java   # /api/users
 │   │   ├── domain/
 │   │   │   ├── entity/
-│   │   │   │   ├── FaqEntry.java      # FAQ Entity
-│   │   │   │   ├── Conversation.java  # Chat Sessions
-│   │   │   │   ├── Message.java       # Chat Messages
-│   │   │   │   └── SupportTicket.java # Support Tickets
+│   │   │   │   ├── FaqEntry.java               # FAQ with Embeddings
+│   │   │   │   ├── Conversation.java           # Chat Sessions
+│   │   │   │   ├── Message.java                # Chat Messages
+│   │   │   │   ├── MessageFeedback.java        # User Feedback
+│   │   │   │   ├── SupportTicket.java          # Support Tickets
+│   │   │   │   ├── Document.java               # Uploaded Documents
+│   │   │   │   ├── User.java                   # Users
+│   │   │   │   └── Tenant.java                 # Tenants
 │   │   │   ├── dto/
-│   │   │   │   ├── FaqEntryDto.java
-│   │   │   │   ├── HandoffRequestDto.java
-│   │   │   │   ├── TicketResponseDto.java
-│   │   │   │   └── ErrorResponse.java
+│   │   │   │   ├── ChatRequest/Response        # Chat API
+│   │   │   │   ├── FaqEntryDto                 # FAQ Transfer
+│   │   │   │   ├── HandoffRequestDto           # Escalation
+│   │   │   │   ├── TicketResponseDto           # Ticket Transfer
+│   │   │   │   ├── DocumentDto                 # Document Transfer
+│   │   │   │   ├── AnalyticsDto                # Analytics Data
+│   │   │   │   ├── AuthResponse/LoginRequest   # Auth DTOs
+│   │   │   │   ├── UserDto/CreateUserRequest   # User Management
+│   │   │   │   ├── TenantDto                   # Tenant Transfer
+│   │   │   │   └── ErrorResponse               # Error Format
 │   │   │   └── enums/
-│   │   │       ├── TicketStatus.java
-│   │   │       └── TicketPriority.java
+│   │   │       ├── TicketStatus/Priority       # Ticket Enums
+│   │   │       ├── DocumentType/Status         # Document Enums
+│   │   │       ├── ConversationStatus          # Chat Status
+│   │   │       ├── MessageRole                 # USER/ASSISTANT
+│   │   │       ├── UserRole                    # Roles
+│   │   │       └── FeedbackType                # POSITIVE/NEGATIVE
 │   │   ├── repository/
-│   │   │   ├── FaqRepository.java
-│   │   │   ├── ConversationRepository.java
-│   │   │   ├── MessageRepository.java
-│   │   │   └── SupportTicketRepository.java
+│   │   │   ├── FaqRepository.java              # JPA with Vector Queries
+│   │   │   ├── ConversationRepository.java     # Chat Management
+│   │   │   ├── MessageRepository.java          # Message History
+│   │   │   ├── MessageFeedbackRepository.java  # Feedback Data
+│   │   │   ├── SupportTicketRepository.java    # Tickets
+│   │   │   ├── DocumentRepository.java         # Documents
+│   │   │   ├── UserRepository.java             # Users
+│   │   │   └── TenantRepository.java           # Tenants
 │   │   ├── service/
-│   │   │   ├── FaqService.java        # FAQ CRUD
-│   │   │   ├── SupportTicketService.java  # Ticket Management
-│   │   │   └── EmailService.java      # SMTP Email Sender
+│   │   │   ├── FaqService.java                 # FAQ CRUD + Embeddings
+│   │   │   ├── ChatServiceLLM.java             # RAG Pipeline with OpenAI
+│   │   │   ├── EmbeddingService.java           # OpenAI Embeddings
+│   │   │   ├── FeedbackService.java            # Feedback Processing
+│   │   │   ├── SupportTicketService.java       # Ticket Management
+│   │   │   ├── DocumentService.java            # Document Processing
+│   │   │   ├── AnalyticsService.java           # Analytics Data
+│   │   │   ├── EmailService.java               # SMTP Email
+│   │   │   ├── AuthService.java                # JWT Auth Logic
+│   │   │   ├── UserManagementService.java      # User CRUD
+│   │   │   └── TenantService.java              # Tenant Management
 │   │   └── exception/
-│   │       ├── GlobalExceptionHandler.java
-│   │       ├── ResourceNotFoundException.java
-│   │       └── BusinessException.java
+│   │       ├── GlobalExceptionHandler.java     # Centralized Error Handling
+│   │       ├── ResourceNotFoundException.java  # 404 Exceptions
+│   │       └── BusinessException.java          # Business Logic Errors
 │   ├── src/main/resources/
-│   │   ├── db/migration/
-│   │   │   ├── V1__init_schema.sql
-│   │   │   ├── V2__add_chat_tables.sql
-│   │   │   ├── ...
-│   │   │   ├── V8__create_support_tickets_table.sql
+│   │   ├── db/migration/                       # Flyway Migrations
+│   │   │   ├── V1__initial_schema.sql          # FAQs + pgvector
+│   │   │   ├── V2__create_chat_tables.sql      # Conversations, Messages
+│   │   │   ├── V3__add_embeddings_to_faq.sql   # Vector Column
+│   │   │   ├── V4__create_message_feedback.sql # Feedback Table
+│   │   │   ├── V5__create_users.sql            # Users Table
+│   │   │   ├── V6__create_documents.sql        # Documents
+│   │   │   ├── V7__create_tenant_management.sql # Tenants
+│   │   │   ├── V8__create_support_tickets.sql  # Support Tickets
 │   │   │   └── V9__add_customer_question_to_support_tickets.sql
-│   │   ├── logback-spring.xml         # Logging Configuration
-│   │   └── application.properties
+│   │   ├── logback-spring.xml                  # Logging Configuration
+│   │   └── application.properties              # Main Configuration
 │   ├── Dockerfile
 │   └── pom.xml
 │
@@ -147,13 +229,13 @@ ChatQ-Assist/
 │   │   │       ├── ticket-management.component.html
 │   │   │       └── ticket-management.component.css
 │   │   └── services/
-│   │       ├── chat.service.ts        # Chat API Client
-│   │       └── ticket.service.ts      # Ticket API Client
+│   │       ├── chat.service.ts                 # Chat API Client
+│   │       └── ticket.service.ts               # Ticket API Client
 │   ├── package.json
 │   └── angular.json
 │
 ├── docker-compose.yml
-├── CLAUDE.md                          # Project Instructions for Claude Code
+├── CLAUDE.md                                   # Project Instructions for Claude Code
 └── README.md
 ```
 
@@ -161,10 +243,11 @@ ChatQ-Assist/
 
 ### Prerequisites
 
-- **Docker** & **Docker Compose** (for easiest setup)
+- **Docker** & **Docker Compose** (recommended setup method)
 - **Java 21** (for local backend development)
 - **Node.js 18+** (for frontend development)
-- **PostgreSQL 16+** with **pgvector extension** (if running locally without Docker)
+- **PostgreSQL 16+** with **pgvector extension** (for local setup)
+- **OpenAI API Key** (for LLM functionality)
 
 ### Option 1: Docker Compose (Recommended)
 
@@ -173,10 +256,16 @@ ChatQ-Assist/
 git clone https://github.com/Blindworks/chatq-assist.git
 cd ChatQ-Assist
 
-# 2. Start all services
+# 2. Configure environment variables
+# Create a .env file or edit docker-compose.yml:
+# - OPENAI_API_KEY=sk-...
+# - JWT_SECRET=your-secure-secret
+# - MAIL_USERNAME, MAIL_PASSWORD
+
+# 3. Start all services
 docker-compose up -d
 
-# 3. Follow logs
+# 4. Follow logs
 docker-compose logs -f backend
 ```
 
@@ -192,6 +281,12 @@ docker-compose logs -f backend
 ```bash
 cd chatq-assist-backend
 
+# Set environment variables
+export OPENAI_API_KEY=sk-...
+export JWT_SECRET=your-secure-secret
+export DB_HOST=localhost
+export DB_PORT=5433
+
 # Windows
 mvnw.cmd spring-boot:run
 
@@ -199,7 +294,7 @@ mvnw.cmd spring-boot:run
 ./mvnw spring-boot:run
 ```
 
-**Important**: PostgreSQL with pgvector must be running! See [pgvector Installation](#pgvector-installation).
+**Important**: PostgreSQL with pgvector must be running! See [pgvector Installation](#-pgvector-installation).
 
 #### Start Frontend
 
@@ -213,12 +308,40 @@ Widget runs on http://localhost:4200
 
 ## 📋 API Documentation
 
-### FAQ Endpoints
+All endpoints use `X-Tenant-ID` header (default: `default-tenant`).
+Protected endpoints require `Authorization: Bearer <JWT-Token>` header.
+
+### 🔐 Authentication
+
+#### POST /api/auth/login
+Login with username and password
+
+**Request**:
+```json
+{
+  "username": "admin",
+  "password": "password123"
+}
+```
+
+**Response**:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "username": "admin",
+  "role": "SUPER_ADMIN",
+  "tenantId": "default-tenant",
+  "message": "Login successful"
+}
+```
+
+#### GET /api/auth/validate
+Validate JWT token (requires Authorization header)
+
+### 📝 FAQ Endpoints
 
 #### GET /api/faq
-Get all FAQs for a tenant
-
-**Headers**: `X-Tenant-ID: default-tenant`
+Get all FAQs for tenant
 
 **Response**:
 ```json
@@ -238,82 +361,90 @@ Get all FAQs for a tenant
 ```
 
 #### POST /api/faq
-Create a single FAQ entry
+Create FAQ (embeddings are generated automatically)
 
-**Headers**: `X-Tenant-ID: default-tenant`
+#### PUT /api/faq/{id}
+Update FAQ
+
+#### DELETE /api/faq/{id}
+Delete FAQ
+
+### 💬 Chat Endpoints
+
+#### POST /api/chat
+RAG-based chat request (regular)
 
 **Request**:
 ```json
 {
   "question": "How can I contact you?",
-  "answer": "You can reach us by phone at...",
-  "tags": ["contact"],
-  "isActive": true,
-  "displayOrder": 2
+  "sessionId": "uuid-optional"
 }
 ```
-
-#### PUT /api/faq/{id}
-Update FAQ entry
-
-#### DELETE /api/faq/{id}
-Delete FAQ entry
-
-### Support Ticket Endpoints
-
-All ticket endpoints require authentication with roles: `ADMIN`, `SUPER_ADMIN`, or `TENANT_ADMIN`.
-
-#### GET /api/tickets
-Get paginated list of tickets
-
-**Headers**: `X-Tenant-ID: default-tenant`
-
-**Query Parameters**:
-- `status` (optional): Filter by status (OPEN, IN_PROGRESS, RESOLVED, CLOSED)
-- `page` (optional): Page number (default: 0)
-- `size` (optional): Page size (default: 20)
 
 **Response**:
 ```json
 {
-  "content": [
-    {
-      "id": 1,
-      "tenantId": "default-tenant",
-      "sessionId": "uuid-here",
-      "customerName": "John Doe",
-      "customerEmail": "john@example.com",
-      "customerPhone": "+49123456789",
-      "customerQuestion": "I need help with my account",
-      "status": "OPEN",
-      "priority": "MEDIUM",
-      "assignedTo": null,
-      "notes": null,
-      "createdAt": "2024-01-15T10:00:00Z",
-      "updatedAt": "2024-01-15T10:00:00Z"
-    }
-  ],
-  "pageable": {...},
-  "totalElements": 10,
-  "totalPages": 1
+  "answer": "You can reach us by phone at...",
+  "sessionId": "uuid",
+  "conversationId": 123,
+  "confidenceScore": 0.95,
+  "handoffTriggered": false,
+  "suggestedFaqIds": [1, 5, 7]
 }
 ```
 
-#### GET /api/tickets/{id}
-Get single ticket by ID
+#### POST /api/chat/stream
+Streaming chat with Server-Sent Events (SSE)
 
-#### PUT /api/tickets/{id}
-Update ticket (status, priority, assignment, notes)
+**Headers**: `Accept: text/event-stream`
+
+#### GET /api/chat/history/{sessionId}
+Get chat history for session
+
+#### POST /api/chat/feedback
+Submit feedback for message
 
 **Request**:
 ```json
 {
-  "status": "IN_PROGRESS",
-  "priority": "HIGH",
-  "assignedTo": "admin@example.com",
-  "notes": "Working on this issue now"
+  "messageId": 123,
+  "feedbackType": "POSITIVE",
+  "comment": "Very helpful!"
 }
 ```
+
+#### POST /api/chat/handoff
+Escalate to support ticket with customer data
+
+**Request**:
+```json
+{
+  "sessionId": "uuid",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+49123456789",
+  "question": "I need help with my account"
+}
+```
+
+### 🎫 Support Ticket Endpoints
+
+🔒 All ticket endpoints require authentication with roles: `ADMIN`, `SUPER_ADMIN`, or `TENANT_ADMIN`
+
+#### GET /api/tickets
+Get paginated list of tickets
+
+**Query Parameters**:
+- `status` (optional): Filter by status
+- `page` (optional): Page number (default: 0)
+- `size` (optional): Page size (default: 20)
+
+#### GET /api/tickets/{id}
+Get single ticket
+
+#### PUT /api/tickets/{id}
+Update ticket (status, priority, assignment, notes)
 
 #### DELETE /api/tickets/{id}
 Delete ticket
@@ -332,25 +463,135 @@ Get ticket statistics for tenant
 }
 ```
 
-### Chat & Handoff Endpoints
+### 📄 Document Endpoints
 
-#### POST /api/chat/handoff
-Submit handoff request and create support ticket
+#### POST /api/documents/upload
+Upload file (PDF, DOCX, TXT)
 
-**Headers**: `X-Tenant-ID: default-tenant`
+**Form-Data**:
+- `file`: Multipart-File
+- `title`: String
+- `documentType`: DOCUMENT_PDF | DOCUMENT_DOCX | DOCUMENT_TXT
+
+#### POST /api/documents/ingest
+Ingest document from URL
 
 **Request**:
 ```json
 {
-  "sessionId": "uuid",
-  "name": "John Doe",
-  "email": "john@example.com",
-  "phone": "+49123456789",
-  "question": "I need help with my account"
+  "sourceUrl": "https://example.com/page",
+  "title": "Company Info",
+  "documentType": "URL"
 }
 ```
 
-**Response**: Created ticket details
+#### GET /api/documents
+Get all documents for tenant
+
+#### GET /api/documents/{id}
+Get single document
+
+#### DELETE /api/documents/{id}
+Delete document
+
+### 📊 Analytics Endpoints
+
+#### GET /api/analytics
+Get analytics data for tenant
+
+**Query Parameters**:
+- `daysBack` (optional): Number of days to look back (default: 30)
+
+**Response**:
+```json
+{
+  "totalConversations": 150,
+  "totalMessages": 450,
+  "averageMessagesPerConversation": 3.0,
+  "positiveFeedbackCount": 120,
+  "negativeFeedbackCount": 15,
+  "topFaqs": [
+    {
+      "id": 1,
+      "question": "What are your business hours?",
+      "usageCount": 42
+    }
+  ]
+}
+```
+
+### 🏢 Tenant Management Endpoints
+
+🔒 Only for `SUPER_ADMIN`
+
+#### GET /api/tenants
+Get all tenants
+
+#### GET /api/tenants/active
+Get only active tenants
+
+#### GET /api/tenants/{id}
+Get tenant by ID
+
+#### POST /api/tenants
+Create new tenant
+
+**Request**:
+```json
+{
+  "name": "Acme Corp",
+  "tenantId": "acme-corp",
+  "contactEmail": "admin@acme.com",
+  "isActive": true
+}
+```
+
+#### PUT /api/tenants/{id}
+Update tenant
+
+#### POST /api/tenants/{id}/toggle-status
+Activate/deactivate tenant
+
+#### POST /api/tenants/{id}/regenerate-api-key
+Generate new API key
+
+#### DELETE /api/tenants/{id}
+Delete tenant
+
+### 👥 User Management Endpoints
+
+🔒 For `SUPER_ADMIN` and `TENANT_ADMIN`
+
+#### GET /api/users
+Get all users (SUPER_ADMIN only)
+
+#### GET /api/users/tenant/{tenantId}
+Get users for tenant
+
+#### POST /api/users
+Create new user
+
+**Request**:
+```json
+{
+  "username": "john.doe",
+  "password": "SecurePass123!",
+  "email": "john@example.com",
+  "fullName": "John Doe",
+  "role": "TENANT_USER",
+  "tenantId": "default-tenant",
+  "isActive": true
+}
+```
+
+#### PUT /api/users/{id}
+Update user
+
+#### POST /api/users/{id}/toggle-status
+Activate/deactivate user
+
+#### DELETE /api/users/{id}
+Delete user
 
 ## 🔧 Configuration
 
@@ -368,11 +609,20 @@ spring.jpa.hibernate.ddl-auto=validate
 # Server
 server.port=8080
 
+# OpenAI
+openai.api.key=${OPENAI_API_KEY}
+openai.model=${OPENAI_MODEL:gpt-4}
+openai.embedding.model=${OPENAI_EMBEDDING_MODEL:text-embedding-ada-002}
+
+# JWT Security
+jwt.secret=${JWT_SECRET:change-this-in-production}
+jwt.expiration=${JWT_EXPIRATION:86400000}
+
 # Email Configuration
 spring.mail.host=${MAIL_HOST:smtp.gmail.com}
 spring.mail.port=${MAIL_PORT:587}
-spring.mail.username=${MAIL_USERNAME:benedikt.lind@gmail.com}
-spring.mail.password=${MAIL_PASSWORD:}
+spring.mail.username=${MAIL_USERNAME}
+spring.mail.password=${MAIL_PASSWORD}
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
@@ -385,7 +635,6 @@ email.enabled=${EMAIL_ENABLED:true}
 logging.file.name=logs/chatq-assist.log
 logging.file.path=logs
 logging.level.com.chatq.assist=INFO
-logging.level.org.springframework.web=INFO
 ```
 
 ### Environment Variables
@@ -397,17 +646,23 @@ logging.level.org.springframework.web=INFO
 | `DB_NAME` | Database Name | `chatq_assist` |
 | `DB_USER` | Database User | `postgres` |
 | `DB_PASSWORD` | Database Password | `taxcRH51#` |
-| `MAIL_HOST` | SMTP Server Host | `smtp.gmail.com` |
-| `MAIL_PORT` | SMTP Server Port | `587` |
+| `OPENAI_API_KEY` | OpenAI API Key | **REQUIRED** |
+| `OPENAI_MODEL` | OpenAI Model | `gpt-4` |
+| `JWT_SECRET` | JWT Secret Key | **Change in production!** |
+| `JWT_EXPIRATION` | Token validity (ms) | `86400000` (24h) |
+| `MAIL_HOST` | SMTP Server | `smtp.gmail.com` |
+| `MAIL_PORT` | SMTP Port | `587` |
 | `MAIL_USERNAME` | SMTP Username | - |
 | `MAIL_PASSWORD` | SMTP Password | - |
-| `EMAIL_FROM` | From Email Address | `noreply@chatq-assist.com` |
-| `EMAIL_ADMIN` | Admin Email Address | `admin@chatq-assist.com` |
-| `EMAIL_ENABLED` | Enable/Disable Emails | `true` |
+| `EMAIL_FROM` | Sender Address | `noreply@chatq-assist.com` |
+| `EMAIL_ADMIN` | Admin Email | `admin@chatq-assist.com` |
+| `EMAIL_ENABLED` | Enable Emails | `true` |
 
 ## 🗄️ Database Schema
 
 ### faq_entries
+FAQ entries with vector embeddings for semantic search
+
 ```sql
 CREATE TABLE faq_entries (
     id BIGSERIAL PRIMARY KEY,
@@ -418,16 +673,61 @@ CREATE TABLE faq_entries (
     is_active BOOLEAN DEFAULT true,
     display_order INTEGER,
     usage_count BIGINT DEFAULT 0,
-    embedding vector(1536),  -- Prepared for future RAG
+    embedding vector(1536),  -- OpenAI Embeddings
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     version INTEGER DEFAULT 0
 );
+```
 
-CREATE INDEX idx_faq_tenant ON faq_entries(tenant_id);
+### conversations
+Chat sessions with tenant isolation
+
+```sql
+CREATE TABLE conversations (
+    id BIGSERIAL PRIMARY KEY,
+    session_id VARCHAR(255) UNIQUE NOT NULL,
+    tenant_id VARCHAR(255) NOT NULL,
+    user_email VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'ACTIVE',
+    last_activity_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### messages
+Chat messages with confidence scores
+
+```sql
+CREATE TABLE messages (
+    id BIGSERIAL PRIMARY KEY,
+    conversation_id BIGINT REFERENCES conversations(id),
+    role VARCHAR(50) NOT NULL,  -- USER, ASSISTANT
+    content TEXT NOT NULL,
+    confidence_score DOUBLE PRECISION,
+    faq_entry_id BIGINT,
+    tenant_id VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### message_feedback
+User feedback for messages
+
+```sql
+CREATE TABLE message_feedback (
+    id BIGSERIAL PRIMARY KEY,
+    message_id BIGINT REFERENCES messages(id),
+    tenant_id VARCHAR(255) NOT NULL,
+    feedback_type VARCHAR(50) NOT NULL,  -- POSITIVE, NEGATIVE
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
 ```
 
 ### support_tickets
+Support tickets with customer information
+
 ```sql
 CREATE TABLE support_tickets (
     id BIGSERIAL PRIMARY KEY,
@@ -445,43 +745,72 @@ CREATE TABLE support_tickets (
     updated_at TIMESTAMP DEFAULT NOW(),
     version INTEGER DEFAULT 0
 );
-
-CREATE INDEX idx_tickets_tenant ON support_tickets(tenant_id);
-CREATE INDEX idx_tickets_status ON support_tickets(tenant_id, status);
 ```
 
-### conversations
+### documents
+Uploaded documents with embeddings
+
 ```sql
-CREATE TABLE conversations (
+CREATE TABLE documents (
     id BIGSERIAL PRIMARY KEY,
-    session_id VARCHAR(255) UNIQUE NOT NULL,
     tenant_id VARCHAR(255) NOT NULL,
-    user_email VARCHAR(255),
-    status VARCHAR(50) DEFAULT 'ACTIVE',
-    last_activity_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
-### messages
-```sql
-CREATE TABLE messages (
-    id BIGSERIAL PRIMARY KEY,
-    conversation_id BIGINT REFERENCES conversations(id),
-    role VARCHAR(50) NOT NULL,  -- USER, ASSISTANT
+    title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    confidence_score DOUBLE PRECISION,
-    faq_entry_id BIGINT,
-    tenant_id VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    source_url TEXT,
+    document_type VARCHAR(50) NOT NULL,
+    status VARCHAR(50) DEFAULT 'PENDING',
+    embedding vector(1536),
+    file_path TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    version INTEGER DEFAULT 0
 );
 ```
 
-## 🧪 Testing
+### users
+User accounts with roles
+
+```sql
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255),
+    role VARCHAR(50) NOT NULL,
+    tenant_id VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### tenants
+Tenant management
+
+```sql
+CREATE TABLE tenants (
+    id BIGSERIAL PRIMARY KEY,
+    tenant_id VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    contact_email VARCHAR(255) NOT NULL,
+    api_key VARCHAR(255) UNIQUE NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+## 🧪 Testing & Development
 
 ### cURL Examples
 
 ```bash
+# Login
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"password123"}'
+
 # Create FAQ
 curl -X POST http://localhost:8080/api/faq \
   -H "Content-Type: application/json" \
@@ -489,44 +818,56 @@ curl -X POST http://localhost:8080/api/faq \
   -d '{
     "question": "What are your business hours?",
     "answer": "Monday to Friday from 9am to 6pm.",
-    "tags": ["hours", "service"],
-    "displayOrder": 1
+    "tags": ["hours", "service"]
   }'
 
-# Get all FAQs
-curl -X GET http://localhost:8080/api/faq \
-  -H "X-Tenant-ID: default-tenant"
+# Chat request
+curl -X POST http://localhost:8080/api/chat \
+  -H "Content-Type: application/json" \
+  -H "X-Tenant-ID: default-tenant" \
+  -d '{
+    "question": "When are you open?"
+  }'
 
-# Get all tickets
+# Streaming chat (SSE)
+curl -X POST http://localhost:8080/api/chat/stream \
+  -H "Content-Type: application/json" \
+  -H "X-Tenant-ID: default-tenant" \
+  -H "Accept: text/event-stream" \
+  -d '{"question": "How can I contact you?"}'
+
+# Get tickets with auth
 curl -X GET http://localhost:8080/api/tickets \
+  -H "X-Tenant-ID: default-tenant" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Get analytics
+curl -X GET "http://localhost:8080/api/analytics?daysBack=7" \
   -H "X-Tenant-ID: default-tenant"
 
-# Get ticket statistics
-curl -X GET http://localhost:8080/api/tickets/stats \
-  -H "X-Tenant-ID: default-tenant"
+# Upload document
+curl -X POST http://localhost:8080/api/documents/upload \
+  -H "X-Tenant-ID: default-tenant" \
+  -F "file=@document.pdf" \
+  -F "title=Company Document" \
+  -F "documentType=DOCUMENT_PDF"
+```
+
+### Run Maven Tests
+
+```bash
+cd chatq-assist-backend
+./mvnw test
 ```
 
 ## 🔐 pgvector Installation
 
 ### Windows (PostgreSQL 16+)
 
-1. Download pgvector for your PostgreSQL version from:
-   https://github.com/pgvector/pgvector/releases
-
-2. Extract `vector.dll` to:
-   ```
-   C:\Program Files\PostgreSQL\16\lib\
-   ```
-
-3. Extract SQL files to:
-   ```
-   C:\Program Files\PostgreSQL\16\share\extension\
-   ```
-
-4. In psql:
-   ```sql
-   CREATE EXTENSION vector;
-   ```
+1. Download pgvector: https://github.com/pgvector/pgvector/releases
+2. Copy `vector.dll` to `C:\Program Files\PostgreSQL\16\lib\`
+3. Copy SQL files to `C:\Program Files\PostgreSQL\16\share\extension\`
+4. In psql: `CREATE EXTENSION vector;`
 
 ### Linux (Ubuntu/Debian)
 
@@ -549,50 +890,34 @@ RUN apt-get update && apt-get install -y postgresql-16-pgvector
 
 ## 📝 Logging
 
-The application uses structured logging with Logback:
-
 - **Main Log**: `logs/chatq-assist.log` - All log messages
-- **Error Log**: `logs/chatq-assist-error.log` - Only ERROR level
+- **Error Log**: `logs/chatq-assist-error.log` - ERROR level only
 - **Rolling Policy**: Daily rotation, 30-day retention
-- **Async Appenders**: Non-blocking for better performance
-- **Request IDs**: Each HTTP request gets a unique UUID for tracing
-
-Log pattern includes: timestamp, level, thread, logger, request ID, and message.
-
-## 🚨 Exception Handling
-
-The application uses a global exception handler (`@RestControllerAdvice`) that returns consistent error responses:
-
-```json
-{
-  "timestamp": "2024-01-15T10:00:00Z",
-  "status": 404,
-  "error": "Not Found",
-  "message": "Ticket not found with ID: 123",
-  "path": "/api/tickets/123"
-}
-```
-
-Handled exceptions:
-- **Validation Errors**: Field-level validation with detailed error messages
-- **Resource Not Found**: 404 with specific error message
-- **Business Logic Errors**: Custom business exceptions
-- **Generic Errors**: Catch-all for unexpected exceptions
+- **Async Appenders**: Non-blocking for performance
+- **Request IDs**: Each HTTP request gets unique UUID
 
 ## 🚨 Troubleshooting
 
 ### "Type vector does not exist"
-→ pgvector extension not installed. See [pgvector Installation](#pgvector-installation)
+→ pgvector extension not installed. See [pgvector Installation](#-pgvector-installation)
 
-### "Query returned no result" (Hibernate)
-→ PostgreSQL dependency must have `compile` scope (not `runtime`)
+### "401 Unauthorized" on protected endpoints
+→ JWT token missing or invalid. Call `/api/auth/login` first
 
-### Email not sending
+### "403 Forbidden" on admin endpoints
+→ User doesn't have required role (ADMIN, TENANT_ADMIN, SUPER_ADMIN)
+
+### Emails not sending
 → Check SMTP credentials and ensure `EMAIL_ENABLED=true`
-→ For Gmail, use an App Password, not your regular password
+→ For Gmail: Use App Password, not regular password
 
-### "Access Denied" on ticket endpoints
-→ Ticket endpoints require authentication with ADMIN role
+### "Cannot connect to OpenAI"
+→ Set `OPENAI_API_KEY` environment variable
+→ Verify API key validity
+
+### Flyway migration fails
+→ Check database schema manually: `SELECT version FROM flyway_schema_history;`
+→ If issues: `./mvnw flyway:repair`
 
 ## 🤝 Contributing
 
@@ -616,7 +941,8 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for 
 - **pgvector**: https://github.com/pgvector/pgvector
 - **Spring Boot**: https://spring.io/projects/spring-boot
 - **Angular**: https://angular.io
+- **OpenAI**: https://openai.com
 
 ---
 
-**Built for SMBs who need smart, GDPR-compliant customer support**
+**Built for SMBs who need intelligent, GDPR-compliant customer support solutions** 🚀
