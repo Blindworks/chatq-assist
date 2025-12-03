@@ -272,7 +272,7 @@ docker-compose logs -f backend
 **Access**:
 - Backend API: http://localhost:8080
 - Frontend Widget: http://localhost:4200
-- PostgreSQL: localhost:5433 (User: `postgres`, PW: `taxcRH51#`)
+- PostgreSQL: localhost:5433 (User: `postgres`, PW: `hidden`)
 
 ### Option 2: Local Development
 
@@ -601,7 +601,7 @@ Delete user
 # Database
 spring.datasource.url=jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:chatq_assist}
 spring.datasource.username=${DB_USER:postgres}
-spring.datasource.password=${DB_PASSWORD:taxcRH51#}
+spring.datasource.password=${DB_PASSWORD:hidden}
 
 # JPA (Flyway handles schema)
 spring.jpa.hibernate.ddl-auto=validate
@@ -645,7 +645,7 @@ logging.level.com.chatq.assist=INFO
 | `DB_PORT` | PostgreSQL Port | `5433` |
 | `DB_NAME` | Database Name | `chatq_assist` |
 | `DB_USER` | Database User | `postgres` |
-| `DB_PASSWORD` | Database Password | `taxcRH51#` |
+| `DB_PASSWORD` | Database Password | `hidden` |
 | `OPENAI_API_KEY` | OpenAI API Key | **REQUIRED** |
 | `OPENAI_MODEL` | OpenAI Model | `gpt-4` |
 | `JWT_SECRET` | JWT Secret Key | **Change in production!** |
