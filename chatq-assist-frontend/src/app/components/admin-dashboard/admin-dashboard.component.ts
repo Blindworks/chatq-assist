@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FaqService, FaqEntry } from '../../services/faq.service';
+import { AuthService } from '../../services/auth.service';
 import { DocumentManagementComponent } from '../document-management/document-management.component';
 import { TenantManagementComponent } from '../tenant-management/tenant-management.component';
 import { UserManagementComponent } from '../user-management/user-management.component';
@@ -31,7 +32,10 @@ export class AdminDashboardComponent implements OnInit {
   editingFaq: FaqEntry | null = null;
   formData: FaqEntry = this.getEmptyFaq();
 
-  constructor(private faqService: FaqService) {}
+  constructor(
+    private faqService: FaqService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadFaqs();
@@ -212,5 +216,22 @@ export class AdminDashboardComponent implements OnInit {
       isActive: true,
       displayOrder: 0
     };
+  }
+
+  // Role-based access control methods
+  canAccessTenantManagement(): boolean {
+    return this.authService.hasAccessToTenantManagement();
+  }
+
+  canAccessUserManagement(): boolean {
+    return this.authService.hasAccessToUserManagement();
+  }
+
+  getUserRole(): string | null {
+    return this.authService.getRole();
+  }
+
+  getUsername(): string | null {
+    return this.authService.getUsername();
   }
 }

@@ -1,6 +1,12 @@
 <div class="admin-dashboard">
   <div class="header">
-    <h1>Admin Dashboard</h1>
+    <h1>{{ getUserRole() === 'TENANT_ADMIN' ? 'Tenant Dashboard' : 'Admin Dashboard' }}</h1>
+    <div class="user-info">
+      <span class="username">{{ getUsername() }}</span>
+      <span class="role-badge" [class.tenant-admin]="getUserRole() === 'TENANT_ADMIN'">
+        {{ getUserRole() === 'TENANT_ADMIN' ? 'Tenant Admin' : getUserRole() }}
+      </span>
+    </div>
   </div>
 
   <!-- Tab Navigation -->
@@ -30,12 +36,14 @@
       📄 Document Management
     </button>
     <button
+      *ngIf="canAccessTenantManagement()"
       class="tab"
       [class.active]="activeTab === 'tenants'"
       (click)="switchTab('tenants')">
       🏢 Tenant Management
     </button>
     <button
+      *ngIf="canAccessUserManagement()"
       class="tab"
       [class.active]="activeTab === 'users'"
       (click)="switchTab('users')">
@@ -221,12 +229,12 @@
   </div>
 
   <!-- Tenant Management Content -->
-  <div *ngIf="activeTab === 'tenants'" class="tab-content">
+  <div *ngIf="activeTab === 'tenants' && canAccessTenantManagement()" class="tab-content">
     <app-tenant-management></app-tenant-management>
   </div>
 
   <!-- User Management Content -->
-  <div *ngIf="activeTab === 'users'" class="tab-content">
+  <div *ngIf="activeTab === 'users' && canAccessUserManagement()" class="tab-content">
     <app-user-management></app-user-management>
   </div>
 </div>

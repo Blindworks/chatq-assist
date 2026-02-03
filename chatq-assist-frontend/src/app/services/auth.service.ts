@@ -76,6 +76,26 @@ export class AuthService {
     return role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'TENANT_ADMIN';
   }
 
+  isSuperAdmin(): boolean {
+    const role = this.getRole();
+    return role === 'SUPER_ADMIN';
+  }
+
+  isTenantAdmin(): boolean {
+    const role = this.getRole();
+    return role === 'TENANT_ADMIN';
+  }
+
+  hasAccessToUserManagement(): boolean {
+    const role = this.getRole();
+    return role === 'SUPER_ADMIN' || role === 'ADMIN';
+  }
+
+  hasAccessToTenantManagement(): boolean {
+    const role = this.getRole();
+    return role === 'SUPER_ADMIN' || role === 'ADMIN';
+  }
+
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
