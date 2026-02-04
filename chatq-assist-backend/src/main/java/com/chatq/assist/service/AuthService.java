@@ -55,12 +55,17 @@ public class AuthService {
                     .collect(Collectors.toList()));
             String token = jwtService.generateToken(claims, userDetails);
 
-            log.info("User {} logged in successfully with role {}", user.getUsername(), user.getRole());
+            // Get tenant ID
+            String tenantId = user.getTenant() != null ? user.getTenant().getTenantId() : "default-tenant";
+
+            log.info("User {} logged in successfully with role {} and tenant {}",
+                    user.getUsername(), user.getRole(), tenantId);
 
             return AuthResponse.builder()
                     .token(token)
                     .username(user.getUsername())
                     .role(user.getRole().name())
+                    .tenantId(tenantId)
                     .message("Login successful")
                     .build();
 

@@ -83,4 +83,10 @@ public class TenantController {
         tenantService.deleteTenant(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/widget-settings/{tenantId}")
+    public ResponseEntity<TenantDto> getWidgetSettings(@PathVariable String tenantId) {
+        log.info("GET /api/tenants/widget-settings/{} - Public endpoint for widget configuration", tenantId);
+        return ResponseEntity.ok(tenantService.getTenantByTenantId(tenantId));
+    }
 }

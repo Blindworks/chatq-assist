@@ -12,6 +12,7 @@ export interface AuthResponse {
   token?: string;
   username?: string;
   role?: string;
+  tenantId?: string;
   message: string;
 }
 
@@ -37,10 +38,10 @@ export class AuthService {
           this.setToken(response.token);
           this.setUsername(response.username || '');
           this.setRole(response.role || '');
-          // For MVP: Everyone uses 'default-tenant' for now
-          // In future: SUPER_ADMIN can switch between tenants
-          const tenantId = 'default-tenant';
+          // Use tenantId from backend response
+          const tenantId = response.tenantId || 'default-tenant';
           this.setTenantId(tenantId);
+          console.log('Login successful. User:', response.username, 'Role:', response.role, 'TenantId:', tenantId);
           this.currentUserSubject.next(response.username || null);
         }
       })

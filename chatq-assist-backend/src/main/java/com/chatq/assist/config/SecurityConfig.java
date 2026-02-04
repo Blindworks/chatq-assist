@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/test/**").permitAll() // Test endpoints
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/chat/**").permitAll() // Chat widget is public
+                        .requestMatchers("/api/tenants/widget-settings/**").permitAll() // Widget settings are public
 
                         // Tenant management - SUPER_ADMIN only
                         .requestMatchers("/api/tenants/**").hasAnyRole("SUPER_ADMIN", "TENANT_ADMIN")

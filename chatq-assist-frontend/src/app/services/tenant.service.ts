@@ -72,4 +72,8 @@ export class TenantService {
   deleteTenant(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getWidgetSettings(tenantId: string): Observable<TenantDto> {
+    return this.http.get<TenantDto>(`${this.apiUrl}/widget-settings/${tenantId}`);
+  }
 }

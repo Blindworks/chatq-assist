@@ -2,6 +2,8 @@ import { Component, OnInit, OnChanges, SimpleChanges, Input, ElementRef, Rendere
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatRequest, ChatResponse } from '../../services/chat.service';
+import { AuthService } from '../../services/auth.service';
+import { TenantService } from '../../services/tenant.service';
 import { WidgetConfig } from '../../models/widget-config.model';
 
 interface Message {
@@ -53,6 +55,8 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
 
   constructor(
     private chatService: ChatService,
+    private authService: AuthService,
+    private tenantService: TenantService,
     private elementRef: ElementRef,
     private renderer: Renderer2
   ) {}
@@ -63,8 +67,17 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
       this.config = { ...this.config, ...(window as any).chatqConfig };
     }
 
-    // Apply custom CSS variables for branding
-    this.applyBranding();
+    // If user is authenticated, use their tenant ID
+    if (this.authService.isAuthenticated()) {
+      const tenantId = this.authService.getTenantId();
+      if (tenantId) {
+        this.config.tenantId = tenantId;
+        console.log('Using authenticated user tenant ID:', tenantId);
+      }
+    }
+
+    // Load tenant settings and apply them to widget config
+    this.loadTenantSettings();
 
     // Check for saved session
     this.sessionId = localStorage.getItem('chatq-session-id');
@@ -78,6 +91,58 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.theme = 'dark';
     }
+  }
+
+  loadTenantSettings(): void {
+    const tenantId = this.config.tenantId;
+    if (!tenantId) {
+      console.warn('No tenantId set, using default widget configuration');
+      this.applyBranding();
+      return;
+    }
+
+    console.log('Loading tenant settings for:', tenantId);
+    this.tenantService.getWidgetSettings(tenantId).subscribe({
+      next: (tenant) => {
+        console.log('Loaded tenant settings:', tenant);
+
+        // Parse settings JSON if it exists
+        if (tenant.settings) {
+          try {
+            const settings = JSON.parse(tenant.settings);
+            console.log('Parsed tenant settings:', settings);
+
+            // Apply widget-specific settings
+            if (settings.widget) {
+              this.config.primaryColor = settings.widget.primaryColor || this.config.primaryColor;
+              this.config.secondaryColor = settings.widget.secondaryColor || this.config.secondaryColor;
+              this.config.position = settings.widget.position || this.config.position;
+              this.config.showLogo = settings.widget.showLogo !== undefined ? settings.widget.showLogo : this.config.showLogo;
+              this.config.showThemeToggle = settings.widget.showThemeToggle !== undefined ? settings.widget.showThemeToggle : this.config.showThemeToggle;
+              this.config.enableFeedback = settings.widget.enableFeedback !== undefined ? settings.widget.enableFeedback : this.config.enableFeedback;
+            }
+
+            // Apply general tenant settings
+            this.config.companyName = tenant.name || this.config.companyName;
+            this.config.welcomeMessage = settings.welcomeMessage || this.config.welcomeMessage;
+            this.config.logoUrl = settings.logoUrl || this.config.logoUrl;
+          } catch (e) {
+            console.error('Failed to parse tenant settings:', e);
+          }
+        } else {
+          // Use tenant name even if no settings JSON
+          this.config.companyName = tenant.name;
+        }
+
+        // Apply branding after settings are loaded
+        this.applyBranding();
+      },
+      error: (error) => {
+        console.error('Failed to load tenant settings:', error);
+        // Fall back to default config
+        this.applyBranding();
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

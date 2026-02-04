@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface ChatRequest {
   question: string;
@@ -66,12 +67,19 @@ export interface HandoffRequest {
 export class ChatService {
   private apiUrl = 'http://localhost:8080/api/chat';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  private getTenantId(): string {
+    return this.authService.getTenantId() || 'default-tenant';
+  }
 
   sendMessage(request: ChatRequest): Observable<ChatResponse> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Tenant-ID': 'default-tenant'
+      'X-Tenant-ID': this.getTenantId()
     });
 
     return this.http.post<ChatResponse>(this.apiUrl, request, { headers });
@@ -84,7 +92,7 @@ export class ChatService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Tenant-ID': 'default-tenant'
+        'X-Tenant-ID': this.getTenantId()
       },
       body: JSON.stringify(request)
     }).then(response => {
@@ -165,7 +173,7 @@ export class ChatService {
 
   getHistory(sessionId: string): Observable<MessageDto[]> {
     const headers = new HttpHeaders({
-      'X-Tenant-ID': 'default-tenant'
+      'X-Tenant-ID': this.getTenantId()
     });
 
     return this.http.get<MessageDto[]>(`${this.apiUrl}/history/${sessionId}`, { headers });
@@ -174,7 +182,7 @@ export class ChatService {
   submitFeedback(request: FeedbackRequest): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Tenant-ID': 'default-tenant'
+      'X-Tenant-ID': this.getTenantId()
     });
 
     return this.http.post(`${this.apiUrl}/feedback`, request, { headers });
@@ -183,7 +191,7 @@ export class ChatService {
   submitHandoffRequest(request: HandoffRequest): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Tenant-ID': 'default-tenant'
+      'X-Tenant-ID': this.getTenantId()
     });
 
     return this.http.post(`${this.apiUrl}/handoff`, request, { headers });

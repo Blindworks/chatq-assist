@@ -45,7 +45,10 @@
       "Bash(if not exist \"services\" mkdir services)",
       "Bash(if not exist \"components\\tenant-management\" mkdir componentstenant-management)",
       "Bash(if not exist \"components\\user-management\" mkdir componentsuser-management)",
-      "Bash(docker rm:*)"
+      "Bash(docker rm:*)",
+      "Bash(git pull:*)",
+      "Bash(npx ng build:*)",
+      "Bash(cmd.exe /c mvnw.cmd clean compile)"
     ],
     "deny": [],
     "ask": []
