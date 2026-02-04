@@ -82,8 +82,8 @@ export class AppComponent {
   ) {}
 
   showNav(): boolean {
-    // Don't show nav on login page
-    return !this.router.url.includes('/login');
+    // Don't show nav on login page or admin dashboard
+    return !this.router.url.includes('/login') && !this.router.url.includes('/admin');
   }
 
   logout(): void {

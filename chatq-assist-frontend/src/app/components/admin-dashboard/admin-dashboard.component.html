@@ -1,63 +1,114 @@
 <div class="admin-dashboard">
-  <div class="header">
-    <h1>{{ getUserRole() === 'TENANT_ADMIN' ? 'Tenant Dashboard' : 'Admin Dashboard' }}</h1>
-    <div class="user-info">
-      <span class="username">{{ getUsername() }}</span>
-      <span class="role-badge" [class.tenant-admin]="getUserRole() === 'TENANT_ADMIN'">
-        {{ getUserRole() === 'TENANT_ADMIN' ? 'Tenant Admin' : getUserRole() }}
-      </span>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">💬</span>
+        <span class="logo-text">ChatQ</span>
+      </div>
     </div>
-  </div>
 
-  <!-- Tab Navigation -->
-  <div class="tabs">
-    <button
-      class="tab"
-      [class.active]="activeTab === 'analytics'"
-      (click)="switchTab('analytics')">
-      📊 Analytics
-    </button>
-    <button
-      class="tab"
-      [class.active]="activeTab === 'faqs'"
-      (click)="switchTab('faqs')">
-      📋 FAQ Management
-    </button>
-    <button
-      class="tab"
-      [class.active]="activeTab === 'tickets'"
-      (click)="switchTab('tickets')">
-      🎫 Support Tickets
-    </button>
-    <button
-      class="tab"
-      [class.active]="activeTab === 'documents'"
-      (click)="switchTab('documents')">
-      📄 Document Management
-    </button>
-    <button
-      *ngIf="canAccessTenantManagement()"
-      class="tab"
-      [class.active]="activeTab === 'tenants'"
-      (click)="switchTab('tenants')">
-      🏢 Tenant Management
-    </button>
-    <button
-      *ngIf="canAccessUserManagement()"
-      class="tab"
-      [class.active]="activeTab === 'users'"
-      (click)="switchTab('users')">
-      👥 User Management
-    </button>
-  </div>
+    <!-- User Profile in Sidebar -->
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar">{{ getUserInitials() }}</div>
+      <div class="sidebar-user-details">
+        <div class="sidebar-user-name">{{ getUsername() }}</div>
+        <div class="sidebar-user-role">{{ getUserRole() === 'TENANT_ADMIN' ? 'Tenant Admin' : getUserRole() }}</div>
+      </div>
+    </div>
 
-  <!-- Analytics Content -->
-  <div *ngIf="activeTab === 'analytics'" class="tab-content">
-    <app-analytics-dashboard></app-analytics-dashboard>
-  </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Main Navigation</div>
+        <a routerLink="/" class="nav-item nav-link">
+          <span class="nav-icon">💬</span>
+          <span class="nav-label">Chat Widget</span>
+        </a>
+        <a routerLink="/admin" class="nav-item nav-link active">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Admin Dashboard</span>
+        </a>
+      </div>
 
-  <!-- FAQ Management Content -->
-  <div *ngIf="activeTab === 'faqs'" class="tab-content">
+      <div class="nav-section">
+        <div class="nav-section-title">Dashboard</div>
+        <button
+          class="nav-item"
+          [class.active]="activeTab === 'analytics'"
+          (click)="switchTab('analytics')">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Analytics</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeTab === 'faqs'"
+          (click)="switchTab('faqs')">
+          <span class="nav-icon">💬</span>
+          <span class="nav-label">FAQ Management</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeTab === 'tickets'"
+          (click)="switchTab('tickets')">
+          <span class="nav-icon">🎫</span>
+          <span class="nav-label">Support Tickets</span>
+        </button>
+
+        <button
+          class="nav-item"
+          [class.active]="activeTab === 'documents'"
+          (click)="switchTab('documents')">
+          <span class="nav-icon">📄</span>
+          <span class="nav-label">Documents</span>
+        </button>
+
+        <button
+          *ngIf="canAccessTenantManagement()"
+          class="nav-item"
+          [class.active]="activeTab === 'tenants'"
+          (click)="switchTab('tenants')">
+          <span class="nav-icon">🏢</span>
+          <span class="nav-label">Tenants</span>
+        </button>
+
+        <button
+          *ngIf="canAccessUserManagement()"
+          class="nav-item"
+          [class.active]="activeTab === 'users'"
+          (click)="switchTab('users')">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">Users</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="nav-item logout-btn" (click)="logout()">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-label">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Top Header -->
+    <header class="top-header">
+      <h1 class="page-title">{{ getPageTitle() }}</h1>
+    </header>
+
+    <!-- Content Container -->
+    <div class="content-container">
+
+      <!-- Analytics Content -->
+      <div *ngIf="activeTab === 'analytics'" class="tab-content">
+        <app-analytics-dashboard></app-analytics-dashboard>
+      </div>
+
+      <!-- FAQ Management Content -->
+      <div *ngIf="activeTab === 'faqs'" class="tab-content">
     <div class="section-header">
       <h2>FAQ Management</h2>
       <button class="btn btn-primary" (click)="openCreateForm()">
@@ -233,8 +284,11 @@
     <app-tenant-management></app-tenant-management>
   </div>
 
-  <!-- User Management Content -->
-  <div *ngIf="activeTab === 'users' && canAccessUserManagement()" class="tab-content">
-    <app-user-management></app-user-management>
-  </div>
-</div>
+      <!-- User Management Content -->
+      <div *ngIf="activeTab === 'users' && canAccessUserManagement()" class="tab-content">
+        <app-user-management></app-user-management>
+      </div>
+
+    </div><!-- /.content-container -->
+  </div><!-- /.main-content -->
+</div><!-- /.admin-dashboard -->

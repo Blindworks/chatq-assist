@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink, Router } from '@angular/router';
 import { FaqService, FaqEntry } from '../../services/faq.service';
 import { AuthService } from '../../services/auth.service';
 import { DocumentManagementComponent } from '../document-management/document-management.component';
@@ -12,7 +13,7 @@ import { TicketManagementComponent } from '../ticket-management/ticket-managemen
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, DocumentManagementComponent, TenantManagementComponent, UserManagementComponent, AnalyticsDashboardComponent, TicketManagementComponent],
+  imports: [CommonModule, FormsModule, RouterLink, DocumentManagementComponent, TenantManagementComponent, UserManagementComponent, AnalyticsDashboardComponent, TicketManagementComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
@@ -34,7 +35,8 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(
     private faqService: FaqService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -233,5 +235,33 @@ export class AdminDashboardComponent implements OnInit {
 
   getUsername(): string | null {
     return this.authService.getUsername();
+  }
+
+  getPageTitle(): string {
+    const titles: { [key: string]: string } = {
+      'analytics': 'Analytics Dashboard',
+      'faqs': 'FAQ Management',
+      'tickets': 'Support Tickets',
+      'documents': 'Document Management',
+      'tenants': 'Tenant Management',
+      'users': 'User Management'
+    };
+    return titles[this.activeTab] || 'Dashboard';
+  }
+
+  getUserInitials(): string {
+    const username = this.getUsername();
+    if (!username) return 'U';
+
+    const parts = username.split(/[\s_.-]+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return username.substring(0, 2).toUpperCase();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
