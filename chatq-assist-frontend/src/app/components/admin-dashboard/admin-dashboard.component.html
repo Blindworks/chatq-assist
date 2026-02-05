@@ -63,14 +63,43 @@
           <span class="nav-label">Documents</span>
         </button>
 
-        <button
-          *ngIf="canAccessTenantManagement()"
-          class="nav-item"
-          [class.active]="activeTab === 'tenants'"
-          (click)="switchTab('tenants')">
-          <span class="nav-icon"><lucide-icon [img]="Building2" [size]="18"></lucide-icon></span>
-          <span class="nav-label">Tenants</span>
-        </button>
+        <div *ngIf="canAccessTenantManagement()" class="nav-item-group">
+          <button
+            class="nav-item"
+            (click)="toggleTenantsMenu()">
+            <span class="nav-icon">
+              <lucide-icon [img]="Building2" [size]="18"></lucide-icon>
+            </span>
+            <span class="nav-label">Tenants</span>
+            <span class="nav-icon">
+              <lucide-icon [img]="tenantsExpanded ? ChevronDown : ChevronRight" [size]="16"></lucide-icon>
+            </span>
+          </button>
+
+          <!-- Tenant Submenu -->
+          <div *ngIf="tenantsExpanded" class="nav-submenu">
+            <div *ngIf="tenantsLoading" class="nav-submenu-loading">
+              Loading tenants...
+            </div>
+            <button
+              *ngFor="let tenant of tenants"
+              class="nav-item nav-subitem"
+              [class.active]="isSelectedTenant(tenant)"
+              (click)="selectTenant(tenant)"
+              [title]="tenant.name">
+              <span class="nav-label tenant-label">
+                <span class="tenant-name">{{ tenant.name }}</span>
+                <span class="tenant-id">{{ tenant.tenantId }}</span>
+              </span>
+            </button>
+            <button
+              class="nav-item nav-subitem manage-tenants"
+              (click)="switchTab('tenants')">
+              <span class="nav-icon"><lucide-icon [img]="Settings" [size]="14"></lucide-icon></span>
+              <span class="nav-label">Manage Tenants</span>
+            </button>
+          </div>
+        </div>
 
         <button
           *ngIf="canAccessUserManagement()"
@@ -95,7 +124,13 @@
   <div class="main-content">
     <!-- Top Header -->
     <header class="top-header">
-      <h1 class="page-title">{{ getPageTitle() }}</h1>
+      <div class="header-left">
+        <h1 class="page-title">{{ getPageTitle() }}</h1>
+        <div *ngIf="selectedTenant" class="selected-tenant-badge">
+          <lucide-icon [img]="Building2" [size]="14"></lucide-icon>
+          <span>{{ selectedTenant.name }}</span>
+        </div>
+      </div>
     </header>
 
     <!-- Content Container -->

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { TenantContextService } from './tenant-context.service';
 
 export interface FaqEntry {
   id?: number;
@@ -21,12 +22,15 @@ export interface FaqEntry {
 export class FaqService {
   private apiUrl = `${environment.apiUrl}/faq`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tenantContext: TenantContextService
+  ) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Tenant-ID': 'default-tenant'
+      'X-Tenant-ID': this.tenantContext.getSelectedTenantId()
     });
   }
 

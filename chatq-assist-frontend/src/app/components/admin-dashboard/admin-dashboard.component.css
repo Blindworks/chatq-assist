@@ -208,10 +208,17 @@
   padding: 24px 32px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 50;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .page-title {
@@ -220,6 +227,19 @@
   font-weight: 700;
   color: #0f172a;
   letter-spacing: -0.5px;
+}
+
+.selected-tenant-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 /* ============================================
@@ -809,4 +829,89 @@ textarea.form-control {
   .form-row {
     flex-direction: column;
   }
+}
+
+/* ============================================
+   TENANT SUBMENU
+   ============================================ */
+.nav-item-group {
+  margin-bottom: 4px;
+}
+
+.nav-submenu {
+  margin-top: 4px;
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.nav-submenu-loading {
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.nav-subitem {
+  padding: 10px 16px;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.nav-subitem .nav-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+
+.tenant-label {
+  width: 100%;
+}
+
+.tenant-name {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  display: block;
+  line-height: 1.2;
+}
+
+.tenant-id {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+  display: block;
+  line-height: 1.2;
+}
+
+.nav-subitem.active .tenant-name {
+  color: white;
+}
+
+.nav-subitem.active .tenant-id {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.manage-tenants {
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+}
+
+.manage-tenants:hover {
+  color: white;
 }

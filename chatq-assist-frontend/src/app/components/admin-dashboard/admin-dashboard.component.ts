@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { FaqService, FaqEntry } from '../../services/faq.service';
 import { AuthService } from '../../services/auth.service';
+import { TenantService, TenantDto } from '../../services/tenant.service';
+import { TenantContextService } from '../../services/tenant-context.service';
 import { DocumentManagementComponent } from '../document-management/document-management.component';
 import { TenantManagementComponent } from '../tenant-management/tenant-management.component';
 import { UserManagementComponent } from '../user-management/user-management.component';
@@ -26,7 +28,9 @@ import {
   Pencil,
   Trash2,
   Plus,
-  X
+  X,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-angular';
 
 @Component({
@@ -50,6 +54,12 @@ import {
 export class AdminDashboardComponent implements OnInit {
   // Tab state
   activeTab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets' | 'chatwidget' = 'faqs';
+
+  // Tenant state
+  tenants: TenantDto[] = [];
+  selectedTenant: TenantDto | null = null;
+  tenantsExpanded: boolean = false;
+  tenantsLoading: boolean = false;
 
   faqs: FaqEntry[] = [];
   filteredFaqs: FaqEntry[] = [];
@@ -79,19 +89,69 @@ export class AdminDashboardComponent implements OnInit {
   readonly Trash2 = Trash2;
   readonly Plus = Plus;
   readonly X = X;
+  readonly ChevronDown = ChevronDown;
+  readonly ChevronRight = ChevronRight;
 
   constructor(
     private faqService: FaqService,
     private authService: AuthService,
+    private tenantService: TenantService,
+    private tenantContext: TenantContextService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.loadTenants();
     this.loadFaqs();
+
+    // Subscribe to tenant changes
+    this.tenantContext.selectedTenant$.subscribe(tenant => {
+      this.selectedTenant = tenant;
+      // Reload data when tenant changes
+      if (this.activeTab === 'faqs') {
+        this.loadFaqs();
+      }
+    });
   }
 
   switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets' | 'chatwidget'): void {
     this.activeTab = tab;
+  }
+
+  loadTenants(): void {
+    if (!this.canAccessTenantManagement()) {
+      return;
+    }
+
+    this.tenantsLoading = true;
+    this.tenantService.getActiveTenants().subscribe({
+      next: (tenants) => {
+        this.tenants = tenants;
+        this.tenantsLoading = false;
+
+        // If no tenant is selected, select the first one
+        if (!this.selectedTenant && tenants.length > 0) {
+          this.selectTenant(tenants[0]);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading tenants:', err);
+        this.tenantsLoading = false;
+      }
+    });
+  }
+
+  toggleTenantsMenu(): void {
+    this.tenantsExpanded = !this.tenantsExpanded;
+  }
+
+  selectTenant(tenant: TenantDto): void {
+    this.selectedTenant = tenant;
+    this.tenantContext.setSelectedTenant(tenant);
+  }
+
+  isSelectedTenant(tenant: TenantDto): boolean {
+    return this.selectedTenant?.id === tenant.id;
   }
 
   loadFaqs(): void {
