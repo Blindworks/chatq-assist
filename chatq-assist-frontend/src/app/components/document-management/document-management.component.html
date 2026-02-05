@@ -1,6 +1,9 @@
 <div class="document-management">
   <div class="header">
-    <h2>Document Management</h2>
+    <h2>
+      <lucide-icon [img]="FileText" [size]="24"></lucide-icon>
+      Document Management
+    </h2>
     <button class="btn btn-primary" (click)="toggleUploadForm()">
       <lucide-icon [img]="showUploadForm ? X : Plus" [size]="16"></lucide-icon>
       {{ showUploadForm ? 'Cancel' : 'Add Document' }}
