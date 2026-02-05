@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TenantContextService } from './tenant-context.service';
 
 export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
 export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
@@ -56,14 +57,16 @@ interface PageResponse<T> {
 })
 export class TicketService {
   private readonly apiUrl = 'http://localhost:8080/api/tickets';
-  private readonly tenantId = 'default-tenant';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tenantContext: TenantContextService
+  ) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Tenant-ID': this.tenantId
+      'X-Tenant-ID': this.tenantContext.getSelectedTenantId()
     });
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { TenantContextService } from './tenant-context.service';
 
 export interface FeedbackMetrics {
   totalFeedback: number;
@@ -48,11 +49,14 @@ export interface Analytics {
 export class AnalyticsService {
   private apiUrl = `${environment.apiUrl}/analytics`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tenantContext: TenantContextService
+  ) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
-      'X-Tenant-ID': 'default-tenant'
+      'X-Tenant-ID': this.tenantContext.getSelectedTenantId()
     });
   }
 

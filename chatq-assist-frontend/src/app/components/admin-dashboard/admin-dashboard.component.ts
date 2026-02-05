@@ -102,20 +102,22 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTenants();
-    this.loadFaqs();
 
-    // Subscribe to tenant changes
+    // Subscribe to tenant changes from context
     this.tenantContext.selectedTenant$.subscribe(tenant => {
-      this.selectedTenant = tenant;
-      // Reload data when tenant changes
-      if (this.activeTab === 'faqs') {
-        this.loadFaqs();
+      if (tenant) {
+        this.selectedTenant = tenant;
       }
     });
   }
 
   switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets' | 'chatwidget'): void {
     this.activeTab = tab;
+
+    // Load FAQs when switching to FAQ tab
+    if (tab === 'faqs') {
+      this.loadFaqs();
+    }
   }
 
   loadTenants(): void {
@@ -146,8 +148,34 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   selectTenant(tenant: TenantDto): void {
+    // Check if this is a different tenant
+    const isDifferentTenant = this.selectedTenant?.id !== tenant.id;
+
+    // Close the dropdown
+    this.tenantsExpanded = false;
+
+    // Only proceed if it's a different tenant
+    if (!isDifferentTenant) {
+      return;
+    }
+
+    // Reset views and switch to analytics BEFORE setting the tenant
+    this.resetViewStates();
+    this.activeTab = 'analytics';
+
+    // Update tenant context - this will trigger all child components to reload
     this.selectedTenant = tenant;
     this.tenantContext.setSelectedTenant(tenant);
+  }
+
+  private resetViewStates(): void {
+    // Reset FAQ management state
+    this.closeForm();
+    this.searchQuery = '';
+    this.filterActive = 'all';
+    this.faqs = [];
+    this.filteredFaqs = [];
+    this.error = null;
   }
 
   isSelectedTenant(tenant: TenantDto): boolean {

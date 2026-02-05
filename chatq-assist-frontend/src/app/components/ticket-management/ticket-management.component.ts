@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {
   TicketService,
   SupportTicket,
@@ -9,6 +10,7 @@ import {
   TicketPriority,
   TicketUpdateRequest
 } from '../../services/ticket.service';
+import { TenantContextService } from '../../services/tenant-context.service';
 import { LucideAngularModule, ClipboardList, ArrowDown, ArrowUp, X, Trash2 } from 'lucide-angular';
 
 @Component({
@@ -18,7 +20,7 @@ import { LucideAngularModule, ClipboardList, ArrowDown, ArrowUp, X, Trash2 } fro
   templateUrl: './ticket-management.component.html',
   styleUrls: ['./ticket-management.component.css']
 })
-export class TicketManagementComponent implements OnInit {
+export class TicketManagementComponent implements OnInit, OnDestroy {
   tickets: SupportTicket[] = [];
   filteredTickets: SupportTicket[] = [];
   stats: TicketStats = {
@@ -54,11 +56,30 @@ export class TicketManagementComponent implements OnInit {
   readonly X = X;
   readonly Trash2 = Trash2;
 
-  constructor(private ticketService: TicketService) {}
+  private tenantSubscription?: Subscription;
+
+  constructor(
+    private ticketService: TicketService,
+    private tenantContext: TenantContextService
+  ) {}
 
   ngOnInit(): void {
     this.loadTickets();
     this.loadStats();
+
+    // Subscribe to tenant changes
+    this.tenantSubscription = this.tenantContext.selectedTenant$.subscribe(tenant => {
+      if (tenant) {
+        this.loadTickets();
+        this.loadStats();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.tenantSubscription) {
+      this.tenantSubscription.unsubscribe();
+    }
   }
 
   loadTickets(): void {

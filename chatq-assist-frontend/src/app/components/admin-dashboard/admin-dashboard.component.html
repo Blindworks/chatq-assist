@@ -49,7 +49,7 @@
             *ngFor="let tenant of tenants"
             class="tenant-dropdown-item"
             [class.active]="isSelectedTenant(tenant)"
-            (click)="selectTenant(tenant); toggleTenantsMenu()"
+            (click)="selectTenant(tenant)"
             [title]="tenant.name">
             <span class="tenant-dropdown-icon">
               <lucide-icon [img]="Building2" [size]="14"></lucide-icon>

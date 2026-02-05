@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { DocumentService, DocumentDto, DocumentIngestRequest } from '../../services/document.service';
+import { TenantContextService } from '../../services/tenant-context.service';
 import { LucideAngularModule, FileText, Trash2, Plus, X, CheckCircle2, Loader2, Clock, XCircle } from 'lucide-angular';
 
 @Component({
@@ -11,7 +13,7 @@ import { LucideAngularModule, FileText, Trash2, Plus, X, CheckCircle2, Loader2, 
   templateUrl: './document-management.component.html',
   styleUrls: ['./document-management.component.css']
 })
-export class DocumentManagementComponent implements OnInit {
+export class DocumentManagementComponent implements OnInit, OnDestroy {
   documents: DocumentDto[] = [];
   isLoading = false;
   error: string | null = null;
@@ -34,15 +36,37 @@ export class DocumentManagementComponent implements OnInit {
   readonly Clock = Clock;
   readonly XCircle = XCircle;
 
-  constructor(private documentService: DocumentService) {}
+  private tenantSubscription?: Subscription;
+  private refreshInterval?: number;
+
+  constructor(
+    private documentService: DocumentService,
+    private tenantContext: TenantContextService
+  ) {}
 
   ngOnInit() {
     this.loadDocuments();
 
+    // Subscribe to tenant changes
+    this.tenantSubscription = this.tenantContext.selectedTenant$.subscribe(tenant => {
+      if (tenant) {
+        this.loadDocuments();
+      }
+    });
+
     // Refresh every 5 seconds to update processing status
-    setInterval(() => {
+    this.refreshInterval = window.setInterval(() => {
       this.loadDocuments();
     }, 5000);
+  }
+
+  ngOnDestroy() {
+    if (this.tenantSubscription) {
+      this.tenantSubscription.unsubscribe();
+    }
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   }
 
   loadDocuments() {

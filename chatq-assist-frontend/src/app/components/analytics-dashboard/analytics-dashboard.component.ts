@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { AnalyticsService, Analytics, FaqPerformance } from '../../services/analytics.service';
+import { TenantContextService } from '../../services/tenant-context.service';
 import { LucideAngularModule, BarChart3, MessageCircle, ThumbsUp, ThumbsDown } from 'lucide-angular';
 
 @Component({
@@ -11,7 +13,7 @@ import { LucideAngularModule, BarChart3, MessageCircle, ThumbsUp, ThumbsDown } f
   templateUrl: './analytics-dashboard.component.html',
   styleUrls: ['./analytics-dashboard.component.css']
 })
-export class AnalyticsDashboardComponent implements OnInit {
+export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
   analytics: Analytics | null = null;
   isLoading: boolean = false;
   error: string | null = null;
@@ -31,10 +33,28 @@ export class AnalyticsDashboardComponent implements OnInit {
   readonly ThumbsUp = ThumbsUp;
   readonly ThumbsDown = ThumbsDown;
 
-  constructor(private analyticsService: AnalyticsService) {}
+  private tenantSubscription?: Subscription;
+
+  constructor(
+    private analyticsService: AnalyticsService,
+    private tenantContext: TenantContextService
+  ) {}
 
   ngOnInit(): void {
     this.loadAnalytics();
+
+    // Subscribe to tenant changes
+    this.tenantSubscription = this.tenantContext.selectedTenant$.subscribe(tenant => {
+      if (tenant) {
+        this.loadAnalytics();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.tenantSubscription) {
+      this.tenantSubscription.unsubscribe();
+    }
   }
 
   loadAnalytics(): void {
