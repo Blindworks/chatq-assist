@@ -125,10 +125,6 @@ export class TenantManagementComponent implements OnInit {
   }
 
   toggleStatus(tenant: TenantDto) {
-    if (!confirm(`${tenant.name} ${tenant.isActive ? 'deaktivieren' : 'aktivieren'}?`)) {
-      return;
-    }
-
     this.tenantService.toggleTenantStatus(tenant.id).subscribe({
       next: () => this.loadTenants(),
       error: (err) => {
