@@ -1,8 +1,8 @@
 <div class="tenant-management">
   <div class="header">
-    <h2>🏢 Tenant Verwaltung</h2>
+    <h2><lucide-icon [img]="Building2" [size]="24"></lucide-icon> Tenant Verwaltung</h2>
     <button class="btn btn-primary" (click)="openCreateForm()" [disabled]="loading">
-      ➕ Neuer Tenant
+      <lucide-icon [img]="Plus" [size]="16"></lucide-icon> Neuer Tenant
     </button>
   </div>
 
@@ -15,7 +15,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3>{{ editingTenant ? 'Tenant bearbeiten' : 'Neuen Tenant erstellen' }}</h3>
-        <button class="close-btn" (click)="closeForm()">✕</button>
+        <button class="close-btn" (click)="closeForm()">
+          <lucide-icon [img]="X" [size]="20"></lucide-icon>
+        </button>
       </div>
 
       <div class="form-group">
@@ -62,18 +64,22 @@
           <h3>{{ tenant.name }}</h3>
           <span class="tenant-id">ID: {{ tenant.tenantId }}</span>
           <span class="status-badge" [class.active]="tenant.isActive" [class.inactive]="!tenant.isActive">
-            {{ tenant.isActive ? '✓ Aktiv' : '✕ Inaktiv' }}
+            <lucide-icon [img]="tenant.isActive ? Check : X" [size]="14"></lucide-icon>
+            {{ tenant.isActive ? 'Aktiv' : 'Inaktiv' }}
           </span>
         </div>
         <div class="tenant-actions">
-          <button class="btn btn-sm btn-primary" (click)="openEditForm(tenant)">✏️ Bearbeiten</button>
+          <button class="btn btn-sm btn-primary" (click)="openEditForm(tenant)">
+            <lucide-icon [img]="Pencil" [size]="14"></lucide-icon> Bearbeiten
+          </button>
           <button class="btn btn-sm" [class.btn-warning]="tenant.isActive" [class.btn-success]="!tenant.isActive"
                   (click)="toggleStatus(tenant)">
-            {{ tenant.isActive ? '🚫 Deaktivieren' : '✓ Aktivieren' }}
+            <lucide-icon [img]="tenant.isActive ? Ban : Check" [size]="14"></lucide-icon>
+            {{ tenant.isActive ? 'Deaktivieren' : 'Aktivieren' }}
           </button>
           <button class="btn btn-sm btn-danger" (click)="deleteTenant(tenant)"
                   *ngIf="tenant.tenantId !== 'system'">
-            🗑️ Löschen
+            <lucide-icon [img]="Trash2" [size]="14"></lucide-icon> Löschen
           </button>
         </div>
       </div>
@@ -101,17 +107,17 @@
         <div class="api-key-row">
           <input type="text" [value]="tenant.apiKey" readonly class="api-key-input" />
           <button class="btn btn-sm btn-secondary" (click)="copyToClipboard(tenant.apiKey!)">
-            📋 Kopieren
+            <lucide-icon [img]="Copy" [size]="14"></lucide-icon> Kopieren
           </button>
           <button class="btn btn-sm btn-warning" (click)="regenerateApiKey(tenant)">
-            🔄 Neu generieren
+            <lucide-icon [img]="RefreshCw" [size]="14"></lucide-icon> Neu generieren
           </button>
         </div>
       </div>
 
       <div class="widget-config-section">
         <button class="btn btn-primary btn-widget-config" (click)="openWidgetCustomizer(tenant)">
-          🎨 Widget konfigurieren & Embed-Code generieren
+          <lucide-icon [img]="Palette" [size]="16"></lucide-icon> Widget konfigurieren & Embed-Code generieren
         </button>
       </div>
     </div>
@@ -125,8 +131,10 @@
   <div class="modal modal-large" *ngIf="showWidgetCustomizer && customizingTenant">
     <div class="modal-content modal-content-large">
       <div class="modal-header">
-        <h3>🎨 Widget-Konfiguration für {{ customizingTenant.name }}</h3>
-        <button class="close-btn" (click)="closeWidgetCustomizer()">✕</button>
+        <h3><lucide-icon [img]="Palette" [size]="20"></lucide-icon> Widget-Konfiguration für {{ customizingTenant.name }}</h3>
+        <button class="close-btn" (click)="closeWidgetCustomizer()">
+          <lucide-icon [img]="X" [size]="20"></lucide-icon>
+        </button>
       </div>
       <div class="modal-body">
         <app-widget-customizer [tenant]="customizingTenant"></app-widget-customizer>

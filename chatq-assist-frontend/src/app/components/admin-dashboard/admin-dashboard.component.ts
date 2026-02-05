@@ -9,17 +9,47 @@ import { TenantManagementComponent } from '../tenant-management/tenant-managemen
 import { UserManagementComponent } from '../user-management/user-management.component';
 import { AnalyticsDashboardComponent } from '../analytics-dashboard/analytics-dashboard.component';
 import { TicketManagementComponent } from '../ticket-management/ticket-management.component';
+import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
+import {
+  LucideAngularModule,
+  MessageSquare,
+  Settings,
+  BarChart3,
+  MessageCircle,
+  Ticket,
+  FileText,
+  Building2,
+  Users,
+  LogOut,
+  Eye,
+  EyeOff,
+  Pencil,
+  Trash2,
+  Plus,
+  X
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DocumentManagementComponent, TenantManagementComponent, UserManagementComponent, AnalyticsDashboardComponent, TicketManagementComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    DocumentManagementComponent,
+    TenantManagementComponent,
+    UserManagementComponent,
+    AnalyticsDashboardComponent,
+    TicketManagementComponent,
+    ChatWidgetComponent,
+    LucideAngularModule
+  ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
   // Tab state
-  activeTab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets' = 'faqs';
+  activeTab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets' | 'chatwidget' = 'faqs';
 
   faqs: FaqEntry[] = [];
   filteredFaqs: FaqEntry[] = [];
@@ -33,6 +63,23 @@ export class AdminDashboardComponent implements OnInit {
   editingFaq: FaqEntry | null = null;
   formData: FaqEntry = this.getEmptyFaq();
 
+  // Lucide icons
+  readonly MessageSquare = MessageSquare;
+  readonly Settings = Settings;
+  readonly BarChart3 = BarChart3;
+  readonly MessageCircle = MessageCircle;
+  readonly Ticket = Ticket;
+  readonly FileText = FileText;
+  readonly Building2 = Building2;
+  readonly Users = Users;
+  readonly LogOut = LogOut;
+  readonly Eye = Eye;
+  readonly EyeOff = EyeOff;
+  readonly Pencil = Pencil;
+  readonly Trash2 = Trash2;
+  readonly Plus = Plus;
+  readonly X = X;
+
   constructor(
     private faqService: FaqService,
     private authService: AuthService,
@@ -43,7 +90,7 @@ export class AdminDashboardComponent implements OnInit {
     this.loadFaqs();
   }
 
-  switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets'): void {
+  switchTab(tab: 'faqs' | 'documents' | 'tenants' | 'users' | 'analytics' | 'tickets' | 'chatwidget'): void {
     this.activeTab = tab;
   }
 
@@ -244,7 +291,8 @@ export class AdminDashboardComponent implements OnInit {
       'tickets': 'Support Tickets',
       'documents': 'Document Management',
       'tenants': 'Tenant Management',
-      'users': 'User Management'
+      'users': 'User Management',
+      'chatwidget': 'Chat Widget'
     };
     return titles[this.activeTab] || 'Dashboard';
   }

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DocumentService, DocumentDto, DocumentIngestRequest } from '../../services/document.service';
+import { LucideAngularModule, FileText, Trash2, Plus, X, CheckCircle2, Loader2, Clock, XCircle } from 'lucide-angular';
 
 @Component({
   selector: 'app-document-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './document-management.component.html',
   styleUrls: ['./document-management.component.css']
 })
@@ -22,6 +23,16 @@ export class DocumentManagementComponent implements OnInit {
   selectedFile: File | null = null;
   uploadUrl = '';
   isUploading = false;
+
+  // Lucide icons
+  readonly FileText = FileText;
+  readonly Trash2 = Trash2;
+  readonly Plus = Plus;
+  readonly X = X;
+  readonly CheckCircle2 = CheckCircle2;
+  readonly Loader2 = Loader2;
+  readonly Clock = Clock;
+  readonly XCircle = XCircle;
 
   constructor(private documentService: DocumentService) {}
 
@@ -160,13 +171,13 @@ export class DocumentManagementComponent implements OnInit {
     }
   }
 
-  getStatusIcon(status: string): string {
+  getStatusIcon(status: string): any {
     switch (status) {
-      case 'COMPLETED': return '✓';
-      case 'PROCESSING': return '⟳';
-      case 'PENDING': return '⋯';
-      case 'FAILED': return '✗';
-      default: return '';
+      case 'COMPLETED': return this.CheckCircle2;
+      case 'PROCESSING': return this.Loader2;
+      case 'PENDING': return this.Clock;
+      case 'FAILED': return this.XCircle;
+      default: return this.FileText;
     }
   }
 

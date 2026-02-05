@@ -1,13 +1,13 @@
 <div class="user-management">
   <div class="header">
-    <h2>👥 Benutzer Verwaltung</h2>
+    <h2><lucide-icon [img]="Users" [size]="24"></lucide-icon> Benutzer Verwaltung</h2>
     <div class="header-actions">
       <select [(ngModel)]="selectedTenantFilter" (change)="onTenantFilterChange()" class="tenant-filter">
         <option value="">Alle Tenants</option>
         <option *ngFor="let tenant of tenants" [value]="tenant.tenantId">{{ tenant.name }}</option>
       </select>
       <button class="btn btn-primary" (click)="openCreateForm()" [disabled]="loading">
-        ➕ Neuer Benutzer
+        <lucide-icon [img]="Plus" [size]="16"></lucide-icon> Neuer Benutzer
       </button>
     </div>
   </div>
@@ -21,7 +21,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3>{{ editingUser ? 'Benutzer bearbeiten' : 'Neuen Benutzer erstellen' }}</h3>
-        <button class="close-btn" (click)="closeForm()">✕</button>
+        <button class="close-btn" (click)="closeForm()">
+          <lucide-icon [img]="X" [size]="20"></lucide-icon>
+        </button>
       </div>
 
       <div class="form-group">
@@ -107,22 +109,25 @@
           </td>
           <td>
             <span class="status-badge" [class.active]="user.enabled" [class.inactive]="!user.enabled">
-              {{ user.enabled ? '✓ Aktiv' : '✕ Inaktiv' }}
+              <lucide-icon [img]="user.enabled ? Check : X" [size]="14"></lucide-icon>
+              {{ user.enabled ? 'Aktiv' : 'Inaktiv' }}
             </span>
           </td>
           <td>{{ user.createdAt | date: 'dd.MM.yyyy' }}</td>
           <td>
             <div class="action-buttons">
-              <button class="btn btn-sm btn-primary" (click)="openEditForm(user)">✏️</button>
+              <button class="btn btn-sm btn-primary" (click)="openEditForm(user)">
+                <lucide-icon [img]="Pencil" [size]="14"></lucide-icon>
+              </button>
               <button class="btn btn-sm"
                       [class.btn-warning]="user.enabled"
                       [class.btn-success]="!user.enabled"
                       (click)="toggleStatus(user)">
-                {{ user.enabled ? '🚫' : '✓' }}
+                <lucide-icon [img]="user.enabled ? Ban : Check" [size]="14"></lucide-icon>
               </button>
               <button class="btn btn-sm btn-danger" (click)="deleteUser(user)"
                       *ngIf="user.username !== 'admin'">
-                🗑️
+                <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
               </button>
             </div>
           </td>

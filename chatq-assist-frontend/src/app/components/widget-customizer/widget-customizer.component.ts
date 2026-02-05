@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { TenantDto, TenantService } from '../../services/tenant.service';
 import { TenantSettings, WidgetConfig } from '../../models/widget-config.model';
 import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
+import { LucideAngularModule, Palette, Eye, X, Copy, Code, Save } from 'lucide-angular';
 
 @Component({
   selector: 'app-widget-customizer',
   standalone: true,
-  imports: [CommonModule, FormsModule, ChatWidgetComponent],
+  imports: [CommonModule, FormsModule, ChatWidgetComponent, LucideAngularModule],
   templateUrl: './widget-customizer.component.html',
   styleUrls: ['./widget-customizer.component.css']
 })
@@ -35,6 +36,14 @@ export class WidgetCustomizerComponent implements OnInit {
 
   embedCode: string = '';
   showEmbedCode: boolean = false;
+
+  // Lucide icons
+  readonly Palette = Palette;
+  readonly Eye = Eye;
+  readonly X = X;
+  readonly Copy = Copy;
+  readonly Code = Code;
+  readonly Save = Save;
 
   constructor(private tenantService: TenantService) {}
 

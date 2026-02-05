@@ -9,11 +9,12 @@ import {
   TicketPriority,
   TicketUpdateRequest
 } from '../../services/ticket.service';
+import { LucideAngularModule, ClipboardList, ArrowDown, ArrowUp, X, Trash2 } from 'lucide-angular';
 
 @Component({
   selector: 'app-ticket-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './ticket-management.component.html',
   styleUrls: ['./ticket-management.component.css']
 })
@@ -45,6 +46,13 @@ export class TicketManagementComponent implements OnInit {
   // Available options
   readonly statusOptions: TicketStatus[] = ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
   readonly priorityOptions: TicketPriority[] = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
+
+  // Lucide icons
+  readonly ClipboardList = ClipboardList;
+  readonly ArrowDown = ArrowDown;
+  readonly ArrowUp = ArrowUp;
+  readonly X = X;
+  readonly Trash2 = Trash2;
 
   constructor(private ticketService: TicketService) {}
 

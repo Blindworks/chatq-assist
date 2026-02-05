@@ -29,7 +29,7 @@
       <!-- Feedback Metrics -->
       <div class="metric-card feedback-card">
         <div class="card-header">
-          <h3>📊 Feedback Overview</h3>
+          <h3><lucide-icon [img]="BarChart3" [size]="20"></lucide-icon> Feedback Overview</h3>
         </div>
         <div class="card-body">
           <div class="big-number">{{ analytics.feedbackMetrics.totalFeedback }}</div>
@@ -37,7 +37,7 @@
 
           <div class="feedback-breakdown">
             <div class="feedback-item positive">
-              <span class="icon">👍</span>
+              <span class="icon"><lucide-icon [img]="ThumbsUp" [size]="24"></lucide-icon></span>
               <div class="feedback-details">
                 <div class="count">{{ analytics.feedbackMetrics.positiveFeedback }}</div>
                 <div class="rate" [class]="getFeedbackClass(analytics.feedbackMetrics.positiveRate)">
@@ -46,7 +46,7 @@
               </div>
             </div>
             <div class="feedback-item negative">
-              <span class="icon">👎</span>
+              <span class="icon"><lucide-icon [img]="ThumbsDown" [size]="24"></lucide-icon></span>
               <div class="feedback-details">
                 <div class="count">{{ analytics.feedbackMetrics.negativeFeedback }}</div>
                 <div class="rate">{{ analytics.feedbackMetrics.negativeRate }}%</div>
@@ -59,7 +59,7 @@
       <!-- Conversation Metrics -->
       <div class="metric-card conversation-card">
         <div class="card-header">
-          <h3>💬 Conversations</h3>
+          <h3><lucide-icon [img]="MessageCircle" [size]="20"></lucide-icon> Conversations</h3>
         </div>
         <div class="card-body">
           <div class="big-number">{{ analytics.conversationMetrics.totalConversations }}</div>
@@ -166,8 +166,12 @@
               </td>
               <td class="feedback-col">
                 <div class="feedback-mini">
-                  <span class="mini-positive">👍 {{ faq.positiveFeedbackCount }}</span>
-                  <span class="mini-negative">👎 {{ faq.negativeFeedbackCount }}</span>
+                  <span class="mini-positive">
+                    <lucide-icon [img]="ThumbsUp" [size]="12"></lucide-icon> {{ faq.positiveFeedbackCount }}
+                  </span>
+                  <span class="mini-negative">
+                    <lucide-icon [img]="ThumbsDown" [size]="12"></lucide-icon> {{ faq.negativeFeedbackCount }}
+                  </span>
                 </div>
               </td>
               <td class="satisfaction-col">

@@ -5,6 +5,7 @@ import { ChatService, ChatRequest, ChatResponse } from '../../services/chat.serv
 import { AuthService } from '../../services/auth.service';
 import { TenantService } from '../../services/tenant.service';
 import { WidgetConfig } from '../../models/widget-config.model';
+import { LucideAngularModule, MessageCircle, Moon, Sun, X, Send, ThumbsUp, ThumbsDown } from 'lucide-angular';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -17,7 +18,7 @@ interface Message {
 @Component({
   selector: 'app-chat-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './chat-widget.component.html',
   styleUrls: ['./chat-widget.component.css']
 })
@@ -52,6 +53,15 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
   };
   handoffSubmitting = false;
   lastUserQuestion = ''; // Store the last question that triggered handoff
+
+  // Lucide icons
+  readonly MessageCircle = MessageCircle;
+  readonly Moon = Moon;
+  readonly Sun = Sun;
+  readonly X = X;
+  readonly Send = Send;
+  readonly ThumbsUp = ThumbsUp;
+  readonly ThumbsDown = ThumbsDown;
 
   constructor(
     private chatService: ChatService,

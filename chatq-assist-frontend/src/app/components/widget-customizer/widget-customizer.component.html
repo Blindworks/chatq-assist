@@ -1,6 +1,6 @@
 <div class="widget-customizer">
   <div class="customizer-header">
-    <h3>🎨 Widget Customization</h3>
+    <h3><lucide-icon [img]="Palette" [size]="20"></lucide-icon> Widget Customization</h3>
     <p>Customize the chat widget appearance for {{ tenant.name }}</p>
   </div>
 
@@ -133,8 +133,10 @@
     <!-- Live Preview -->
     <div class="section preview-section" *ngIf="showPreview">
       <div class="preview-header">
-        <h4>👁️ Live Preview</h4>
-        <button class="btn btn-sm btn-secondary" (click)="closePreview()">✕ Schließen</button>
+        <h4><lucide-icon [img]="Eye" [size]="18"></lucide-icon> Live Preview</h4>
+        <button class="btn btn-sm btn-secondary" (click)="closePreview()">
+          <lucide-icon [img]="X" [size]="14"></lucide-icon> Schließen
+        </button>
       </div>
       <div class="preview-container">
         <p class="preview-info">So wird das Widget auf der Website Ihres Kunden aussehen:</p>
@@ -163,26 +165,26 @@
     <div class="section actions-section">
       <div class="button-group">
         <button class="btn btn-secondary" (click)="previewWidget()">
-          👁️ {{ showPreview ? 'Preview aktualisieren' : 'Preview Widget' }}
+          <lucide-icon [img]="Eye" [size]="16"></lucide-icon> {{ showPreview ? 'Preview aktualisieren' : 'Preview Widget' }}
         </button>
         <button class="btn btn-primary" (click)="saveSettings()" [disabled]="isSaving">
-          {{ isSaving ? '💾 Speichert...' : '💾 Einstellungen speichern' }}
+          <lucide-icon [img]="Save" [size]="16"></lucide-icon> {{ isSaving ? 'Speichert...' : 'Einstellungen speichern' }}
         </button>
         <button class="btn btn-success" (click)="showEmbedCode = !showEmbedCode">
-          📋 {{ showEmbedCode ? 'Ausblenden' : 'Embed-Code anzeigen' }}
+          <lucide-icon [img]="showEmbedCode ? X : Code" [size]="16"></lucide-icon> {{ showEmbedCode ? 'Ausblenden' : 'Embed-Code anzeigen' }}
         </button>
       </div>
     </div>
 
     <!-- Embed Code Section -->
     <div *ngIf="showEmbedCode" class="section embed-section">
-      <h4>📋 Embed Code</h4>
+      <h4><lucide-icon [img]="Code" [size]="18"></lucide-icon> Embed Code</h4>
       <p>Copy and paste this code before the closing &lt;/body&gt; tag on your website:</p>
 
       <div class="embed-code-container">
         <pre>{{ embedCode }}</pre>
         <button class="copy-btn" (click)="copyEmbedCode()">
-          📋 Copy Code
+          <lucide-icon [img]="Copy" [size]="16"></lucide-icon> Copy Code
         </button>
       </div>
 

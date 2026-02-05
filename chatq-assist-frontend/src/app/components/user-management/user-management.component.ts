@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserManagementService, UserDto, CreateUserRequest } from '../../services/user-management.service';
 import { TenantService, TenantDto } from '../../services/tenant.service';
+import { LucideAngularModule, Users, Plus, X, Check, Ban, Pencil, Trash2 } from 'lucide-angular';
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.css']
 })
@@ -36,6 +37,15 @@ export class UserManagementComponent implements OnInit {
     { value: 'ADMIN', label: 'Admin (Legacy)' },
     { value: 'USER', label: 'User (Legacy)' }
   ];
+
+  // Lucide icons
+  readonly Users = Users;
+  readonly Plus = Plus;
+  readonly X = X;
+  readonly Check = Check;
+  readonly Ban = Ban;
+  readonly Pencil = Pencil;
+  readonly Trash2 = Trash2;
 
   constructor(
     private userService: UserManagementService,

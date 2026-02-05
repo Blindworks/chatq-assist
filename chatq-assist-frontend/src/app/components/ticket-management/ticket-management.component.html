@@ -7,7 +7,9 @@
   <!-- Error Message -->
   <div *ngIf="error" class="error-message">
     {{ error }}
-    <button class="close-btn" (click)="clearError()">&times;</button>
+    <button class="close-btn" (click)="clearError()">
+      <lucide-icon [img]="X" [size]="16"></lucide-icon>
+    </button>
   </div>
 
   <!-- Statistics Cards -->
@@ -76,7 +78,7 @@
       class="btn-sort-direction"
       (click)="toggleSortDirection()"
       title="Toggle sort direction">
-      {{ sortDirection === 'desc' ? '↓' : '↑' }}
+      <lucide-icon [img]="sortDirection === 'desc' ? ArrowDown : ArrowUp" [size]="16"></lucide-icon>
     </button>
   </div>
 
@@ -90,7 +92,9 @@
   <div class="tickets-container" *ngIf="!isLoading">
     <!-- Empty State -->
     <div *ngIf="filteredTickets.length === 0" class="empty-state">
-      <div class="empty-icon">📋</div>
+      <div class="empty-icon">
+        <lucide-icon [img]="ClipboardList" [size]="48"></lucide-icon>
+      </div>
       <p>{{ searchQuery || filterStatus !== 'ALL' ? 'No tickets match your filters.' : 'No support tickets yet.' }}</p>
       <p class="empty-hint" *ngIf="searchQuery || filterStatus !== 'ALL'">Try adjusting your search or filters.</p>
     </div>
@@ -146,7 +150,7 @@
                 class="btn-icon btn-delete"
                 (click)="deleteTicket(ticket)"
                 title="Delete ticket">
-                🗑️
+                <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
               </button>
             </td>
           </tr>

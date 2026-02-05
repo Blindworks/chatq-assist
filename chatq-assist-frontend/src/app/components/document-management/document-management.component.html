@@ -2,13 +2,16 @@
   <div class="header">
     <h2>Document Management</h2>
     <button class="btn btn-primary" (click)="toggleUploadForm()">
-      {{ showUploadForm ? 'Cancel' : '+ Add Document' }}
+      <lucide-icon [img]="showUploadForm ? X : Plus" [size]="16"></lucide-icon>
+      {{ showUploadForm ? 'Cancel' : 'Add Document' }}
     </button>
   </div>
 
   <div *ngIf="error" class="alert alert-error">
     {{ error }}
-    <button class="alert-close" (click)="error = null">×</button>
+    <button class="alert-close" (click)="error = null">
+      <lucide-icon [img]="X" [size]="16"></lucide-icon>
+    </button>
   </div>
 
   <!-- Upload Form -->
@@ -64,12 +67,14 @@
     <div *ngFor="let doc of documents" class="document-card">
       <div class="document-header">
         <div class="document-title">
-          <span class="document-icon">📄</span>
+          <span class="document-icon">
+            <lucide-icon [img]="FileText" [size]="20"></lucide-icon>
+          </span>
           <h4>{{ doc.title }}</h4>
         </div>
         <div class="document-actions">
           <button class="btn btn-danger btn-sm" (click)="deleteDocument(doc.id)" title="Delete">
-            🗑️
+            <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
           </button>
         </div>
       </div>
@@ -83,7 +88,9 @@
         <div class="document-info">
           <span class="info-label">Status:</span>
           <span class="info-value" [ngClass]="getStatusClass(doc.status)">
-            <span class="status-icon">{{ getStatusIcon(doc.status) }}</span>
+            <span class="status-icon">
+              <lucide-icon [img]="getStatusIcon(doc.status)" [size]="16"></lucide-icon>
+            </span>
             {{ doc.status }}
           </span>
         </div>

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TenantService, TenantDto, CreateTenantRequest } from '../../services/tenant.service';
 import { WidgetCustomizerComponent } from '../widget-customizer/widget-customizer.component';
+import { LucideAngularModule, Building2, Plus, X, Check, Ban, Copy, Pencil, Trash2, Palette, RefreshCw } from 'lucide-angular';
 
 @Component({
   selector: 'app-tenant-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, WidgetCustomizerComponent],
+  imports: [CommonModule, FormsModule, WidgetCustomizerComponent, LucideAngularModule],
   templateUrl: './tenant-management.component.html',
   styleUrls: ['./tenant-management.component.css']
 })
@@ -27,6 +28,18 @@ export class TenantManagementComponent implements OnInit {
     maxUsers: 10,
     maxDocuments: 100
   };
+
+  // Lucide icons
+  readonly Building2 = Building2;
+  readonly Plus = Plus;
+  readonly X = X;
+  readonly Check = Check;
+  readonly Ban = Ban;
+  readonly Copy = Copy;
+  readonly Pencil = Pencil;
+  readonly Trash2 = Trash2;
+  readonly Palette = Palette;
+  readonly RefreshCw = RefreshCw;
 
   constructor(private tenantService: TenantService) {}
 

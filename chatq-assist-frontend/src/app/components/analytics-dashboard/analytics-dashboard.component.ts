@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnalyticsService, Analytics, FaqPerformance } from '../../services/analytics.service';
+import { LucideAngularModule, BarChart3, MessageCircle, ThumbsUp, ThumbsDown } from 'lucide-angular';
 
 @Component({
   selector: 'app-analytics-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './analytics-dashboard.component.html',
   styleUrls: ['./analytics-dashboard.component.css']
 })
@@ -23,6 +24,12 @@ export class AnalyticsDashboardComponent implements OnInit {
 
   // Make Math available in template
   Math = Math;
+
+  // Lucide icons
+  readonly BarChart3 = BarChart3;
+  readonly MessageCircle = MessageCircle;
+  readonly ThumbsUp = ThumbsUp;
+  readonly ThumbsDown = ThumbsDown;
 
   constructor(private analyticsService: AnalyticsService) {}
 
