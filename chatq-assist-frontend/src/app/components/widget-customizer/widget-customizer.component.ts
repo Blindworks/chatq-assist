@@ -53,6 +53,11 @@ export class WidgetCustomizerComponent implements OnInit {
   ngOnInit() {
     this.loadTenantSettings();
     this.generateEmbedCode();
+
+    // Automatically show widget preview for tenant users
+    if (this.isReadOnly) {
+      this.previewWidget();
+    }
   }
 
   loadTenantSettings() {

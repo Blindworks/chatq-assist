@@ -1,13 +1,7 @@
 <div class="widget-customizer">
-  <!-- Read-only info banner -->
-  <div *ngIf="isReadOnly" class="readonly-banner">
-    <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
-    <span>Sie befinden sich im Vorschau-Modus. Nur Administratoren können das Widget konfigurieren.</span>
-  </div>
-
   <div class="customizer-body">
     <!-- Branding Section -->
-    <div class="section">
+    <div class="section" *ngIf="!isReadOnly">
       <h4><lucide-icon [img]="Palette" [size]="18"></lucide-icon> Branding</h4>
 
       <div class="form-group">
@@ -18,7 +12,6 @@
           [(ngModel)]="widgetSettings.companyName"
           placeholder="Your Company Name"
           class="form-control"
-          [disabled]="isReadOnly"
         />
       </div>
 
@@ -30,7 +23,6 @@
           [(ngModel)]="widgetSettings.welcomeMessage"
           placeholder="How can we help you?"
           class="form-control"
-          [disabled]="isReadOnly"
         />
       </div>
 
@@ -42,7 +34,6 @@
           [(ngModel)]="widgetSettings.logoUrl"
           placeholder="https://example.com/logo.png"
           class="form-control"
-          [disabled]="isReadOnly"
         />
         <small *ngIf="widgetSettings.logoUrl" class="logo-preview">
           <img [src]="widgetSettings.logoUrl" alt="Logo preview" />
@@ -51,7 +42,7 @@
     </div>
 
     <!-- Colors Section -->
-    <div class="section">
+    <div class="section" *ngIf="!isReadOnly">
       <h4><lucide-icon [img]="Paintbrush" [size]="18"></lucide-icon> Colors</h4>
 
       <div class="color-row">
@@ -63,7 +54,6 @@
               type="color"
               [(ngModel)]="widgetSettings.widget!.primaryColor"
               class="color-picker"
-              [disabled]="isReadOnly"
             />
             <input
               type="text"
@@ -72,7 +62,6 @@
               placeholder="#667eea"
               pattern="^#[0-9A-Fa-f]{6}$"
               maxlength="7"
-              [disabled]="isReadOnly"
             />
           </div>
         </div>
@@ -85,7 +74,6 @@
               type="color"
               [(ngModel)]="widgetSettings.widget!.secondaryColor"
               class="color-picker"
-              [disabled]="isReadOnly"
             />
             <input
               type="text"
@@ -94,7 +82,6 @@
               placeholder="#764ba2"
               pattern="^#[0-9A-Fa-f]{6}$"
               maxlength="7"
-              [disabled]="isReadOnly"
             />
           </div>
         </div>
@@ -102,7 +89,7 @@
     </div>
 
     <!-- Position & Features Section -->
-    <div class="section">
+    <div class="section" *ngIf="!isReadOnly">
       <h4><lucide-icon [img]="Settings" [size]="18"></lucide-icon> Position & Features</h4>
 
       <div class="form-group">
@@ -111,7 +98,6 @@
           id="position"
           [(ngModel)]="widgetSettings.widget!.position"
           class="form-control"
-          [disabled]="isReadOnly"
         >
           <option value="bottom-right">Bottom Right</option>
           <option value="bottom-left">Bottom Left</option>
@@ -125,7 +111,6 @@
           <input
             type="checkbox"
             [(ngModel)]="widgetSettings.widget!.showLogo"
-            [disabled]="isReadOnly"
           />
           Show Logo in Header
         </label>
@@ -134,7 +119,6 @@
           <input
             type="checkbox"
             [(ngModel)]="widgetSettings.widget!.enableFeedback"
-            [disabled]="isReadOnly"
           />
           Enable User Feedback
         </label>
@@ -145,7 +129,7 @@
     <div class="section preview-section" *ngIf="showPreview">
       <div class="preview-header">
         <h4><lucide-icon [img]="Eye" [size]="18"></lucide-icon> Live Preview</h4>
-        <button class="btn btn-sm btn-secondary" (click)="closePreview()">
+        <button *ngIf="!isReadOnly" class="btn btn-sm btn-secondary" (click)="closePreview()">
           <lucide-icon [img]="X" [size]="14"></lucide-icon> Schließen
         </button>
       </div>
@@ -154,14 +138,7 @@
         <div class="preview-mockup">
           <div class="preview-content">
             <h3>Beispiel-Website</h3>
-            <p>Das ist eine simulierte Kunden-Website. Das Chat-Widget erscheint in der unteren rechten Ecke.</p>
-
-            <div class="config-preview">
-              <strong>Aktuelle Konfiguration:</strong><br>
-              Firmenname: {{ widgetSettings.companyName || 'ChatQ Assist' }}<br>
-              Primärfarbe: <span class="color-box" [style.background]="widgetSettings.widget?.primaryColor"></span> {{ widgetSettings.widget?.primaryColor }}<br>
-              Position: {{ widgetSettings.widget?.position || 'bottom-right' }}
-            </div>
+            <p>Das ist eine simulierte Kunden-Website. Das Chat-Widget erscheint entsprechend Ihrer Konfiguration.</p>
           </div>
 
           <!-- Render the actual chat widget with custom config -->
@@ -173,15 +150,15 @@
     </div>
 
     <!-- Preview & Actions -->
-    <div class="section actions-section">
+    <div class="section actions-section" *ngIf="!isReadOnly">
       <div class="button-group">
         <button class="btn btn-secondary" (click)="previewWidget()">
           <lucide-icon [img]="Eye" [size]="16"></lucide-icon> {{ showPreview ? 'Preview aktualisieren' : 'Preview Widget' }}
         </button>
-        <button *ngIf="!isReadOnly" class="btn btn-primary" (click)="saveSettings()" [disabled]="isSaving">
+        <button class="btn btn-primary" (click)="saveSettings()" [disabled]="isSaving">
           <lucide-icon [img]="Save" [size]="16"></lucide-icon> {{ isSaving ? 'Speichert...' : 'Einstellungen speichern' }}
         </button>
-        <button *ngIf="!isReadOnly" class="btn btn-success" (click)="showEmbedCode = !showEmbedCode">
+        <button class="btn btn-success" (click)="showEmbedCode = !showEmbedCode">
           <lucide-icon [img]="showEmbedCode ? X : Code" [size]="16"></lucide-icon> {{ showEmbedCode ? 'Ausblenden' : 'Embed-Code anzeigen' }}
         </button>
       </div>
