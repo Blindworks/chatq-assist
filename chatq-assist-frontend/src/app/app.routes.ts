@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { LandingComponent } from './components/landing/landing.component';
 import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { AnalyticsDashboardComponent } from './components/analytics-dashboard/analytics-dashboard.component';
@@ -7,7 +8,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: ChatWidgetComponent },
+  { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'admin',

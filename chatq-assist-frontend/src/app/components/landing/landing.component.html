@@ -1,0 +1,132 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <lucide-icon [img]="Sparkles" [size]="16"></lucide-icon>
+      <span>GDPR-Compliant Support Solution</span>
+    </div>
+    <h1 class="hero-title">
+      Intelligent Customer Support
+      <span class="gradient-text">Made Simple</span>
+    </h1>
+    <p class="hero-description">
+      Empower your customers with instant answers through our AI-powered FAQ chatbot.
+      Seamlessly integrated, fully customizable, and privacy-first.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" (click)="navigateToLogin()">
+        Get Started
+        <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
+      </button>
+      <button class="btn btn-secondary" (click)="openChatWidget()">
+        <lucide-icon [img]="MessageCircle" [size]="20"></lucide-icon>
+        Try Live Demo
+      </button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="floating-card card-1">
+      <lucide-icon [img]="MessageCircle" [size]="24"></lucide-icon>
+      <div>
+        <div class="card-title">24/7 Availability</div>
+        <div class="card-desc">Always ready to help</div>
+      </div>
+    </div>
+    <div class="floating-card card-2">
+      <lucide-icon [img]="Zap" [size]="24"></lucide-icon>
+      <div>
+        <div class="card-title">Instant Response</div>
+        <div class="card-desc">< 1s average time</div>
+      </div>
+    </div>
+    <div class="floating-card card-3">
+      <lucide-icon [img]="Shield" [size]="24"></lucide-icon>
+      <div>
+        <div class="card-title">100% Secure</div>
+        <div class="card-desc">GDPR compliant</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <div class="section-header">
+    <h2 class="section-title">Why Choose ChatQ Assist?</h2>
+    <p class="section-description">Everything you need to deliver exceptional customer support</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card" *ngFor="let feature of features">
+      <div class="feature-icon">
+        <lucide-icon [img]="feature.icon" [size]="28"></lucide-icon>
+      </div>
+      <h3 class="feature-title">{{ feature.title }}</h3>
+      <p class="feature-description">{{ feature.description }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits">
+  <div class="benefits-content">
+    <div class="benefits-text">
+      <h2 class="section-title">Built for Modern Businesses</h2>
+      <p class="section-description">
+        ChatQ Assist provides all the tools you need to automate customer support
+        while maintaining a personal touch.
+      </p>
+      <ul class="benefits-list">
+        <li *ngFor="let benefit of benefits">
+          <lucide-icon [img]="CheckCircle" [size]="20"></lucide-icon>
+          <span>{{ benefit }}</span>
+        </li>
+      </ul>
+      <button class="btn btn-primary" (click)="navigateToLogin()">
+        Start Free Trial
+        <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
+      </button>
+    </div>
+    <div class="benefits-visual">
+      <div class="stats-card">
+        <div class="stat">
+          <div class="stat-value">99.9%</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">< 1s</div>
+          <div class="stat-label">Response Time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">24/7</div>
+          <div class="stat-label">Availability</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+  <div class="cta-content">
+    <h2 class="cta-title">Ready to Transform Your Support?</h2>
+    <p class="cta-description">Join hundreds of businesses already using ChatQ Assist</p>
+    <button class="btn btn-primary btn-lg" (click)="navigateToLogin()">
+      Get Started Now
+      <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
+    </button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <lucide-icon [img]="MessageCircle" [size]="24"></lucide-icon>
+      <span>ChatQ Assist</span>
+    </div>
+    <p class="footer-text">© 2024 ChatQ Assist. GDPR-compliant customer support solution.</p>
+  </div>
+</footer>
+
+<!-- Embedded Chat Widget -->
+<app-chat-widget></app-chat-widget>

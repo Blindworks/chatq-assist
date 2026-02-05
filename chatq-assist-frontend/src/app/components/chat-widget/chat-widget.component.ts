@@ -1,9 +1,11 @@
-import { Component, OnInit, OnChanges, SimpleChanges, Input, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnChanges, OnDestroy, SimpleChanges, Input, ElementRef, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { ChatService, ChatRequest, ChatResponse } from '../../services/chat.service';
 import { AuthService } from '../../services/auth.service';
 import { TenantService } from '../../services/tenant.service';
+import { WidgetControlService } from '../../services/widget-control.service';
 import { WidgetConfig } from '../../models/widget-config.model';
 import { LucideAngularModule, MessageCircle, Moon, Sun, X, Send, ThumbsUp, ThumbsDown } from 'lucide-angular';
 
@@ -22,7 +24,7 @@ interface Message {
   templateUrl: './chat-widget.component.html',
   styleUrls: ['./chat-widget.component.css']
 })
-export class ChatWidgetComponent implements OnInit, OnChanges {
+export class ChatWidgetComponent implements OnInit, OnChanges, OnDestroy {
   @Input() config: WidgetConfig = {
     tenantId: 'default-tenant',
     primaryColor: '#007bff',
@@ -37,6 +39,7 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
   };
 
   isOpen = false;
+  private widgetSubscription?: Subscription;
   messages: Message[] = [];
   currentMessage = '';
   sessionId: string | null = null;
@@ -67,27 +70,36 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
     private chatService: ChatService,
     private authService: AuthService,
     private tenantService: TenantService,
+    private widgetControl: WidgetControlService,
     private elementRef: ElementRef,
     private renderer: Renderer2
   ) {}
 
   ngOnInit() {
+    // Subscribe to widget control service
+    this.widgetSubscription = this.widgetControl.widgetOpen$.subscribe(isOpen => {
+      this.isOpen = isOpen;
+    });
+
     // Load config from window.chatqConfig if embedded
     if (typeof window !== 'undefined' && (window as any).chatqConfig) {
       this.config = { ...this.config, ...(window as any).chatqConfig };
     }
 
-    // If user is authenticated, use their tenant ID
+    // If user is authenticated, use their tenant ID and load settings
     if (this.authService.isAuthenticated()) {
       const tenantId = this.authService.getTenantId();
       if (tenantId) {
         this.config.tenantId = tenantId;
         console.log('Using authenticated user tenant ID:', tenantId);
       }
+      // Load tenant settings only for authenticated users
+      this.loadTenantSettings();
+    } else {
+      // For unauthenticated users, use default config
+      console.log('Using default widget configuration (not authenticated)');
+      this.applyBranding();
     }
-
-    // Load tenant settings and apply them to widget config
-    this.loadTenantSettings();
 
     // Check for saved session
     this.sessionId = localStorage.getItem('chatq-session-id');
@@ -215,7 +227,7 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
   }
 
   toggleWidget() {
-    this.isOpen = !this.isOpen;
+    this.widgetControl.toggleWidget();
   }
 
   toggleTheme() {
@@ -375,5 +387,12 @@ export class ChatWidgetComponent implements OnInit, OnChanges {
         this.handoffSubmitting = false;
       }
     });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from widget control service
+    if (this.widgetSubscription) {
+      this.widgetSubscription.unsubscribe();
+    }
   }
 }
