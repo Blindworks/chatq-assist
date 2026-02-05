@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TenantDto, TenantService } from '../../services/tenant.service';
 import { TenantSettings, WidgetConfig } from '../../models/widget-config.model';
 import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
-import { LucideAngularModule, Palette, Eye, X, Copy, Code, Save } from 'lucide-angular';
+import { LucideAngularModule, Palette, Eye, X, Copy, Code, Save, Paintbrush, Settings } from 'lucide-angular';
 
 @Component({
   selector: 'app-widget-customizer',
@@ -44,6 +44,8 @@ export class WidgetCustomizerComponent implements OnInit {
   readonly Copy = Copy;
   readonly Code = Code;
   readonly Save = Save;
+  readonly Paintbrush = Paintbrush;
+  readonly Settings = Settings;
 
   constructor(private tenantService: TenantService) {}
 

@@ -20,30 +20,32 @@
         </button>
       </div>
 
-      <div class="form-group">
-        <label>Name *</label>
-        <input type="text" [(ngModel)]="newTenant.name" placeholder="Firmenname" class="form-control" />
-      </div>
-
-      <div class="form-group">
-        <label>Kontakt E-Mail *</label>
-        <input type="email" [(ngModel)]="newTenant.contactEmail" placeholder="kontakt@firma.de" class="form-control" />
-      </div>
-
-      <div class="form-group">
-        <label>Domain (optional)</label>
-        <input type="text" [(ngModel)]="newTenant.domain" placeholder="www.firma.de" class="form-control" />
-      </div>
-
-      <div class="form-row">
+      <div class="modal-body">
         <div class="form-group">
-          <label>Max. Benutzer</label>
-          <input type="number" [(ngModel)]="newTenant.maxUsers" min="1" class="form-control" />
+          <label>Name *</label>
+          <input type="text" [(ngModel)]="newTenant.name" placeholder="Firmenname" class="form-control" />
         </div>
 
         <div class="form-group">
-          <label>Max. Dokumente</label>
-          <input type="number" [(ngModel)]="newTenant.maxDocuments" min="1" class="form-control" />
+          <label>Kontakt E-Mail *</label>
+          <input type="email" [(ngModel)]="newTenant.contactEmail" placeholder="kontakt@firma.de" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label>Domain (optional)</label>
+          <input type="text" [(ngModel)]="newTenant.domain" placeholder="www.firma.de" class="form-control" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Max. Benutzer</label>
+            <input type="number" [(ngModel)]="newTenant.maxUsers" min="1" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label>Max. Dokumente</label>
+            <input type="number" [(ngModel)]="newTenant.maxDocuments" min="1" class="form-control" />
+          </div>
         </div>
       </div>
 

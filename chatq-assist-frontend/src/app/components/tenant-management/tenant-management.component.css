@@ -121,6 +121,10 @@
   color: #0f172a;
 }
 
+.modal-body {
+  padding: 28px;
+}
+
 .form-group {
   margin-bottom: 24px;
 }
@@ -163,7 +167,6 @@
   padding: 20px 28px;
   border-top: 1px solid #e2e8f0;
   background: #f8fafc;
-  margin: 0 -28px -28px;
 }
 
 /* Tenant Cards */
