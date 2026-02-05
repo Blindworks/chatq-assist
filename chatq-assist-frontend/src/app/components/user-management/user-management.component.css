@@ -151,6 +151,10 @@
   color: #0f172a;
 }
 
+.modal-body {
+  padding: 28px;
+}
+
 .form-group {
   margin-bottom: 24px;
 }

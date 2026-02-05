@@ -26,48 +26,50 @@
         </button>
       </div>
 
-      <div class="form-group">
-        <label>Benutzername *</label>
-        <input type="text" [(ngModel)]="newUser.username" placeholder="benutzername"
-               class="form-control" [disabled]="editingUser !== null" />
-      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Benutzername *</label>
+          <input type="text" [(ngModel)]="newUser.username" placeholder="benutzername"
+                 class="form-control" [disabled]="editingUser !== null" />
+        </div>
 
-      <div class="form-group" *ngIf="!editingUser">
-        <label>Passwort *</label>
-        <input type="password" [(ngModel)]="newUser.password" placeholder="Passwort" class="form-control" />
-      </div>
+        <div class="form-group" *ngIf="!editingUser">
+          <label>Passwort *</label>
+          <input type="password" [(ngModel)]="newUser.password" placeholder="Passwort" class="form-control" />
+        </div>
 
-      <div class="form-group" *ngIf="editingUser">
-        <label>Neues Passwort (leer lassen für unverändert)</label>
-        <input type="password" [(ngModel)]="newUser.password" placeholder="Neues Passwort" class="form-control" />
-      </div>
+        <div class="form-group" *ngIf="editingUser">
+          <label>Neues Passwort (leer lassen für unverändert)</label>
+          <input type="password" [(ngModel)]="newUser.password" placeholder="Neues Passwort" class="form-control" />
+        </div>
 
-      <div class="form-group">
-        <label>E-Mail</label>
-        <input type="email" [(ngModel)]="newUser.email" placeholder="email@firma.de" class="form-control" />
-      </div>
+        <div class="form-group">
+          <label>E-Mail</label>
+          <input type="email" [(ngModel)]="newUser.email" placeholder="email@firma.de" class="form-control" />
+        </div>
 
-      <div class="form-group">
-        <label>Tenant *</label>
-        <select [(ngModel)]="newUser.tenantId" class="form-control" [disabled]="editingUser !== null">
-          <option *ngFor="let tenant of tenants" [value]="tenant.tenantId">
-            {{ tenant.name }} ({{ tenant.tenantId }})
-          </option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label>Tenant *</label>
+          <select [(ngModel)]="newUser.tenantId" class="form-control" [disabled]="editingUser !== null">
+            <option *ngFor="let tenant of tenants" [value]="tenant.tenantId">
+              {{ tenant.name }} ({{ tenant.tenantId }})
+            </option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label>Rolle *</label>
-        <select [(ngModel)]="newUser.role" class="form-control">
-          <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label>Rolle *</label>
+          <select [(ngModel)]="newUser.role" class="form-control">
+            <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+          </select>
+        </div>
 
-      <div class="form-group checkbox-group">
-        <label>
-          <input type="checkbox" [(ngModel)]="newUser.enabled" />
-          Benutzer ist aktiv
-        </label>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" [(ngModel)]="newUser.enabled" />
+            Benutzer ist aktiv
+          </label>
+        </div>
       </div>
 
       <div class="modal-actions">
