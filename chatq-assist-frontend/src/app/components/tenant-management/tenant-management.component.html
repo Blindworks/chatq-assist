@@ -72,12 +72,11 @@
           <button class="btn btn-sm btn-primary" (click)="openEditForm(tenant)">
             <lucide-icon [img]="Pencil" [size]="14"></lucide-icon> Bearbeiten
           </button>
-          <button class="btn btn-sm" [class.btn-warning]="tenant.isActive" [class.btn-success]="!tenant.isActive"
-                  (click)="toggleStatus(tenant)">
+          <button class="btn btn-sm btn-secondary" (click)="toggleStatus(tenant)">
             <lucide-icon [img]="tenant.isActive ? Ban : Check" [size]="14"></lucide-icon>
             {{ tenant.isActive ? 'Deaktivieren' : 'Aktivieren' }}
           </button>
-          <button class="btn btn-sm btn-danger" (click)="deleteTenant(tenant)"
+          <button class="btn btn-sm btn-secondary" (click)="deleteTenant(tenant)"
                   *ngIf="tenant.tenantId !== 'system'">
             <lucide-icon [img]="Trash2" [size]="14"></lucide-icon> Löschen
           </button>
@@ -103,13 +102,13 @@
       </div>
 
       <div class="api-key-section">
-        <label><strong>API Key:</strong></label>
+        <label>API Key</label>
         <div class="api-key-row">
           <input type="text" [value]="tenant.apiKey" readonly class="api-key-input" />
           <button class="btn btn-sm btn-secondary" (click)="copyToClipboard(tenant.apiKey!)">
             <lucide-icon [img]="Copy" [size]="14"></lucide-icon> Kopieren
           </button>
-          <button class="btn btn-sm btn-warning" (click)="regenerateApiKey(tenant)">
+          <button class="btn btn-sm btn-secondary" (click)="regenerateApiKey(tenant)">
             <lucide-icon [img]="RefreshCw" [size]="14"></lucide-icon> Neu generieren
           </button>
         </div>
