@@ -89,7 +89,7 @@
       <!-- Messages Metrics -->
       <div class="metric-card messages-card">
         <div class="card-header">
-          <h3>✉️ Messages</h3>
+          <h3><lucide-icon [img]="Mail" [size]="20"></lucide-icon> Messages</h3>
         </div>
         <div class="card-body">
           <div class="big-number">{{ analytics.conversationMetrics.totalMessages }}</div>
@@ -97,7 +97,7 @@
 
           <div class="message-stats">
             <div class="stat-item">
-              <div class="stat-icon">👤</div>
+              <lucide-icon [img]="User" [size]="24" style="color: #3b82f6;"></lucide-icon>
               <div class="stat-info">
                 <div class="stat-number">{{ analytics.totalQuestions || 0 }}</div>
                 <div class="stat-text">User Questions</div>
@@ -111,7 +111,7 @@
     <!-- Activity Chart -->
     <div class="chart-section">
       <div class="section-header">
-        <h2>📈 Daily Activity</h2>
+        <h2><lucide-icon [img]="TrendingUp" [size]="24"></lucide-icon>Daily Activity</h2>
         <p class="section-subtitle">Questions per day over the selected period</p>
       </div>
 
@@ -135,7 +135,7 @@
     <!-- Top FAQs Table -->
     <div class="table-section">
       <div class="section-header">
-        <h2>🏆 Top Performing FAQs</h2>
+        <h2><lucide-icon [img]="Trophy" [size]="24"></lucide-icon>Top Performing FAQs</h2>
         <p class="section-subtitle">Most frequently used FAQs with satisfaction metrics</p>
       </div>
 

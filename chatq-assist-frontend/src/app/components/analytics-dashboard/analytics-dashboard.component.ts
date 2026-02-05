@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AnalyticsService, Analytics, FaqPerformance } from '../../services/analytics.service';
 import { TenantContextService } from '../../services/tenant-context.service';
-import { LucideAngularModule, BarChart3, MessageCircle, ThumbsUp, ThumbsDown } from 'lucide-angular';
+import { LucideAngularModule, BarChart3, MessageCircle, ThumbsUp, ThumbsDown, Mail, User, TrendingUp, Trophy } from 'lucide-angular';
 
 @Component({
   selector: 'app-analytics-dashboard',
@@ -32,6 +32,10 @@ export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
   readonly MessageCircle = MessageCircle;
   readonly ThumbsUp = ThumbsUp;
   readonly ThumbsDown = ThumbsDown;
+  readonly Mail = Mail;
+  readonly User = User;
+  readonly TrendingUp = TrendingUp;
+  readonly Trophy = Trophy;
 
   private tenantSubscription?: Subscription;
 
