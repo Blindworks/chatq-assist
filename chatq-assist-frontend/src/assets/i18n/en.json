@@ -1,0 +1,75 @@
+{
+  "hero": {
+    "badge": "GDPR-Compliant Support Solution",
+    "title": "Intelligent Customer Support",
+    "titleHighlight": "Made Simple",
+    "description": "Empower your customers with instant answers through our AI-powered FAQ chatbot. Seamlessly integrated, fully customizable, and privacy-first.",
+    "getStarted": "Get Started",
+    "tryDemo": "Try Live Demo"
+  },
+  "floatingCards": {
+    "availability": {
+      "title": "24/7 Availability",
+      "desc": "Always ready to help"
+    },
+    "response": {
+      "title": "Instant Response",
+      "desc": "< 1s average time"
+    },
+    "security": {
+      "title": "100% Secure",
+      "desc": "GDPR compliant"
+    }
+  },
+  "features": {
+    "sectionTitle": "Why Choose ChatQ Assist?",
+    "sectionDescription": "Everything you need to deliver exceptional customer support",
+    "instantAnswers": {
+      "title": "Instant Answers",
+      "description": "Get immediate responses to your questions 24/7 with our intelligent FAQ system."
+    },
+    "gdprCompliant": {
+      "title": "GDPR Compliant",
+      "description": "Your privacy matters. All data processing follows strict GDPR guidelines."
+    },
+    "humanHandoff": {
+      "title": "Human Handoff",
+      "description": "Seamlessly connect with a real person when you need personalized assistance."
+    }
+  },
+  "benefits": {
+    "sectionTitle": "Built for Modern Businesses",
+    "sectionDescription": "ChatQ Assist provides all the tools you need to automate customer support while maintaining a personal touch.",
+    "list": {
+      "integration": "Easy integration into your website",
+      "customizable": "Customizable design and branding",
+      "multiTenant": "Multi-tenant support",
+      "analytics": "Real-time chat analytics",
+      "knowledgeBase": "Document-based knowledge base",
+      "ticketing": "Ticket management system"
+    },
+    "startTrial": "Start Free Trial"
+  },
+  "stats": {
+    "uptime": {
+      "value": "99.9%",
+      "label": "Uptime"
+    },
+    "responseTime": {
+      "value": "< 1s",
+      "label": "Response Time"
+    },
+    "availability": {
+      "value": "24/7",
+      "label": "Availability"
+    }
+  },
+  "cta": {
+    "title": "Ready to Transform Your Support?",
+    "description": "Join hundreds of businesses already using ChatQ Assist",
+    "button": "Get Started Now"
+  },
+  "footer": {
+    "copyright": "© 2024 ChatQ Assist. GDPR-compliant customer support solution."
+  }
+}

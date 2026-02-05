@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
 import { WidgetControlService } from '../../services/widget-control.service';
-import { LucideAngularModule, MessageCircle, Shield, Zap, Users, CheckCircle, ArrowRight, Sparkles } from 'lucide-angular';
+import { LucideAngularModule, MessageCircle, Shield, Zap, Users, CheckCircle, ArrowRight, Sparkles, Languages } from 'lucide-angular';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, ChatWidgetComponent, LucideAngularModule],
+  imports: [CommonModule, ChatWidgetComponent, LucideAngularModule, TranslateModule],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit {
   readonly MessageCircle = MessageCircle;
   readonly Shield = Shield;
   readonly Zap = Zap;
@@ -20,38 +21,62 @@ export class LandingComponent {
   readonly CheckCircle = CheckCircle;
   readonly ArrowRight = ArrowRight;
   readonly Sparkles = Sparkles;
+  readonly Languages = Languages;
+
+  currentLanguage: string = 'en';
+  availableLanguages = [
+    { code: 'en', label: 'English' },
+    { code: 'de', label: 'Deutsch' }
+  ];
 
   features = [
     {
       icon: this.Zap,
-      title: 'Instant Answers',
-      description: 'Get immediate responses to your questions 24/7 with our intelligent FAQ system.'
+      titleKey: 'features.instantAnswers.title',
+      descriptionKey: 'features.instantAnswers.description'
     },
     {
       icon: this.Shield,
-      title: 'GDPR Compliant',
-      description: 'Your privacy matters. All data processing follows strict GDPR guidelines.'
+      titleKey: 'features.gdprCompliant.title',
+      descriptionKey: 'features.gdprCompliant.description'
     },
     {
       icon: this.Users,
-      title: 'Human Handoff',
-      description: 'Seamlessly connect with a real person when you need personalized assistance.'
+      titleKey: 'features.humanHandoff.title',
+      descriptionKey: 'features.humanHandoff.description'
     }
   ];
 
-  benefits = [
-    'Easy integration into your website',
-    'Customizable design and branding',
-    'Multi-tenant support',
-    'Real-time chat analytics',
-    'Document-based knowledge base',
-    'Ticket management system'
+  benefitKeys = [
+    'benefits.list.integration',
+    'benefits.list.customizable',
+    'benefits.list.multiTenant',
+    'benefits.list.analytics',
+    'benefits.list.knowledgeBase',
+    'benefits.list.ticketing'
   ];
 
   constructor(
     private router: Router,
-    private widgetControl: WidgetControlService
-  ) {}
+    private widgetControl: WidgetControlService,
+    public translate: TranslateService
+  ) {
+    // Set default language
+    translate.setDefaultLang('en');
+    // Try to get saved language or use browser language
+    const savedLang = localStorage.getItem('language');
+    const browserLang = translate.getBrowserLang();
+    this.currentLanguage = savedLang || (browserLang?.match(/en|de/) ? browserLang : 'en');
+    translate.use(this.currentLanguage);
+  }
+
+  ngOnInit(): void {}
+
+  switchLanguage(lang: string): void {
+    this.currentLanguage = lang;
+    this.translate.use(lang);
+    localStorage.setItem('language', lang);
+  }
 
   navigateToLogin(): void {
     this.router.navigate(['/login']);

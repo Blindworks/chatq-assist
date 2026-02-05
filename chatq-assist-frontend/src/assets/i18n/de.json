@@ -1,0 +1,75 @@
+{
+  "hero": {
+    "badge": "DSGVO-konforme Support-Lösung",
+    "title": "Intelligenter Kundensupport",
+    "titleHighlight": "Einfach gemacht",
+    "description": "Ermöglichen Sie Ihren Kunden sofortige Antworten durch unseren KI-gestützten FAQ-Chatbot. Nahtlos integriert, vollständig anpassbar und datenschutzfreundlich.",
+    "getStarted": "Jetzt starten",
+    "tryDemo": "Live-Demo testen"
+  },
+  "floatingCards": {
+    "availability": {
+      "title": "24/7 Verfügbar",
+      "desc": "Immer bereit zu helfen"
+    },
+    "response": {
+      "title": "Sofortige Antwort",
+      "desc": "< 1s durchschn. Zeit"
+    },
+    "security": {
+      "title": "100% Sicher",
+      "desc": "DSGVO-konform"
+    }
+  },
+  "features": {
+    "sectionTitle": "Warum ChatQ Assist wählen?",
+    "sectionDescription": "Alles, was Sie für außergewöhnlichen Kundensupport benötigen",
+    "instantAnswers": {
+      "title": "Sofortige Antworten",
+      "description": "Erhalten Sie sofortige Antworten auf Ihre Fragen rund um die Uhr mit unserem intelligenten FAQ-System."
+    },
+    "gdprCompliant": {
+      "title": "DSGVO-konform",
+      "description": "Ihre Privatsphäre ist wichtig. Alle Datenverarbeitung folgt strengen DSGVO-Richtlinien."
+    },
+    "humanHandoff": {
+      "title": "Menschliche Übergabe",
+      "description": "Verbinden Sie sich nahtlos mit einer echten Person, wenn Sie persönliche Unterstützung benötigen."
+    }
+  },
+  "benefits": {
+    "sectionTitle": "Entwickelt für moderne Unternehmen",
+    "sectionDescription": "ChatQ Assist bietet alle Tools, die Sie benötigen, um den Kundensupport zu automatisieren und gleichzeitig eine persönliche Note zu bewahren.",
+    "list": {
+      "integration": "Einfache Integration in Ihre Website",
+      "customizable": "Anpassbares Design und Branding",
+      "multiTenant": "Multi-Mandanten-Unterstützung",
+      "analytics": "Echtzeit-Chat-Analysen",
+      "knowledgeBase": "Dokumentenbasierte Wissensdatenbank",
+      "ticketing": "Ticket-Management-System"
+    },
+    "startTrial": "Kostenlose Testversion starten"
+  },
+  "stats": {
+    "uptime": {
+      "value": "99,9%",
+      "label": "Verfügbarkeit"
+    },
+    "responseTime": {
+      "value": "< 1s",
+      "label": "Antwortzeit"
+    },
+    "availability": {
+      "value": "24/7",
+      "label": "Erreichbarkeit"
+    }
+  },
+  "cta": {
+    "title": "Bereit, Ihren Support zu transformieren?",
+    "description": "Hunderte von Unternehmen nutzen bereits ChatQ Assist",
+    "button": "Jetzt starten"
+  },
+  "footer": {
+    "copyright": "© 2024 ChatQ Assist. DSGVO-konforme Kundensupport-Lösung."
+  }
+}

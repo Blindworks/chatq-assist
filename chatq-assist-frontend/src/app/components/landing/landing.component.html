@@ -1,26 +1,37 @@
+<!-- Language Switcher -->
+<div class="language-switcher">
+  <lucide-icon [img]="Languages" [size]="18"></lucide-icon>
+  <button
+    *ngFor="let lang of availableLanguages"
+    class="lang-btn"
+    [class.active]="currentLanguage === lang.code"
+    (click)="switchLanguage(lang.code)">
+    {{ lang.label }}
+  </button>
+</div>
+
 <!-- Hero Section -->
 <section class="hero">
   <div class="hero-content">
     <div class="hero-badge">
       <lucide-icon [img]="Sparkles" [size]="16"></lucide-icon>
-      <span>GDPR-Compliant Support Solution</span>
+      <span>{{ 'hero.badge' | translate }}</span>
     </div>
     <h1 class="hero-title">
-      Intelligent Customer Support
-      <span class="gradient-text">Made Simple</span>
+      {{ 'hero.title' | translate }}
+      <span class="gradient-text">{{ 'hero.titleHighlight' | translate }}</span>
     </h1>
     <p class="hero-description">
-      Empower your customers with instant answers through our AI-powered FAQ chatbot.
-      Seamlessly integrated, fully customizable, and privacy-first.
+      {{ 'hero.description' | translate }}
     </p>
     <div class="hero-actions">
       <button class="btn btn-primary" (click)="navigateToLogin()">
-        Get Started
+        {{ 'hero.getStarted' | translate }}
         <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
       </button>
       <button class="btn btn-secondary" (click)="openChatWidget()">
         <lucide-icon [img]="MessageCircle" [size]="20"></lucide-icon>
-        Try Live Demo
+        {{ 'hero.tryDemo' | translate }}
       </button>
     </div>
   </div>
@@ -28,22 +39,22 @@
     <div class="floating-card card-1">
       <lucide-icon [img]="MessageCircle" [size]="24"></lucide-icon>
       <div>
-        <div class="card-title">24/7 Availability</div>
-        <div class="card-desc">Always ready to help</div>
+        <div class="card-title">{{ 'floatingCards.availability.title' | translate }}</div>
+        <div class="card-desc">{{ 'floatingCards.availability.desc' | translate }}</div>
       </div>
     </div>
     <div class="floating-card card-2">
       <lucide-icon [img]="Zap" [size]="24"></lucide-icon>
       <div>
-        <div class="card-title">Instant Response</div>
-        <div class="card-desc">< 1s average time</div>
+        <div class="card-title">{{ 'floatingCards.response.title' | translate }}</div>
+        <div class="card-desc">{{ 'floatingCards.response.desc' | translate }}</div>
       </div>
     </div>
     <div class="floating-card card-3">
       <lucide-icon [img]="Shield" [size]="24"></lucide-icon>
       <div>
-        <div class="card-title">100% Secure</div>
-        <div class="card-desc">GDPR compliant</div>
+        <div class="card-title">{{ 'floatingCards.security.title' | translate }}</div>
+        <div class="card-desc">{{ 'floatingCards.security.desc' | translate }}</div>
       </div>
     </div>
   </div>
@@ -52,16 +63,16 @@
 <!-- Features Section -->
 <section class="features">
   <div class="section-header">
-    <h2 class="section-title">Why Choose ChatQ Assist?</h2>
-    <p class="section-description">Everything you need to deliver exceptional customer support</p>
+    <h2 class="section-title">{{ 'features.sectionTitle' | translate }}</h2>
+    <p class="section-description">{{ 'features.sectionDescription' | translate }}</p>
   </div>
   <div class="features-grid">
     <div class="feature-card" *ngFor="let feature of features">
       <div class="feature-icon">
         <lucide-icon [img]="feature.icon" [size]="28"></lucide-icon>
       </div>
-      <h3 class="feature-title">{{ feature.title }}</h3>
-      <p class="feature-description">{{ feature.description }}</p>
+      <h3 class="feature-title">{{ feature.titleKey | translate }}</h3>
+      <p class="feature-description">{{ feature.descriptionKey | translate }}</p>
     </div>
   </div>
 </section>
@@ -70,35 +81,34 @@
 <section class="benefits">
   <div class="benefits-content">
     <div class="benefits-text">
-      <h2 class="section-title">Built for Modern Businesses</h2>
+      <h2 class="section-title">{{ 'benefits.sectionTitle' | translate }}</h2>
       <p class="section-description">
-        ChatQ Assist provides all the tools you need to automate customer support
-        while maintaining a personal touch.
+        {{ 'benefits.sectionDescription' | translate }}
       </p>
       <ul class="benefits-list">
-        <li *ngFor="let benefit of benefits">
+        <li *ngFor="let benefitKey of benefitKeys">
           <lucide-icon [img]="CheckCircle" [size]="20"></lucide-icon>
-          <span>{{ benefit }}</span>
+          <span>{{ benefitKey | translate }}</span>
         </li>
       </ul>
       <button class="btn btn-primary" (click)="navigateToLogin()">
-        Start Free Trial
+        {{ 'benefits.startTrial' | translate }}
         <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
       </button>
     </div>
     <div class="benefits-visual">
       <div class="stats-card">
         <div class="stat">
-          <div class="stat-value">99.9%</div>
-          <div class="stat-label">Uptime</div>
+          <div class="stat-value">{{ 'stats.uptime.value' | translate }}</div>
+          <div class="stat-label">{{ 'stats.uptime.label' | translate }}</div>
         </div>
         <div class="stat">
-          <div class="stat-value">< 1s</div>
-          <div class="stat-label">Response Time</div>
+          <div class="stat-value">{{ 'stats.responseTime.value' | translate }}</div>
+          <div class="stat-label">{{ 'stats.responseTime.label' | translate }}</div>
         </div>
         <div class="stat">
-          <div class="stat-value">24/7</div>
-          <div class="stat-label">Availability</div>
+          <div class="stat-value">{{ 'stats.availability.value' | translate }}</div>
+          <div class="stat-label">{{ 'stats.availability.label' | translate }}</div>
         </div>
       </div>
     </div>
@@ -108,10 +118,10 @@
 <!-- CTA Section -->
 <section class="cta">
   <div class="cta-content">
-    <h2 class="cta-title">Ready to Transform Your Support?</h2>
-    <p class="cta-description">Join hundreds of businesses already using ChatQ Assist</p>
+    <h2 class="cta-title">{{ 'cta.title' | translate }}</h2>
+    <p class="cta-description">{{ 'cta.description' | translate }}</p>
     <button class="btn btn-primary btn-lg" (click)="navigateToLogin()">
-      Get Started Now
+      {{ 'cta.button' | translate }}
       <lucide-icon [img]="ArrowRight" [size]="20"></lucide-icon>
     </button>
   </div>
@@ -124,7 +134,7 @@
       <lucide-icon [img]="MessageCircle" [size]="24"></lucide-icon>
       <span>ChatQ Assist</span>
     </div>
-    <p class="footer-text">© 2024 ChatQ Assist. GDPR-compliant customer support solution.</p>
+    <p class="footer-text">{{ 'footer.copyright' | translate }}</p>
   </div>
 </footer>
 
