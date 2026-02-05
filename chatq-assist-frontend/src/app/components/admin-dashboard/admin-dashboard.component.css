@@ -857,6 +857,16 @@ textarea.form-control {
   border-color: rgba(59, 130, 246, 0.5);
 }
 
+.tenant-selector.disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.tenant-selector.disabled:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
 .tenant-selector-current {
   display: flex;
   align-items: center;

@@ -12,6 +12,7 @@ import { UserManagementComponent } from '../user-management/user-management.comp
 import { AnalyticsDashboardComponent } from '../analytics-dashboard/analytics-dashboard.component';
 import { TicketManagementComponent } from '../ticket-management/ticket-management.component';
 import { ChatWidgetComponent } from '../chat-widget/chat-widget.component';
+import { WidgetCustomizerComponent } from '../widget-customizer/widget-customizer.component';
 import {
   LucideAngularModule,
   MessageSquare,
@@ -46,6 +47,7 @@ import {
     AnalyticsDashboardComponent,
     TicketManagementComponent,
     ChatWidgetComponent,
+    WidgetCustomizerComponent,
     LucideAngularModule
   ],
   templateUrl: './admin-dashboard.component.html',
@@ -101,7 +103,12 @@ export class AdminDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadTenants();
+    // Load tenants for ADMIN/SUPER_ADMIN or load own tenant for TENANT_ADMIN
+    if (this.canAccessTenantManagement()) {
+      this.loadTenants();
+    } else if (this.authService.isTenantAdmin()) {
+      this.loadOwnTenant();
+    }
 
     // Subscribe to tenant changes from context
     this.tenantContext.selectedTenant$.subscribe(tenant => {
@@ -138,6 +145,29 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading tenants:', err);
+        this.tenantsLoading = false;
+      }
+    });
+  }
+
+  loadOwnTenant(): void {
+    const tenantId = this.authService.getTenantId();
+    if (!tenantId) {
+      console.error('No tenant ID found for tenant admin');
+      return;
+    }
+
+    this.tenantsLoading = true;
+    this.tenantService.getTenantByTenantId(tenantId).subscribe({
+      next: (tenant) => {
+        this.selectedTenant = tenant;
+        this.tenants = [tenant]; // Add own tenant to list
+        this.tenantContext.setSelectedTenant(tenant);
+        this.tenantsLoading = false;
+        console.log('Loaded own tenant:', tenant);
+      },
+      error: (err) => {
+        console.error('Error loading own tenant:', err);
         this.tenantsLoading = false;
       }
     });
@@ -364,6 +394,16 @@ export class AdminDashboardComponent implements OnInit {
     return this.authService.hasAccessToUserManagement();
   }
 
+  canEditWidget(): boolean {
+    // Only ADMIN and SUPER_ADMIN can edit widget configuration
+    const role = this.authService.getRole();
+    return role === 'ADMIN' || role === 'SUPER_ADMIN';
+  }
+
+  getWidgetMenuLabel(): string {
+    return this.canEditWidget() ? 'Widget Configuration' : 'Widget Preview';
+  }
+
   getUserRole(): string | null {
     return this.authService.getRole();
   }
@@ -380,7 +420,7 @@ export class AdminDashboardComponent implements OnInit {
       'documents': 'Document Management',
       'tenants': 'Tenant Management',
       'users': 'User Management',
-      'chatwidget': 'Chat Widget'
+      'chatwidget': this.getWidgetMenuLabel()
     };
     return titles[this.activeTab] || 'Dashboard';
   }

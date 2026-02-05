@@ -15,6 +15,7 @@ import { LucideAngularModule, Palette, Eye, X, Copy, Code, Save, Paintbrush, Set
 })
 export class WidgetCustomizerComponent implements OnInit {
   @Input() tenant!: TenantDto;
+  @Input() isReadOnly: boolean = false;
   @Output() settingsSaved = new EventEmitter<void>();
 
   showPreview: boolean = false;

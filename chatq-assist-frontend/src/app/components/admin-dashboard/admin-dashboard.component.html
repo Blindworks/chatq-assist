@@ -21,7 +21,10 @@
       <!-- Tenant Selector Section -->
       <div class="nav-section tenant-selector-section">
         <div class="nav-section-title">Tenant</div>
-        <div class="tenant-selector" (click)="toggleTenantsMenu()" [class.expanded]="tenantsExpanded">
+        <div class="tenant-selector"
+             [class.expanded]="tenantsExpanded"
+             [class.disabled]="!canAccessTenantManagement()"
+             (click)="canAccessTenantManagement() ? toggleTenantsMenu() : null">
           <div class="tenant-selector-current">
             <span class="tenant-selector-icon">
               <lucide-icon [img]="Building2" [size]="18"></lucide-icon>
@@ -34,14 +37,14 @@
                 {{ selectedTenant.tenantId }}
               </div>
             </div>
-            <span class="tenant-selector-chevron">
+            <span class="tenant-selector-chevron" *ngIf="canAccessTenantManagement()">
               <lucide-icon [img]="tenantsExpanded ? ChevronDown : ChevronRight" [size]="16"></lucide-icon>
             </span>
           </div>
         </div>
 
-        <!-- Tenant Dropdown -->
-        <div *ngIf="tenantsExpanded" class="tenant-dropdown">
+        <!-- Tenant Dropdown (only for ADMIN/SUPER_ADMIN) -->
+        <div *ngIf="tenantsExpanded && canAccessTenantManagement()" class="tenant-dropdown">
           <div *ngIf="tenantsLoading" class="tenant-dropdown-loading">
             Loading tenants...
           </div>
@@ -94,8 +97,8 @@
           class="nav-item"
           [class.active]="activeTab === 'chatwidget'"
           (click)="switchTab('chatwidget')">
-          <span class="nav-icon"><lucide-icon [img]="Settings" [size]="18"></lucide-icon></span>
-          <span class="nav-label">Widget Configuration</span>
+          <span class="nav-icon"><lucide-icon [img]="canEditWidget() ? Settings : Eye" [size]="18"></lucide-icon></span>
+          <span class="nav-label">{{ getWidgetMenuLabel() }}</span>
         </button>
 
         <button
@@ -156,8 +159,12 @@
     <div class="content-container">
 
       <!-- Chat Widget Content -->
-      <div *ngIf="activeTab === 'chatwidget'" class="tab-content">
-        <app-chat-widget></app-chat-widget>
+      <div *ngIf="activeTab === 'chatwidget' && selectedTenant" class="tab-content">
+        <app-widget-customizer
+          [tenant]="selectedTenant"
+          [isReadOnly]="!canEditWidget()"
+          (settingsSaved)="loadTenants()">
+        </app-widget-customizer>
       </div>
 
       <!-- Analytics Content -->
