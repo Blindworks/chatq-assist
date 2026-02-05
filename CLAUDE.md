@@ -157,6 +157,152 @@ When adding new entities:
 
 The system currently uses `@CrossOrigin(origins = "*")` on controllers. For production, configure `CORS_ORIGINS` environment variable in docker-compose.yml to restrict allowed domains.
 
+## Frontend Design System
+
+**Reference Component**: `tenant-management` component serves as the design system reference. All frontend components should follow this consistent style.
+
+### Color Palette
+
+**Text Colors:**
+- Primary text: `#0f172a` (dark slate)
+- Secondary text: `#334155`, `#475569`, `#64748b` (gray shades)
+
+**Background Colors:**
+- Light background: `#f8fafc`
+- Card background: `white`
+- Secondary background: `#f1f5f9`
+
+**Border Colors:**
+- Primary border: `#e2e8f0`
+- Hover border: `#cbd5e1`
+
+**Status Colors:**
+- Active: Background `#dcfce7`, Text `#166534` (green)
+- Inactive: Background `#fee2e2`, Text `#991b1b` (red)
+- Error: Background `#fef2f2`, Text `#991b1b`, Border `#fecaca`
+
+**Brand Colors:**
+- Primary: Gradient `#3b82f6` → `#2563eb` (blue)
+
+### Typography
+
+**Font Sizes:**
+- Header (h2): `22px`, font-weight `700`
+- Modal header (h3): `20px`, font-weight `700`
+- Body text: `14px`
+- Labels: `14px`, font-weight `600`
+- Small text: `11px` - `13px`
+
+### Buttons
+
+**Primary Button:**
+```css
+background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+color: white;
+box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+border-radius: 10px;
+padding: 10px 20px;
+font-weight: 600;
+```
+- Hover: `transform: translateY(-2px)` + stronger shadow
+
+**Secondary Button:**
+```css
+background: #f1f5f9;
+color: #475569;
+border: 1px solid #e2e8f0;
+border-radius: 10px;
+padding: 10px 20px;
+font-weight: 600;
+```
+- Hover: Background `#e2e8f0`, Color `#334155`
+
+**Small Buttons (btn-sm):**
+- Padding: `8px 16px`
+- Font-size: `13px`
+
+### Form Controls
+
+**Input Fields:**
+```css
+padding: 12px 16px;
+border: 2px solid #e2e8f0;
+border-radius: 10px;
+font-size: 14px;
+```
+- Focus state: `border-color: #3b82f6`, `box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1)`
+
+### Cards & Containers
+
+**Card Style:**
+```css
+background: white;
+border-radius: 12px;
+padding: 24px;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+border: 1px solid #e2e8f0;
+```
+- Hover: `transform: translateY(-2px)` + stronger shadow
+
+### Status Badges
+
+**Badge Style:**
+```css
+padding: 6px 14px;
+border-radius: 20px;  /* pill shape */
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+```
+
+### Modal
+
+**Modal Overlay:**
+```css
+background: rgba(15, 23, 42, 0.6);
+backdrop-filter: blur(4px);
+```
+
+**Modal Content:**
+```css
+border-radius: 16px;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+```
+
+### Animations
+
+**Transition Timing:**
+- Use `cubic-bezier(0.4, 0, 0.2, 1)` for smooth animations
+- Duration: `0.2s` for most transitions
+
+**Hover Effects:**
+- Cards & Primary buttons: `transform: translateY(-2px)`
+- Duration: `0.2s`
+
+### Spacing
+
+**Padding & Margins:**
+- Small: `8px`, `12px`
+- Medium: `16px`, `20px`, `24px`
+- Large: `28px`, `32px`
+
+**Gaps:**
+- Icon gaps: `8px`
+- Button groups: `8px` - `12px`
+- Form fields: `20px` - `24px`
+
+### Icons
+
+- Use Lucide Angular icons consistently
+- Standard size: `16px` - `20px`
+- Header icons: `24px`
+- Small icons (badges, buttons): `14px`
+
 ## Discrepancies with Documentation
 
 The README.md describes a full RAG-based chatbot with:

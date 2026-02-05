@@ -117,17 +117,15 @@
           <td>
             <div class="action-buttons">
               <button class="btn btn-sm btn-primary" (click)="openEditForm(user)">
-                <lucide-icon [img]="Pencil" [size]="14"></lucide-icon>
+                <lucide-icon [img]="Pencil" [size]="14"></lucide-icon> Bearbeiten
               </button>
-              <button class="btn btn-sm"
-                      [class.btn-warning]="user.enabled"
-                      [class.btn-success]="!user.enabled"
-                      (click)="toggleStatus(user)">
+              <button class="btn btn-sm btn-secondary" (click)="toggleStatus(user)">
                 <lucide-icon [img]="user.enabled ? Ban : Check" [size]="14"></lucide-icon>
+                {{ user.enabled ? 'Deaktivieren' : 'Aktivieren' }}
               </button>
-              <button class="btn btn-sm btn-danger" (click)="deleteUser(user)"
+              <button class="btn btn-sm btn-secondary" (click)="deleteUser(user)"
                       *ngIf="user.username !== 'admin'">
-                <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
+                <lucide-icon [img]="Trash2" [size]="14"></lucide-icon> Löschen
               </button>
             </div>
           </td>
